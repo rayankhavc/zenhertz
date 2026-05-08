@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZenHertz - Bioacoustic Scanner</title>
-    <!-- CE LIEN EST OBLIGATOIRE POUR LE DESIGN -->
+    <title>ZenHertz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .glass {
@@ -15,7 +14,7 @@
         }
     </style>
 </head>
-<body class="bg-[#f0f0f5] font-sans">
+<body class="bg-[#f0f0f5]">
 
     <div class="min-h-screen flex items-center justify-center p-6">
         
@@ -29,10 +28,9 @@
             </p>
 
             <label class="cursor-pointer group block">
-                <!-- LE BOUTON NOIR EST ICI -->
                 <div class="bg-black text-white p-10 rounded-[45px] border-2 border-transparent group-hover:border-violet-500 transition-all duration-500 shadow-2xl scale-100 group-hover:scale-[1.02]">
                     <div class="bg-white/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-3xl font-light">＋</span>
+                        <span class="text-3xl">＋</span>
                     </div>
                     <p class="font-bold text-xl tracking-tight">Analyser un morceau</p>
                     <p class="text-[10px] opacity-40 uppercase tracking-[0.3em] mt-2 font-black">MP3, WAV, AAC</p>
@@ -48,32 +46,31 @@
                 <div class="absolute inset-0 border-4 border-violet-600 rounded-full border-t-transparent animate-spin"></div>
             </div>
             <h2 class="text-3xl font-black text-gray-800 animate-pulse tracking-tighter">Scan Bioacoustique...</h2>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-6">Fréquences & Hertz</p>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-6">Analyse des données</p>
         </div>
 
         <!-- ÉCRAN RÉSULTATS -->
         <div id="screen-result" class="hidden max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl">
             <div class="mb-10">
-                <h2 id="res-name" class="text-2xl font-black text-gray-900 tracking-tight">Analyse terminée</h2>
+                <h2 id="res-name" class="text-2xl font-black text-gray-900 tracking-tight">Nom du fichier</h2>
                 <div class="h-1.5 w-16 bg-violet-600 mx-auto mt-3 rounded-full"></div>
             </div>
             
-            <div class="grid grid-cols-3 gap-3 bg-white/50 border border-white p-8 rounded-[40px] mb-10">
-                <div class="flex flex-col justify-center">
-                    <p id="res-bpm" class="text-5xl font-black text-gray-900 leading-none tracking-tighter">0</p>
+            <div class="grid grid-cols-3 gap-3 bg-white/50 border border-white p-8 rounded-[40px] mb-10 shadow-inner">
+                <div>
+                    <p id="res-bpm" class="text-5xl font-black text-gray-900 leading-none">0</p>
                     <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-4">BPM</p>
                 </div>
-                <div class="border-x border-gray-100 flex flex-col justify-center">
-                    <p id="res-hz" class="text-5xl font-black text-violet-600 leading-none tracking-tighter">0</p>
+                <div class="border-x border-gray-100">
+                    <p id="res-hz" class="text-5xl font-black text-violet-600 leading-none">0</p>
                     <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-4">Hertz</p>
                 </div>
-                <div class="flex flex-col justify-center">
-                    <p id="res-wave" class="text-2xl font-black text-gray-900 leading-none uppercase tracking-tighter">--</p>
+                <div>
+                    <p id="res-wave" class="text-2xl font-black text-gray-900 leading-none pt-2 uppercase">--</p>
                     <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-6">Ondes</p>
                 </div>
             </div>
 
-            <!-- BOUTON NOIR RÉSULTAT -->
             <div class="bg-black p-8 rounded-[45px] text-white flex justify-between items-center mb-8 shadow-2xl">
                 <div class="text-left">
                     <p class="font-bold text-lg leading-tight">Bilan Complet</p>
@@ -82,7 +79,7 @@
                 <div class="bg-violet-600 px-6 py-3 rounded-full text-xs font-black shadow-lg">2.99€</div>
             </div>
             
-            <button onclick="location.reload()" class="text-gray-400 text-[11px] font-black uppercase tracking-[0.3em] hover:text-violet-600 transition-colors">Réinitialiser</button>
+            <button onclick="location.reload()" class="text-gray-400 text-[11px] font-black uppercase tracking-[0.3em] hover:text-black transition-colors">Retour</button>
         </div>
 
     </div>
