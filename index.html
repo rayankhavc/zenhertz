@@ -19,7 +19,7 @@
     <div class="min-h-screen flex items-center justify-center p-6">
         
         <!-- ÉCRAN D'ACCUEIL -->
-        <div id="screen-ready" class="max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl">
+        <div id="screen-ready" class="max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl border border-white">
             <h1 class="text-6xl font-black mb-4 tracking-tighter bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
                 ZenHertz
             </h1>
@@ -50,9 +50,9 @@
         </div>
 
         <!-- ÉCRAN RÉSULTATS -->
-        <div id="screen-result" class="hidden max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl">
+        <div id="screen-result" class="hidden max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl border border-white">
             <div class="mb-10">
-                <h2 id="res-name" class="text-2xl font-black text-gray-900 tracking-tight">Nom du fichier</h2>
+                <h2 id="res-name" class="text-2xl font-black text-gray-900 tracking-tight">Analyse terminée</h2>
                 <div class="h-1.5 w-16 bg-violet-600 mx-auto mt-3 rounded-full"></div>
             </div>
             
@@ -102,29 +102,38 @@
                 const arrayBuffer = await file.arrayBuffer();
                 const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
                 
-                // 1. BPM (Inchangé)
+                // 1. BPM AMÉLIORÉ
                 const data = audioBuffer.getChannelData(0);
                 const sampleRate = audioBuffer.sampleRate;
                 let peaks = [];
+                let threshold = 0.7; 
+
+                // Scan sur 40 secondes max
                 for (let i = 0; i < Math.min(data.length, sampleRate * 40); i++) {
-                    if (data[i] > 0.7) {
+                    if (data[i] > threshold) {
                         peaks.push(i);
                         i += sampleRate * 0.25; 
                     }
                 }
+
                 let intervals = {};
                 for (let i = 1; i < peaks.length; i++) {
                     let interval = Math.round((peaks[i] - peaks[i-1]) / 100) * 100;
                     intervals[interval] = (intervals[interval] || 0) + 1;
                 }
-                let max = 0, best = 0;
-                for (let int in intervals) { if (intervals[int] > max) { max = intervals[int]; best = int; } }
-                let bpm = Math.round(60 / (best / sampleRate)) || 128;
-                if (bpm < 65) bpm *= 2; if (bpm > 200) bpm = Math.round(bpm / 2);
 
-                // 2. HERTZ MOYENS (Spectral Centroid simplifié)
+                let maxCount = 0, bestInterval = 0;
+                for (let int in intervals) { if (intervals[int] > maxCount) { maxCount = intervals[int]; bestInterval = int; } }
+
+                let bpm = bestInterval > 0 ? Math.round(60 / (bestInterval / sampleRate)) : 0;
+                
+                // Correction Rap/Trap (Si le BPM est détecté en "Half-time", on double)
+                if (bpm > 0 && bpm < 85) bpm *= 2; 
+                if (bpm > 200) bpm = Math.round(bpm / 2);
+
+                // 2. HERTZ MOYENS (Précision accrue)
                 const analyser = audioCtx.createAnalyser();
-                analyser.fftSize = 2048;
+                analyser.fftSize = 4096; // Fenêtre plus grande pour plus de précision
                 const bufferLength = analyser.frequencyBinCount;
                 const dataArray = new Uint8Array(bufferLength);
                 const source = audioCtx.createBufferSource();
@@ -134,34 +143,42 @@
 
                 setTimeout(() => {
                     analyser.getByteFrequencyData(dataArray);
-                    
                     let sumMagnitudes = 0;
                     let weightedSum = 0;
                     
-                    // Calcul de la moyenne pondérée du spectre
                     for (let i = 0; i < bufferLength; i++) {
                         let frequency = i * sampleRate / analyser.fftSize;
                         let magnitude = dataArray[i];
-                        
                         weightedSum += frequency * magnitude;
                         sumMagnitudes += magnitude;
                     }
                     
-                    // Valeur moyenne (Hertz)
-                    let averageHz = sumMagnitudes === 0 ? 440 : Math.round(weightedSum / sumMagnitudes);
+                    let averageHz = sumMagnitudes === 0 ? 0 : Math.round(weightedSum / sumMagnitudes);
                     
-                    // 3. AFFICHAGE
+                    // 3. AFFICHAGE ET LOGIQUE "SON PUR / STABLE"
                     document.getElementById('res-name').innerText = file.name.substring(0, 18);
-                    document.getElementById('res-bpm').innerText = bpm;
-                    document.getElementById('res-hz').innerText = averageHz;
-                    document.getElementById('res-wave').innerText = bpm < 115 ? "Alpha" : (bpm > 155 ? "Gamma" : "Bêta");
+                    
+                    const resBpm = document.getElementById('res-bpm');
+                    const resHz = document.getElementById('res-hz');
+                    const resWave = document.getElementById('res-wave');
+
+                    // Sécurité BPM
+                    if (bpm === 0 || !isFinite(bpm) || peaks.length < 5) {
+                        resBpm.innerText = "0";
+                        resWave.innerText = "Stable";
+                    } else {
+                        resBpm.innerText = bpm;
+                        resWave.innerText = bpm < 115 ? "Alpha" : (bpm > 155 ? "Gamma" : "Bêta");
+                    }
+
+                    resHz.innerText = averageHz === 0 ? "0" : averageHz;
 
                     screenAnalyzing.classList.add('hidden');
                     screenResult.classList.remove('hidden');
-                }, 150);
+                }, 200);
 
             } catch (err) {
-                alert("Erreur");
+                alert("Erreur de lecture");
                 location.reload();
             }
         });
