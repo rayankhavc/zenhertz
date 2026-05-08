@@ -15,75 +15,67 @@ audioInput.addEventListener('change', async (e) => {
         const arrayBuffer = await file.arrayBuffer();
         const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
         
-        // --- 1. PRÉ-TRAITEMENT (FILTRE PASSE-BAS) ---
-        // On isole les basses pour ne pas être perturbé par les cymbales/voix
-        const offlineCtx = new OfflineAudioContext(1, audioBuffer.length, audioBuffer.sampleRate);
+        // On ne garde que les 40 premières secondes pour un calcul rapide et précis
+        const offlineCtx = new OfflineAudioContext(1, audioBuffer.sampleRate * 40, audioBuffer.sampleRate);
         const source = offlineCtx.createBufferSource();
         source.buffer = audioBuffer;
-        
+
         const filter = offlineCtx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.value = 150; 
+        filter.frequency.value = 150;
 
         source.connect(filter);
         filter.connect(offlineCtx.destination);
         source.start(0);
+
         const filteredBuffer = await offlineCtx.startRendering();
         const data = filteredBuffer.getChannelData(0);
 
-        // --- 2. ANALYSE PAR AUTOCORRÉLATION ---
-        // On définit une plage de recherche réaliste (60 à 200 BPM)
+        // Algorithme de détection de tempo (Energy Peak detection raffiné)
         const sampleRate = filteredBuffer.sampleRate;
-        const minBpm = 60;
-        const maxBpm = 200;
-        const minInterval = Math.floor(sampleRate * 60 / maxBpm);
-        const maxInterval = Math.floor(sampleRate * 60 / minBpm);
-
-        let bestLag = 0;
-        let maxCorrelation = -Infinity;
-
-        // On échantillonne plusieurs parties du morceau pour plus de précision
-        // On prend 10 fenêtres de 2 secondes à différents endroits
-        const windowSize = sampleRate * 2; 
-        const stepSize = Math.floor((data.length - windowSize) / 10);
+        let peaks = [];
+        let threshold = 0.7; // Seuil initial
         
-        let bpmEstimates = [];
-
-        for (let offset = 0; offset < data.length - windowSize; offset += stepSize) {
-            let localMaxCorr = -Infinity;
-            let localBestLag = 0;
-
-            for (let lag = minInterval; lag <= maxInterval; lag++) {
-                let correlation = 0;
-                for (let i = 0; i < windowSize; i += 10) { // On saute des pas pour la performance
-                    correlation += data[offset + i] * data[offset + i + lag];
-                }
-
-                if (correlation > localMaxCorr) {
-                    localMaxCorr = correlation;
-                    localBestLag = lag;
-                }
+        // On cherche les pics sur toute la durée traitée
+        for (let i = 0; i < data.length; i++) {
+            if (data[i] > threshold) {
+                peaks.push(i);
+                i += sampleRate * 0.25; // Empêche de compter les doubles kicks (max 240 BPM)
             }
-            bpmEstimates.push(Math.round(60 * sampleRate / localBestLag));
         }
 
-        // --- 3. CALCUL DE LA MOYENNE (TRI DES ERREURS) ---
-        // On trie les résultats et on prend la valeur centrale (médiane) pour éviter les "bugs"
-        bpmEstimates.sort((a, b) => a - b);
-        let finalBpm = bpmEstimates[Math.floor(bpmEstimates.length / 2)];
+        // Calcul des intervalles entre les pics pour trouver le rythme dominant
+        let intervals = {};
+        for (let i = 1; i < peaks.length; i++) {
+            let interval = peaks[i] - peaks[i-1];
+            // On arrondit pour grouper les intervalles similaires
+            let rounded = Math.round(interval / 100) * 100;
+            intervals[rounded] = (intervals[rounded] || 0) + 1;
+        }
 
-        // Correction finale pour les genres spécifiques
-        if (finalBpm < 70) finalBpm *= 2; // Évite les demi-tempos
+        // On cherche l'intervalle le plus fréquent
+        let maxCount = 0;
+        let bestInterval = 0;
+        for (let int in intervals) {
+            if (intervals[int] > maxCount) {
+                maxCount = intervals[int];
+                bestInterval = int;
+            }
+        }
+
+        let finalBpm = Math.round(60 / (bestInterval / sampleRate));
+
+        // Sécurité pour les genres ultra-rapides ou lents
+        if (finalBpm < 70) finalBpm *= 2; 
+        if (finalBpm > 200) finalBpm = Math.round(finalBpm / 2);
 
         // Affichage
-        document.getElementById('res-name').innerText = file.name.split('.')[0].substring(0, 20);
+        document.getElementById('res-name').innerText = file.name.split('.')[0].substring(0, 18);
         document.getElementById('res-bpm').innerText = finalBpm;
         
-        // Diagnostic neuro
-        let waveType = "Alpha (Repos)";
-        if (finalBpm >= 100 && finalBpm < 140) waveType = "Bêta (Focus)";
-        if (finalBpm >= 140) waveType = "Gamma (Hyper-Activité)";
-        
+        let waveType = "Bêta (Focus)";
+        if (finalBpm < 110) waveType = "Alpha (Relax)";
+        if (finalBpm > 150) waveType = "Gamma (Intense)";
         document.getElementById('res-wave').innerText = waveType;
 
         screenAnalyzing.classList.add('hidden');
@@ -91,7 +83,7 @@ audioInput.addEventListener('change', async (e) => {
 
     } catch (err) {
         console.error(err);
-        alert("Fichier illisible ou trop lourd.");
+        alert("Erreur. Essayez un fichier plus court ou un autre format.");
         location.reload();
     }
 });
