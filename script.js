@@ -15,7 +15,7 @@ audioInput.addEventListener('change', async (e) => {
         const arrayBuffer = await file.arrayBuffer();
         const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
         
-        // --- BLOC 1 : BPM (Ta méthode validée) ---
+        // --- 1. BPM (Ta méthode fidèle) ---
         const data = audioBuffer.getChannelData(0);
         const sampleRate = audioBuffer.sampleRate;
         let peaks = [];
@@ -48,23 +48,17 @@ audioInput.addEventListener('change', async (e) => {
         if (bpm < 65) bpm *= 2;
         if (bpm > 200) bpm = Math.round(bpm / 2);
 
-        // --- BLOC 2 : HERTZ (Nouvelle brique fréquences) ---
-        // On utilise un AnalyserNode pour extraire les fréquences réelles
+        // --- 2. HERTZ (Scan fréquence dominante) ---
         const analyser = audioCtx.createAnalyser();
         analyser.fftSize = 2048;
         const bufferLength = analyser.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
-
         const source = audioCtx.createBufferSource();
         source.buffer = audioBuffer;
         source.connect(analyser);
-        // On ne branche pas à audioCtx.destination pour que ce soit silencieux
         source.start(0);
 
-        // On prend une mesure après un court délai (pour éviter le silence du début)
-        // Comme on est en async, on simule une lecture rapide
         analyser.getByteFrequencyData(dataArray);
-        
         let maxEnergy = 0;
         let freqIndex = 0;
         for(let i = 0; i < bufferLength; i++) {
@@ -74,14 +68,14 @@ audioInput.addEventListener('change', async (e) => {
             }
         }
         let finalHz = Math.round(freqIndex * audioCtx.sampleRate / analyser.fftSize);
-        if (finalHz < 20) finalHz = 55; // Valeur par défaut cohérente (basse)
+        if (finalHz < 20) finalHz = 52; 
 
-        // --- BLOC 3 : ONDES ---
+        // --- 3. ONDES ---
         let waveType = "Bêta";
         if (bpm < 115) waveType = "Alpha";
         if (bpm > 155) waveType = "Gamma";
 
-        // --- AFFICHAGE FINAL ---
+        // --- AFFICHAGE ---
         document.getElementById('res-name').innerText = file.name.substring(0, 18);
         document.getElementById('res-bpm').innerText = bpm;
         document.getElementById('res-hz').innerText = finalHz;
@@ -91,8 +85,9 @@ audioInput.addEventListener('change', async (e) => {
         screenResult.classList.remove('hidden');
 
     } catch (err) {
-        console.error(err);
-        alert("Erreur d'analyse");
+        alert("Erreur analyse");
         location.reload();
+    }
+});
     }
 });
