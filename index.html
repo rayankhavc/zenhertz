@@ -46,7 +46,7 @@
                 <div class="absolute inset-0 border-4 border-violet-600 rounded-full border-t-transparent animate-spin"></div>
             </div>
             <h2 class="text-3xl font-black text-gray-800 animate-pulse tracking-tighter">Scan Bioacoustique...</h2>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-6">Analyse multi-points</p>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-6">Analyse des données</p>
         </div>
 
         <!-- ÉCRAN RÉSULTATS -->
@@ -102,9 +102,12 @@
                 const arrayBuffer = await file.arrayBuffer();
                 const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
                 
-                // --- 1. BPM (Logique Validée) ---
+                // Extraction des données brutes
                 const data = audioBuffer.getChannelData(0);
                 const sampleRate = audioBuffer.sampleRate;
+                const duration = audioBuffer.duration;
+
+                // --- 1. BPM (Inchangé) ---
                 let peaks = [];
                 let threshold = 0.7; 
 
@@ -128,63 +131,47 @@
                 if (bpm > 0 && bpm < 85) bpm *= 2; 
                 if (bpm > 200) bpm = Math.round(bpm / 2);
 
-                // --- 2. HERTZ (Logique Stabilisée Multi-Points) ---
-                const fftSize = 4096;
-                const offlineCtx = new OfflineAudioContext(1, audioBuffer.length, sampleRate);
-                const source = offlineCtx.createBufferSource();
-                source.buffer = audioBuffer;
-
-                const analyser = offlineCtx.createAnalyser();
-                analyser.fftSize = fftSize;
-                source.connect(analyser);
-                analyser.connect(offlineCtx.destination);
-                source.start(0);
-
-                // On scanne 3 points clés du morceau pour une moyenne stable
-                const pointsToScan = [0.2, 0.5, 0.8]; 
-                let totalWeightedSum = 0;
-                let totalSumMagnitudes = 0;
-
-                await offlineCtx.startRendering();
-
-                const bufferLength = analyser.frequencyBinCount;
-                const dataArray = new Uint8Array(bufferLength);
-
-                pointsToScan.forEach(point => {
-                    // On simule une lecture à différents endroits
-                    analyser.getByteFrequencyData(dataArray);
-                    for (let i = 0; i < bufferLength; i++) {
-                        let frequency = i * sampleRate / fftSize;
-                        let magnitude = dataArray[i];
-                        totalWeightedSum += frequency * magnitude;
-                        totalSumMagnitudes += magnitude;
+                // --- 2. HERTZ (Algorithme Zero-Crossing Rate - 100% Stable) ---
+                let zeroCrossings = 0;
+                let isPositive = data[0] > 0;
+                
+                // On scanne chaque point de la musique du début à la fin
+                for (let i = 1; i < data.length; i++) {
+                    // On utilise un tout petit seuil (0.002) pour ignorer les bruits de fond invisibles
+                    if (isPositive && data[i] < -0.002) {
+                        isPositive = false;
+                    } else if (!isPositive && data[i] > 0.002) {
+                        isPositive = true;
+                        zeroCrossings++; // On compte chaque onde complète
                     }
-                });
-
-                let averageHz = totalSumMagnitudes === 0 ? 0 : Math.round(totalWeightedSum / totalSumMagnitudes);
-
-                // --- 3. AFFICHAGE FINAL ---
-                document.getElementById('res-name').innerText = file.name.substring(0, 18);
-                const resBpm = document.getElementById('res-bpm');
-                const resHz = document.getElementById('res-hz');
-                const resWave = document.getElementById('res-wave');
-
-                if (bpm === 0 || !isFinite(bpm) || peaks.length < 5) {
-                    resBpm.innerText = "0";
-                    resWave.innerText = "Stable";
-                } else {
-                    resBpm.innerText = bpm;
-                    resWave.innerText = bpm < 115 ? "Alpha" : (bpm > 155 ? "Gamma" : "Bêta");
                 }
+                
+                // La moyenne exacte est le nombre de cycles divisé par la durée de la musique
+                let averageHz = Math.round(zeroCrossings / duration);
 
-                // Correction pour les sons purs types test tones
-                resHz.innerText = averageHz === 0 ? "0" : averageHz;
+                // --- 3. AFFICHAGE ---
+                setTimeout(() => {
+                    document.getElementById('res-name').innerText = file.name.substring(0, 18);
+                    const resBpm = document.getElementById('res-bpm');
+                    const resHz = document.getElementById('res-hz');
+                    const resWave = document.getElementById('res-wave');
 
-                screenAnalyzing.classList.add('hidden');
-                screenResult.classList.remove('hidden');
+                    if (bpm === 0 || !isFinite(bpm) || peaks.length < 5) {
+                        resBpm.innerText = "0";
+                        resWave.innerText = "Stable";
+                    } else {
+                        resBpm.innerText = bpm;
+                        resWave.innerText = bpm < 115 ? "Alpha" : (bpm > 155 ? "Gamma" : "Bêta");
+                    }
+
+                    resHz.innerText = averageHz === 0 ? "0" : averageHz;
+
+                    screenAnalyzing.classList.add('hidden');
+                    screenResult.classList.remove('hidden');
+                }, 500); // Petit délai de 500ms juste pour laisser l'animation de chargement tourner
 
             } catch (err) {
-                alert("Erreur de lecture");
+                alert("Erreur de lecture du fichier");
                 location.reload();
             }
         });
