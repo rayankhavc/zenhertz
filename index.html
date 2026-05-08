@@ -1,67 +1,161 @@
-<div class="min-h-screen flex items-center justify-center p-6 bg-[#f0f0f5]">
-    
-    <!-- ÉCRAN D'ACCUEIL : TON DESIGN D'ORIGINE -->
-    <div id="screen-ready" class="max-w-lg w-full bg-white/70 backdrop-blur-2xl rounded-[50px] p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white">
-        <h1 class="text-6xl font-black mb-4 tracking-tighter bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
-            ZenHertz
-        </h1>
-        <p class="text-gray-500 font-semibold mb-10 leading-relaxed px-4">
-            Découvrez l'impact de votre musique sur votre <span class="text-violet-600">système nerveux</span> et vos <span class="text-fuchsia-500">ondes cérébrales</span>.
-        </p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenHertz - Bioacoustic Scanner</title>
+    <!-- CE LIEN EST OBLIGATOIRE POUR LE DESIGN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-[#f0f0f5] font-sans">
 
-        <label class="cursor-pointer group block">
-            <div class="bg-black text-white p-10 rounded-[45px] border-2 border-transparent group-hover:border-violet-500 transition-all duration-500 shadow-2xl scale-100 group-hover:scale-[1.02]">
-                <div class="bg-white/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span class="text-3xl">＋</span>
+    <div class="min-h-screen flex items-center justify-center p-6">
+        
+        <!-- ÉCRAN D'ACCUEIL -->
+        <div id="screen-ready" class="max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl">
+            <h1 class="text-6xl font-black mb-4 tracking-tighter bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
+                ZenHertz
+            </h1>
+            <p class="text-gray-500 font-semibold mb-10 leading-relaxed px-4">
+                Découvrez l'impact de votre musique sur votre <span class="text-violet-600">système nerveux</span> et vos <span class="text-fuchsia-500">ondes cérébrales</span>.
+            </p>
+
+            <label class="cursor-pointer group block">
+                <!-- LE BOUTON NOIR EST ICI -->
+                <div class="bg-black text-white p-10 rounded-[45px] border-2 border-transparent group-hover:border-violet-500 transition-all duration-500 shadow-2xl scale-100 group-hover:scale-[1.02]">
+                    <div class="bg-white/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-3xl font-light">＋</span>
+                    </div>
+                    <p class="font-bold text-xl tracking-tight">Analyser un morceau</p>
+                    <p class="text-[10px] opacity-40 uppercase tracking-[0.3em] mt-2 font-black">MP3, WAV, AAC</p>
                 </div>
-                <p class="font-bold text-xl">Analyser un morceau</p>
-                <p class="text-[10px] opacity-40 uppercase tracking-[0.3em] mt-2">MP3, WAV, AAC</p>
+                <input type="file" id="audio-input" class="hidden" accept="audio/*">
+            </label>
+        </div>
+
+        <!-- ÉCRAN ANALYSE -->
+        <div id="screen-analyzing" class="hidden max-w-lg w-full glass rounded-[50px] p-16 text-center shadow-2xl">
+            <div class="relative w-24 h-24 mx-auto mb-10">
+                <div class="absolute inset-0 border-4 border-violet-100 rounded-full"></div>
+                <div class="absolute inset-0 border-4 border-violet-600 rounded-full border-t-transparent animate-spin"></div>
             </div>
-            <input type="file" id="audio-input" class="hidden" accept="audio/*">
-        </label>
+            <h2 class="text-3xl font-black text-gray-800 animate-pulse tracking-tighter">Scan Bioacoustique...</h2>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-6">Fréquences & Hertz</p>
+        </div>
+
+        <!-- ÉCRAN RÉSULTATS -->
+        <div id="screen-result" class="hidden max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl">
+            <div class="mb-10">
+                <h2 id="res-name" class="text-2xl font-black text-gray-900 tracking-tight">Analyse terminée</h2>
+                <div class="h-1.5 w-16 bg-violet-600 mx-auto mt-3 rounded-full"></div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-3 bg-white/50 border border-white p-8 rounded-[40px] mb-10">
+                <div class="flex flex-col justify-center">
+                    <p id="res-bpm" class="text-5xl font-black text-gray-900 leading-none tracking-tighter">0</p>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-4">BPM</p>
+                </div>
+                <div class="border-x border-gray-100 flex flex-col justify-center">
+                    <p id="res-hz" class="text-5xl font-black text-violet-600 leading-none tracking-tighter">0</p>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-4">Hertz</p>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <p id="res-wave" class="text-2xl font-black text-gray-900 leading-none uppercase tracking-tighter">--</p>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-6">Ondes</p>
+                </div>
+            </div>
+
+            <!-- BOUTON NOIR RÉSULTAT -->
+            <div class="bg-black p-8 rounded-[45px] text-white flex justify-between items-center mb-8 shadow-2xl">
+                <div class="text-left">
+                    <p class="font-bold text-lg leading-tight">Bilan Complet</p>
+                    <p class="text-[10px] opacity-40 uppercase tracking-widest font-bold">Bio-impact cellulaire</p>
+                </div>
+                <div class="bg-violet-600 px-6 py-3 rounded-full text-xs font-black shadow-lg">2.99€</div>
+            </div>
+            
+            <button onclick="location.reload()" class="text-gray-400 text-[11px] font-black uppercase tracking-[0.3em] hover:text-violet-600 transition-colors">Réinitialiser</button>
+        </div>
+
     </div>
 
-    <!-- ÉCRAN ANALYSE : CHARGEMENT FLUIDE -->
-    <div id="screen-analyzing" class="hidden max-w-lg w-full bg-white/70 backdrop-blur-2xl rounded-[50px] p-16 text-center shadow-2xl">
-        <div class="relative w-24 h-24 mx-auto mb-10">
-            <div class="absolute inset-0 border-4 border-violet-100 rounded-full"></div>
-            <div class="absolute inset-0 border-4 border-violet-600 rounded-full border-t-transparent animate-spin"></div>
-        </div>
-        <h2 class="text-3xl font-black text-gray-800 animate-pulse">Scan Bioacoustique...</h2>
-        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-6">Analyse des fréquences HZ</p>
-    </div>
+    <script>
+        const audioInput = document.getElementById('audio-input');
+        const screenReady = document.getElementById('screen-ready');
+        const screenAnalyzing = document.getElementById('screen-analyzing');
+        const screenResult = document.getElementById('screen-result');
 
-    <!-- ÉCRAN RÉSULTATS : TA NOUVELLE GRILLE -->
-    <div id="screen-result" class="hidden max-w-lg w-full bg-white/70 backdrop-blur-2xl rounded-[50px] p-10 text-center shadow-2xl">
-        <div class="mb-10">
-            <h2 id="res-name" class="text-2xl font-black text-gray-900 tracking-tight">Analyse terminée</h2>
-            <div class="h-1.5 w-16 bg-violet-600 mx-auto mt-3 rounded-full"></div>
-        </div>
-        
-        <div class="grid grid-cols-3 gap-3 bg-white/80 border border-white p-8 rounded-[40px] mb-10 shadow-inner">
-            <div>
-                <p id="res-bpm" class="text-5xl font-black text-gray-900 leading-none">0</p>
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-4">BPM</p>
-            </div>
-            <div class="border-x border-gray-100">
-                <p id="res-hz" class="text-5xl font-black text-violet-600 leading-none">0</p>
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-4">Hertz</p>
-            </div>
-            <div>
-                <p id="res-wave" class="text-2xl font-black text-gray-900 leading-none pt-2 uppercase">--</p>
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-6">Ondes</p>
-            </div>
-        </div>
+        audioInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-        <div class="bg-black p-8 rounded-[45px] text-white flex justify-between items-center mb-8 shadow-2xl">
-            <div class="text-left">
-                <p class="font-bold text-lg">Bilan Complet</p>
-                <p class="text-[10px] opacity-40 uppercase tracking-widest">Bio-impact cellulaire</p>
-            </div>
-            <div class="bg-violet-600 px-6 py-3 rounded-full text-xs font-black shadow-lg">2.99€</div>
-        </div>
-        
-        <button onclick="location.reload()" class="text-gray-400 text-[11px] font-black uppercase tracking-[0.3em] hover:text-black transition-colors">Retour</button>
-    </div>
+            screenReady.classList.add('hidden');
+            screenAnalyzing.classList.remove('hidden');
 
-</div>
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const arrayBuffer = await file.arrayBuffer();
+                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+                
+                // 1. BPM
+                const data = audioBuffer.getChannelData(0);
+                const sampleRate = audioBuffer.sampleRate;
+                let peaks = [];
+                for (let i = 0; i < Math.min(data.length, sampleRate * 40); i++) {
+                    if (data[i] > 0.7) {
+                        peaks.push(i);
+                        i += sampleRate * 0.25; 
+                    }
+                }
+                let intervals = {};
+                for (let i = 1; i < peaks.length; i++) {
+                    let interval = Math.round((peaks[i] - peaks[i-1]) / 100) * 100;
+                    intervals[interval] = (intervals[interval] || 0) + 1;
+                }
+                let max = 0, best = 0;
+                for (let int in intervals) { if (intervals[int] > max) { max = intervals[int]; best = int; } }
+                let bpm = Math.round(60 / (best / sampleRate)) || 128;
+                if (bpm < 65) bpm *= 2; if (bpm > 200) bpm = Math.round(bpm / 2);
+
+                // 2. HERTZ
+                const analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 2048;
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                const source = audioCtx.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(analyser);
+                source.start(0);
+
+                setTimeout(() => {
+                    analyser.getByteFrequencyData(dataArray);
+                    let maxE = 0, fIndex = 0;
+                    for(let i = 0; i < bufferLength; i++) { if(dataArray[i] > maxE) { maxE = dataArray[i]; fIndex = i; } }
+                    let hz = Math.round(fIndex * sampleRate / analyser.fftSize);
+                    
+                    // 3. AFFICHAGE
+                    document.getElementById('res-name').innerText = file.name.substring(0, 18);
+                    document.getElementById('res-bpm').innerText = bpm;
+                    document.getElementById('res-hz').innerText = hz < 20 ? 55 : hz;
+                    document.getElementById('res-wave').innerText = bpm < 115 ? "Alpha" : (bpm > 155 ? "Gamma" : "Bêta");
+
+                    screenAnalyzing.classList.add('hidden');
+                    screenResult.classList.remove('hidden');
+                }, 150);
+
+            } catch (err) {
+                alert("Erreur");
+                location.reload();
+            }
+        });
+    </script>
+</body>
+</html>
