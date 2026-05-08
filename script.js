@@ -15,7 +15,7 @@ audioInput.addEventListener('change', async (e) => {
         const arrayBuffer = await file.arrayBuffer();
         const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
         
-        // --- 1. BPM (Ta méthode fidèle) ---
+        // --- 1. BPM (Méthode Intervalles Précise) ---
         const data = audioBuffer.getChannelData(0);
         const sampleRate = audioBuffer.sampleRate;
         let peaks = [];
@@ -35,8 +35,7 @@ audioInput.addEventListener('change', async (e) => {
             intervals[rounded] = (intervals[rounded] || 0) + 1;
         }
 
-        let maxCount = 0;
-        let bestInterval = 0;
+        let maxCount = 0, bestInterval = 0;
         for (let int in intervals) {
             if (intervals[int] > maxCount) {
                 maxCount = intervals[int];
@@ -44,38 +43,40 @@ audioInput.addEventListener('change', async (e) => {
             }
         }
 
-        let bpm = Math.round(60 / (bestInterval / sampleRate)) || 120;
+        let bpm = Math.round(60 / (bestInterval / sampleRate)) || 128;
         if (bpm < 65) bpm *= 2;
         if (bpm > 200) bpm = Math.round(bpm / 2);
 
-        // --- 2. HERTZ (Scan fréquence dominante) ---
-        const analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 2048;
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-        const source = audioCtx.createBufferSource();
+        // --- 2. HERTZ (Analyse réelle via OfflineContext) ---
+        const offlineCtx = new OfflineAudioContext(1, audioBuffer.length, sampleRate);
+        const source = offlineCtx.createBufferSource();
         source.buffer = audioBuffer;
+        const analyser = offlineCtx.createAnalyser();
+        analyser.fftSize = 2048;
         source.connect(analyser);
+        analyser.connect(offlineCtx.destination);
         source.start(0);
+        await offlineCtx.startRendering();
 
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteFrequencyData(dataArray);
-        let maxEnergy = 0;
-        let freqIndex = 0;
-        for(let i = 0; i < bufferLength; i++) {
+        
+        let maxEnergy = 0, freqIndex = 0;
+        for(let i = 0; i < dataArray.length; i++) {
             if(dataArray[i] > maxEnergy) {
                 maxEnergy = dataArray[i];
                 freqIndex = i;
             }
         }
-        let finalHz = Math.round(freqIndex * audioCtx.sampleRate / analyser.fftSize);
-        if (finalHz < 20) finalHz = 52; 
+        let finalHz = Math.round(freqIndex * sampleRate / analyser.fftSize);
+        if (finalHz < 25) finalHz = 55; // Sécurité pour les kicks profonds
 
         // --- 3. ONDES ---
         let waveType = "Bêta";
         if (bpm < 115) waveType = "Alpha";
         if (bpm > 155) waveType = "Gamma";
 
-        // --- AFFICHAGE ---
+        // --- INJECTION ---
         document.getElementById('res-name').innerText = file.name.substring(0, 18);
         document.getElementById('res-bpm').innerText = bpm;
         document.getElementById('res-hz').innerText = finalHz;
@@ -85,9 +86,7 @@ audioInput.addEventListener('change', async (e) => {
         screenResult.classList.remove('hidden');
 
     } catch (err) {
-        alert("Erreur analyse");
+        alert("Fichier non supporté");
         location.reload();
-    }
-});
     }
 });
