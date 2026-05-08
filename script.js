@@ -15,64 +15,83 @@ audioInput.addEventListener('change', async (e) => {
         const arrayBuffer = await file.arrayBuffer();
         const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
         
-        // --- AMÉLIORATION : FILTRAGE DES BASSES ---
+        // --- 1. PRÉ-TRAITEMENT (FILTRE PASSE-BAS) ---
+        // On isole les basses pour ne pas être perturbé par les cymbales/voix
         const offlineCtx = new OfflineAudioContext(1, audioBuffer.length, audioBuffer.sampleRate);
         const source = offlineCtx.createBufferSource();
         source.buffer = audioBuffer;
-
-        // On crée un filtre qui coupe tout au-dessus de 150Hz (on ne garde que le kick)
+        
         const filter = offlineCtx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.value = 150;
+        filter.frequency.value = 150; 
 
         source.connect(filter);
         filter.connect(offlineCtx.destination);
         source.start(0);
-
-        // On calcule le rendu filtré
         const filteredBuffer = await offlineCtx.startRendering();
         const data = filteredBuffer.getChannelData(0);
 
-        // --- DÉTECTION DES PICS ---
-        let peaks = [];
+        // --- 2. ANALYSE PAR AUTOCORRÉLATION ---
+        // On définit une plage de recherche réaliste (60 à 200 BPM)
         const sampleRate = filteredBuffer.sampleRate;
+        const minBpm = 60;
+        const maxBpm = 200;
+        const minInterval = Math.floor(sampleRate * 60 / maxBpm);
+        const maxInterval = Math.floor(sampleRate * 60 / minBpm);
+
+        let bestLag = 0;
+        let maxCorrelation = -Infinity;
+
+        // On échantillonne plusieurs parties du morceau pour plus de précision
+        // On prend 10 fenêtres de 2 secondes à différents endroits
+        const windowSize = sampleRate * 2; 
+        const stepSize = Math.floor((data.length - windowSize) / 10);
         
-        // On cherche le volume maximum dans le morceau pour ajuster le seuil
-        let maxVal = 0;
-        for (let i = 0; i < data.length; i += 1000) {
-            if (data[i] > maxVal) maxVal = data[i];
-        }
+        let bpmEstimates = [];
 
-        const threshold = maxVal * 0.8; // On ne prend que les 20% des sons les plus forts
+        for (let offset = 0; offset < data.length - windowSize; offset += stepSize) {
+            let localMaxCorr = -Infinity;
+            let localBestLag = 0;
 
-        for (let i = 0; i < data.length; i++) {
-            if (data[i] > threshold) {
-                peaks.push(i);
-                // On saute 0.25 seconde pour éviter de recompter le même kick
-                i += sampleRate * 0.25; 
+            for (let lag = minInterval; lag <= maxInterval; lag++) {
+                let correlation = 0;
+                for (let i = 0; i < windowSize; i += 10) { // On saute des pas pour la performance
+                    correlation += data[offset + i] * data[offset + i + lag];
+                }
+
+                if (correlation > localMaxCorr) {
+                    localMaxCorr = correlation;
+                    localBestLag = lag;
+                }
             }
+            bpmEstimates.push(Math.round(60 * sampleRate / localBestLag));
         }
 
-        const duration = filteredBuffer.duration;
-        let bpm = Math.round((peaks.length / duration) * 60);
+        // --- 3. CALCUL DE LA MOYENNE (TRI DES ERREURS) ---
+        // On trie les résultats et on prend la valeur centrale (médiane) pour éviter les "bugs"
+        bpmEstimates.sort((a, b) => a - b);
+        let finalBpm = bpmEstimates[Math.floor(bpmEstimates.length / 2)];
 
-        // Ajustement intelligent pour les musiques rapides (Hardtek / Hardstyle)
-        // Si le BPM trouvé est très bas (genre 75), c'est qu'on a compté un coup sur deux
-        if (bpm < 90 && bpm > 60) bpm = bpm * 2; 
-        // Si c'est trop haut (genre 300), c'est qu'on a compté les rebonds
-        if (bpm > 220) bpm = Math.round(bpm / 2);
+        // Correction finale pour les genres spécifiques
+        if (finalBpm < 70) finalBpm *= 2; // Évite les demi-tempos
 
         // Affichage
-        document.getElementById('res-name').innerText = file.name.substring(0, 20);
-        document.getElementById('res-bpm').innerText = bpm;
-        document.getElementById('res-wave').innerText = bpm < 125 ? "Alpha (Détente)" : "Bêta (Énergie)";
+        document.getElementById('res-name').innerText = file.name.split('.')[0].substring(0, 20);
+        document.getElementById('res-bpm').innerText = finalBpm;
+        
+        // Diagnostic neuro
+        let waveType = "Alpha (Repos)";
+        if (finalBpm >= 100 && finalBpm < 140) waveType = "Bêta (Focus)";
+        if (finalBpm >= 140) waveType = "Gamma (Hyper-Activité)";
+        
+        document.getElementById('res-wave').innerText = waveType;
 
         screenAnalyzing.classList.add('hidden');
         screenResult.classList.remove('hidden');
 
     } catch (err) {
         console.error(err);
-        alert("Erreur analyse. Vérifie le format du fichier.");
+        alert("Fichier illisible ou trop lourd.");
         location.reload();
     }
 });
