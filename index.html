@@ -1,68 +1,67 @@
-<!-- CONTAINER PRINCIPAL -->
-<div class="min-h-screen flex items-center justify-center p-6">
+<div class="min-h-screen flex items-center justify-center p-6 bg-[#f0f0f5]">
     
-    <!-- ÉCRAN DE DÉPART (Ta page que tu aimes) -->
-    <div id="screen-ready" class="max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl">
-        <h1 class="text-5xl font-black mb-4 tracking-tighter bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
+    <!-- ÉCRAN D'ACCUEIL : TON DESIGN D'ORIGINE -->
+    <div id="screen-ready" class="max-w-lg w-full bg-white/70 backdrop-blur-2xl rounded-[50px] p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white">
+        <h1 class="text-6xl font-black mb-4 tracking-tighter bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
             ZenHertz
         </h1>
-        <p class="text-gray-500 font-medium mb-10 leading-relaxed">
-            Découvrez l'impact invisible de votre musique sur votre <span class="text-violet-600">système nerveux</span> et vos <span class="text-fuchsia-500">ondes cérébrales</span>.
+        <p class="text-gray-500 font-semibold mb-10 leading-relaxed px-4">
+            Découvrez l'impact de votre musique sur votre <span class="text-violet-600">système nerveux</span> et vos <span class="text-fuchsia-500">ondes cérébrales</span>.
         </p>
 
-        <label class="cursor-pointer group">
-            <div class="bg-black text-white p-8 rounded-[40px] border-2 border-transparent group-hover:border-violet-500 transition-all duration-500">
-                <div class="bg-white/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span class="text-2xl">＋</span>
+        <label class="cursor-pointer group block">
+            <div class="bg-black text-white p-10 rounded-[45px] border-2 border-transparent group-hover:border-violet-500 transition-all duration-500 shadow-2xl scale-100 group-hover:scale-[1.02]">
+                <div class="bg-white/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <span class="text-3xl">＋</span>
                 </div>
-                <p class="font-bold text-lg">Analyser un morceau</p>
-                <p class="text-[10px] opacity-40 uppercase tracking-widest mt-1">MP3, WAV, AAC</p>
+                <p class="font-bold text-xl">Analyser un morceau</p>
+                <p class="text-[10px] opacity-40 uppercase tracking-[0.3em] mt-2">MP3, WAV, AAC</p>
             </div>
             <input type="file" id="audio-input" class="hidden" accept="audio/*">
         </label>
     </div>
 
-    <!-- ÉCRAN ANALYSE (Loading) -->
-    <div id="screen-analyzing" class="hidden max-w-lg w-full glass rounded-[50px] p-16 text-center shadow-2xl">
-        <div class="relative w-24 h-24 mx-auto mb-8">
+    <!-- ÉCRAN ANALYSE : CHARGEMENT FLUIDE -->
+    <div id="screen-analyzing" class="hidden max-w-lg w-full bg-white/70 backdrop-blur-2xl rounded-[50px] p-16 text-center shadow-2xl">
+        <div class="relative w-24 h-24 mx-auto mb-10">
             <div class="absolute inset-0 border-4 border-violet-100 rounded-full"></div>
             <div class="absolute inset-0 border-4 border-violet-600 rounded-full border-t-transparent animate-spin"></div>
         </div>
-        <h2 class="text-2xl font-black text-gray-800 animate-pulse">Scan en cours...</h2>
-        <p id="loading-step" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-4">Extraction des fréquences</p>
+        <h2 class="text-3xl font-black text-gray-800 animate-pulse">Scan Bioacoustique...</h2>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-6">Analyse des fréquences HZ</p>
     </div>
 
-    <!-- ÉCRAN RÉSULTAT (Le nouveau moteur avec ton style) -->
-    <div id="screen-result" class="hidden max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl">
-        <div class="mb-8">
-            <h2 id="res-name" class="text-xl font-bold text-gray-800 tracking-tight">Analyse terminée</h2>
-            <div class="h-1 w-12 bg-violet-600 mx-auto mt-2 rounded-full"></div>
+    <!-- ÉCRAN RÉSULTATS : TA NOUVELLE GRILLE -->
+    <div id="screen-result" class="hidden max-w-lg w-full bg-white/70 backdrop-blur-2xl rounded-[50px] p-10 text-center shadow-2xl">
+        <div class="mb-10">
+            <h2 id="res-name" class="text-2xl font-black text-gray-900 tracking-tight">Analyse terminée</h2>
+            <div class="h-1.5 w-16 bg-violet-600 mx-auto mt-3 rounded-full"></div>
         </div>
         
-        <div class="grid grid-cols-3 gap-2 bg-white/50 border border-white p-6 rounded-[35px] mb-8 shadow-sm">
-            <div class="text-center">
-                <p id="res-bpm" class="text-4xl font-black text-gray-900 leading-none">0</p>
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-2">BPM</p>
+        <div class="grid grid-cols-3 gap-3 bg-white/80 border border-white p-8 rounded-[40px] mb-10 shadow-inner">
+            <div>
+                <p id="res-bpm" class="text-5xl font-black text-gray-900 leading-none">0</p>
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-4">BPM</p>
             </div>
-            <div class="text-center border-x border-gray-100">
-                <p id="res-hz" class="text-4xl font-black text-violet-600 leading-none">0</p>
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-2">Hertz</p>
+            <div class="border-x border-gray-100">
+                <p id="res-hz" class="text-5xl font-black text-violet-600 leading-none">0</p>
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-4">Hertz</p>
             </div>
-            <div class="text-center">
-                <p id="res-wave" class="text-xl font-black text-gray-900 leading-none pt-2 uppercase">--</p>
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-3">Ondes</p>
+            <div>
+                <p id="res-wave" class="text-2xl font-black text-gray-900 leading-none pt-2 uppercase">--</p>
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-6">Ondes</p>
             </div>
         </div>
 
-        <div class="bg-black p-6 rounded-[35px] text-white flex justify-between items-center mb-6">
+        <div class="bg-black p-8 rounded-[45px] text-white flex justify-between items-center mb-8 shadow-2xl">
             <div class="text-left">
-                <p class="font-bold text-sm">Bilan Bioacoustique</p>
-                <p class="text-[9px] opacity-50 uppercase font-bold tracking-tighter">Impact cellulaire complet</p>
+                <p class="font-bold text-lg">Bilan Complet</p>
+                <p class="text-[10px] opacity-40 uppercase tracking-widest">Bio-impact cellulaire</p>
             </div>
-            <div class="bg-violet-600 px-5 py-2 rounded-full text-[11px] font-black shadow-lg">2.99€</div>
+            <div class="bg-violet-600 px-6 py-3 rounded-full text-xs font-black shadow-lg">2.99€</div>
         </div>
         
-        <button onclick="location.reload()" class="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em]">Retour</button>
+        <button onclick="location.reload()" class="text-gray-400 text-[11px] font-black uppercase tracking-[0.3em] hover:text-black transition-colors">Retour</button>
     </div>
 
 </div>
