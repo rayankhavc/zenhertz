@@ -15,45 +15,26 @@ audioInput.addEventListener('change', async (e) => {
         const arrayBuffer = await file.arrayBuffer();
         const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
         
-        // On ne garde que les 40 premières secondes pour un calcul rapide et précis
-        const offlineCtx = new OfflineAudioContext(1, audioBuffer.sampleRate * 40, audioBuffer.sampleRate);
-        const source = offlineCtx.createBufferSource();
-        source.buffer = audioBuffer;
-
-        const filter = offlineCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.value = 150;
-
-        source.connect(filter);
-        filter.connect(offlineCtx.destination);
-        source.start(0);
-
-        const filteredBuffer = await offlineCtx.startRendering();
-        const data = filteredBuffer.getChannelData(0);
-
-        // Algorithme de détection de tempo (Energy Peak detection raffiné)
-        const sampleRate = filteredBuffer.sampleRate;
+        // --- 1. CALCUL DU BPM (Ta méthode rapide) ---
+        const data = audioBuffer.getChannelData(0);
+        const sampleRate = audioBuffer.sampleRate;
         let peaks = [];
-        let threshold = 0.7; // Seuil initial
-        
-        // On cherche les pics sur toute la durée traitée
-        for (let i = 0; i < data.length; i++) {
+        let threshold = 0.7; 
+
+        for (let i = 0; i < audioBuffer.sampleRate * 40; i++) {
             if (data[i] > threshold) {
                 peaks.push(i);
-                i += sampleRate * 0.25; // Empêche de compter les doubles kicks (max 240 BPM)
+                i += sampleRate * 0.25; 
             }
         }
 
-        // Calcul des intervalles entre les pics pour trouver le rythme dominant
         let intervals = {};
         for (let i = 1; i < peaks.length; i++) {
             let interval = peaks[i] - peaks[i-1];
-            // On arrondit pour grouper les intervalles similaires
             let rounded = Math.round(interval / 100) * 100;
             intervals[rounded] = (intervals[rounded] || 0) + 1;
         }
 
-        // On cherche l'intervalle le plus fréquent
         let maxCount = 0;
         let bestInterval = 0;
         for (let int in intervals) {
@@ -63,27 +44,62 @@ audioInput.addEventListener('change', async (e) => {
             }
         }
 
-        let finalBpm = Math.round(60 / (bestInterval / sampleRate));
+        let bpm = Math.round(60 / (bestInterval / sampleRate));
+        if (bpm < 65) bpm *= 2;
+        if (bpm > 200) bpm = Math.round(bpm / 2);
 
-        // Sécurité pour les genres ultra-rapides ou lents
-        if (finalBpm < 70) finalBpm *= 2; 
-        if (finalBpm > 200) finalBpm = Math.round(finalBpm / 2);
+        // --- 2. CALCUL DES HERTZ (Analyse Fréquentielle) ---
+        // On utilise l'Analyseur natif pour extraire les fréquences dominantes
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 4096; // Précision du scan
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
 
-        // Affichage
-        document.getElementById('res-name').innerText = file.name.split('.')[0].substring(0, 18);
-        document.getElementById('res-bpm').innerText = finalBpm;
+        // On crée un petit morceau de son pour l'analyseur
+        const source = audioCtx.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(analyser);
         
-        let waveType = "Bêta (Focus)";
-        if (finalBpm < 110) waveType = "Alpha (Relax)";
-        if (finalBpm > 150) waveType = "Gamma (Intense)";
+        // On scanne les fréquences à 3 moments clés (début, milieu, fin de l'échantillon)
+        let totalHz = 0;
+        const checkPoints = [0.1, 0.5, 0.8]; 
+        
+        checkPoints.forEach(point => {
+            analyser.getByteFrequencyData(dataArray);
+            let maxEnergy = 0;
+            let freqIndex = 0;
+            
+            for(let i = 0; i < bufferLength; i++) {
+                if(dataArray[i] > maxEnergy) {
+                    maxEnergy = dataArray[i];
+                    freqIndex = i;
+                }
+            }
+            // Conversion de l'index en Fréquence réelle (Hz)
+            totalHz += freqIndex * audioCtx.sampleRate / analyser.fftSize;
+        });
+
+        const averageHz = Math.round(totalHz / checkPoints.length);
+
+        // --- 3. AFFICHAGE ---
+        document.getElementById('res-name').innerText = file.name.substring(0, 18);
+        document.getElementById('res-bpm').innerText = bpm;
+        
+        // On affiche les Hertz (Ajoute un élément avec id="res-hz" dans ton HTML)
+        const hzElement = document.getElementById('res-hz');
+        if(hzElement) hzElement.innerText = averageHz + " Hz";
+
+        // Déduction des Ondes
+        let waveType = "Bêta";
+        if (bpm < 115) waveType = "Alpha";
+        if (bpm > 155) waveType = "Gamma";
         document.getElementById('res-wave').innerText = waveType;
 
         screenAnalyzing.classList.add('hidden');
         screenResult.classList.remove('hidden');
 
     } catch (err) {
-        console.error(err);
-        alert("Erreur. Essayez un fichier plus court ou un autre format.");
+        alert("Erreur analyse");
         location.reload();
     }
 });
