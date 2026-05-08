@@ -1,28 +1,23 @@
 <!-- ÉCRAN RÉSULTAT -->
 <div id="screen-result" class="hidden max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl">
     
-    <!-- En-tête : Nom du fichier -->
     <div class="mb-8">
         <h2 id="res-name" class="text-xl font-bold text-gray-800 tracking-tight">Analyse terminée</h2>
         <div class="h-1 w-12 bg-violet-600 mx-auto mt-2 rounded-full"></div>
     </div>
     
-    <!-- Grille des indicateurs -->
+    <!-- Grille des indicateurs (BPM | HERTZ | ONDES) -->
     <div class="grid grid-cols-3 gap-2 bg-white/50 border border-white p-6 rounded-[35px] mb-8 shadow-sm">
-        
-        <!-- Colonne 1 : BPM -->
         <div class="text-center">
             <p id="res-bpm" class="text-4xl font-black text-gray-900 leading-none">0</p>
             <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-2">BPM</p>
         </div>
         
-        <!-- Colonne 2 : HERTZ (Milieu avec barres de séparation) -->
         <div class="text-center border-x border-gray-100">
             <p id="res-hz" class="text-4xl font-black text-violet-600 leading-none">0</p>
             <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-2">Hertz</p>
         </div>
 
-        <!-- Colonne 3 : ONDES -->
         <div class="text-center">
             <p id="res-wave" class="text-xl font-black text-gray-900 leading-none pt-2 uppercase">Alpha</p>
             <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-3">Ondes</p>
@@ -38,7 +33,6 @@
         <div class="bg-violet-600 px-5 py-2 rounded-full text-[11px] font-black shadow-lg">2.99€</div>
     </div>
     
-    <!-- Relancer -->
     <button onclick="location.reload()" class="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] hover:text-violet-600 transition-colors">
         Analyser un autre son
     </button>
