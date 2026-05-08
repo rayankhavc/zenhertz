@@ -46,7 +46,7 @@
                 <div class="absolute inset-0 border-4 border-violet-600 rounded-full border-t-transparent animate-spin"></div>
             </div>
             <h2 class="text-3xl font-black text-gray-800 animate-pulse tracking-tighter">Scan Bioacoustique...</h2>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-6">Analyse des données</p>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-6">Analyse adaptative</p>
         </div>
 
         <!-- ÉCRAN RÉSULTATS -->
@@ -102,17 +102,24 @@
                 const arrayBuffer = await file.arrayBuffer();
                 const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
                 
-                // Extraction des données brutes
                 const data = audioBuffer.getChannelData(0);
                 const sampleRate = audioBuffer.sampleRate;
                 const duration = audioBuffer.duration;
 
-                // --- 1. BPM (Inchangé) ---
-                let peaks = [];
-                let threshold = 0.7; 
+                // --- 1. BPM AVEC SEUIL ADAPTATIF ---
+                let maxVolume = 0;
+                const scanLength = Math.min(data.length, sampleRate * 40);
+                
+                // On cherche d'abord le volume max pour calibrer
+                for (let i = 0; i < scanLength; i++) {
+                    if (Math.abs(data[i]) > maxVolume) maxVolume = Math.abs(data[i]);
+                }
 
-                for (let i = 0; i < Math.min(data.length, sampleRate * 40); i++) {
-                    if (data[i] > threshold) {
+                let peaks = [];
+                let adaptiveThreshold = maxVolume * 0.85; // Seuil dynamique basé sur le son réel
+
+                for (let i = 0; i < scanLength; i++) {
+                    if (data[i] > adaptiveThreshold) {
                         peaks.push(i);
                         i += sampleRate * 0.25; 
                     }
@@ -131,22 +138,17 @@
                 if (bpm > 0 && bpm < 85) bpm *= 2; 
                 if (bpm > 200) bpm = Math.round(bpm / 2);
 
-                // --- 2. HERTZ (Algorithme Zero-Crossing Rate - 100% Stable) ---
+                // --- 2. HERTZ (Zero-Crossing Rate) ---
                 let zeroCrossings = 0;
                 let isPositive = data[0] > 0;
-                
-                // On scanne chaque point de la musique du début à la fin
                 for (let i = 1; i < data.length; i++) {
-                    // On utilise un tout petit seuil (0.002) pour ignorer les bruits de fond invisibles
                     if (isPositive && data[i] < -0.002) {
                         isPositive = false;
                     } else if (!isPositive && data[i] > 0.002) {
                         isPositive = true;
-                        zeroCrossings++; // On compte chaque onde complète
+                        zeroCrossings++;
                     }
                 }
-                
-                // La moyenne exacte est le nombre de cycles divisé par la durée de la musique
                 let averageHz = Math.round(zeroCrossings / duration);
 
                 // --- 3. AFFICHAGE ---
@@ -168,10 +170,10 @@
 
                     screenAnalyzing.classList.add('hidden');
                     screenResult.classList.remove('hidden');
-                }, 500); // Petit délai de 500ms juste pour laisser l'animation de chargement tourner
+                }, 500);
 
             } catch (err) {
-                alert("Erreur de lecture du fichier");
+                alert("Erreur de lecture");
                 location.reload();
             }
         });
