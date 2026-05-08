@@ -3,27 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZenHertz — Bioacoustique</title>
-    
-    <!-- Polices et Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Sora:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Bibliothèques Externes -->
+    <title>ZenHertz — Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/essentia.js@0.1.3/dist/essentia-wasm.web.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/essentia.js@0.1.3/dist/essentia.js-model.js"></script>
-    
-    <!-- React & Babel (pour lire le JS sur GitHub Pages) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #FDFCFB; }
+        .glass { background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+        .hidden { display: none; }
+    </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- On lie le fichier JS ici -->
-    <script type="text/babel" src="script.js"></script>
+    <!-- ÉCRAN D'ACCUEIL -->
+    <div id="screen-ready" class="max-w-md w-full text-center space-y-8">
+        <h1 class="text-6xl font-black tracking-tighter">Zen<span class="text-violet-600">Hertz</span></h1>
+        <div class="glass p-12 rounded-[40px] shadow-2xl relative cursor-pointer border-2 border-transparent hover:border-violet-200 transition-all">
+            <input type="file" id="audio-input" class="absolute inset-0 opacity-0 cursor-pointer" accept="audio/*">
+            <div class="bg-violet-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+            </div>
+            <p class="text-xl font-bold">Analyser un son</p>
+            <p class="text-[10px] text-gray-400 mt-2 uppercase font-black tracking-widest">Format MP3 / WAV</p>
+        </div>
+    </div>
+
+    <!-- ÉCRAN ANALYSE -->
+    <div id="screen-analyzing" class="hidden text-center space-y-4">
+        <div class="w-12 h-12 border-4 border-violet-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p class="font-black text-xs uppercase tracking-widest text-violet-600">Scan en cours...</p>
+    </div>
+
+    <!-- ÉCRAN RÉSULTAT -->
+    <div id="screen-result" class="hidden max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl">
+        <h2 id="res-name" class="text-2xl font-bold mb-6">Nom du fichier</h2>
+        <div class="grid grid-cols-2 gap-4 bg-gray-50 p-6 rounded-[30px] mb-8">
+            <div>
+                <p id="res-bpm" class="text-5xl font-black">0</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">BPM</p>
+            </div>
+            <div>
+                <p id="res-wave" class="text-xl font-bold text-violet-600 mt-2">Alpha</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Onde</p>
+            </div>
+        </div>
+        <div class="bg-black p-6 rounded-[30px] text-white flex justify-between items-center mb-6">
+            <p class="font-bold">Rapport Expert</p>
+            <button class="bg-violet-600 px-6 py-2 rounded-full text-xs font-bold">2.99€</button>
+        </div>
+        <button onclick="location.reload()" class="text-gray-400 text-[10px] font-black uppercase">Recommencer</button>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
