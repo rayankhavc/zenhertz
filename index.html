@@ -102,7 +102,7 @@
                 const arrayBuffer = await file.arrayBuffer();
                 const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
                 
-                // 1. BPM
+                // 1. BPM (Inchangé)
                 const data = audioBuffer.getChannelData(0);
                 const sampleRate = audioBuffer.sampleRate;
                 let peaks = [];
@@ -122,7 +122,7 @@
                 let bpm = Math.round(60 / (best / sampleRate)) || 128;
                 if (bpm < 65) bpm *= 2; if (bpm > 200) bpm = Math.round(bpm / 2);
 
-                // 2. HERTZ
+                // 2. HERTZ MOYENS (Spectral Centroid simplifié)
                 const analyser = audioCtx.createAnalyser();
                 analyser.fftSize = 2048;
                 const bufferLength = analyser.frequencyBinCount;
@@ -134,14 +134,26 @@
 
                 setTimeout(() => {
                     analyser.getByteFrequencyData(dataArray);
-                    let maxE = 0, fIndex = 0;
-                    for(let i = 0; i < bufferLength; i++) { if(dataArray[i] > maxE) { maxE = dataArray[i]; fIndex = i; } }
-                    let hz = Math.round(fIndex * sampleRate / analyser.fftSize);
+                    
+                    let sumMagnitudes = 0;
+                    let weightedSum = 0;
+                    
+                    // Calcul de la moyenne pondérée du spectre
+                    for (let i = 0; i < bufferLength; i++) {
+                        let frequency = i * sampleRate / analyser.fftSize;
+                        let magnitude = dataArray[i];
+                        
+                        weightedSum += frequency * magnitude;
+                        sumMagnitudes += magnitude;
+                    }
+                    
+                    // Valeur moyenne (Hertz)
+                    let averageHz = sumMagnitudes === 0 ? 440 : Math.round(weightedSum / sumMagnitudes);
                     
                     // 3. AFFICHAGE
                     document.getElementById('res-name').innerText = file.name.substring(0, 18);
                     document.getElementById('res-bpm').innerText = bpm;
-                    document.getElementById('res-hz').innerText = hz < 20 ? 55 : hz;
+                    document.getElementById('res-hz').innerText = averageHz;
                     document.getElementById('res-wave').innerText = bpm < 115 ? "Alpha" : (bpm > 155 ? "Gamma" : "Bêta");
 
                     screenAnalyzing.classList.add('hidden');
