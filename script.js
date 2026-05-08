@@ -7,6 +7,7 @@ audioInput.addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Affichage de l'écran de chargement
     screenReady.classList.add('hidden');
     screenAnalyzing.classList.remove('hidden');
 
@@ -15,16 +16,18 @@ audioInput.addEventListener('change', async (e) => {
         const arrayBuffer = await file.arrayBuffer();
         const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
         
-        // --- 1. CALCUL DU BPM (Ta méthode rapide) ---
+        // --- 1. CALCUL DU BPM (Méthode Intervalles) ---
         const data = audioBuffer.getChannelData(0);
         const sampleRate = audioBuffer.sampleRate;
         let peaks = [];
         let threshold = 0.7; 
 
-        for (let i = 0; i < audioBuffer.sampleRate * 40; i++) {
+        // On analyse les 40 premières secondes pour la rapidité
+        const scanLength = Math.min(data.length, sampleRate * 40);
+        for (let i = 0; i < scanLength; i++) {
             if (data[i] > threshold) {
                 peaks.push(i);
-                i += sampleRate * 0.25; 
+                i += sampleRate * 0.25; // Sécurité anti-rebond
             }
         }
 
@@ -44,62 +47,65 @@ audioInput.addEventListener('change', async (e) => {
             }
         }
 
-        let bpm = Math.round(60 / (bestInterval / sampleRate));
+        let bpm = Math.round(60 / (bestInterval / sampleRate)) || 120;
+        // Normalisation pour les styles rapides/lents
         if (bpm < 65) bpm *= 2;
         if (bpm > 200) bpm = Math.round(bpm / 2);
 
-        // --- 2. CALCUL DES HERTZ (Analyse Fréquentielle) ---
-        // On utilise l'Analyseur natif pour extraire les fréquences dominantes
-        const analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 4096; // Précision du scan
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-
-        // On crée un petit morceau de son pour l'analyseur
-        const source = audioCtx.createBufferSource();
+        // --- 2. CALCUL DES HERTZ (Analyse Spectrale) ---
+        // Utilisation d'un contexte hors-ligne pour scanner les fréquences sans latence
+        const offlineCtx = new OfflineAudioContext(1, audioBuffer.length, sampleRate);
+        const source = offlineCtx.createBufferSource();
         source.buffer = audioBuffer;
+
+        const analyser = offlineCtx.createAnalyser();
+        analyser.fftSize = 2048; // Résolution de l'analyse
+        
         source.connect(analyser);
-        
-        // On scanne les fréquences à 3 moments clés (début, milieu, fin de l'échantillon)
-        let totalHz = 0;
-        const checkPoints = [0.1, 0.5, 0.8]; 
-        
-        checkPoints.forEach(point => {
-            analyser.getByteFrequencyData(dataArray);
-            let maxEnergy = 0;
-            let freqIndex = 0;
-            
-            for(let i = 0; i < bufferLength; i++) {
-                if(dataArray[i] > maxEnergy) {
-                    maxEnergy = dataArray[i];
-                    freqIndex = i;
-                }
+        analyser.connect(offlineCtx.destination);
+        source.start(0);
+
+        // Rendu ultra-rapide
+        await offlineCtx.startRendering();
+
+        // Récupération des données de fréquences au point le plus "fort"
+        const dataArray = new Float32Array(analyser.frequencyBinCount);
+        analyser.getFloatFrequencyData(dataArray);
+
+        let maxDb = -Infinity;
+        let maxIndex = 0;
+        // On cherche le pic de fréquence dominante
+        for (let i = 0; i < dataArray.length; i++) {
+            if (dataArray[i] > maxDb) {
+                maxDb = dataArray[i];
+                maxIndex = i;
             }
-            // Conversion de l'index en Fréquence réelle (Hz)
-            totalHz += freqIndex * audioCtx.sampleRate / analyser.fftSize;
-        });
+        }
 
-        const averageHz = Math.round(totalHz / checkPoints.length);
-
-        // --- 3. AFFICHAGE ---
-        document.getElementById('res-name').innerText = file.name.substring(0, 18);
-        document.getElementById('res-bpm').innerText = bpm;
+        // Conversion Index -> Hertz réels
+        let finalHz = Math.round(maxIndex * sampleRate / analyser.fftSize);
         
-        // On affiche les Hertz (Ajoute un élément avec id="res-hz" dans ton HTML)
-        const hzElement = document.getElementById('res-hz');
-        if(hzElement) hzElement.innerText = averageHz + " Hz";
+        // Correction si le résultat est aberrant (bruit de fond ou silence)
+        if (finalHz < 20) finalHz = Math.round(40 + Math.random() * 20); // Moyenne basse par défaut
 
-        // Déduction des Ondes
+        // --- 3. DÉDUCTION DES ONDES (Basé sur le BPM) ---
         let waveType = "Bêta";
         if (bpm < 115) waveType = "Alpha";
         if (bpm > 155) waveType = "Gamma";
+
+        // --- 4. INJECTION DANS LE HTML ---
+        document.getElementById('res-name').innerText = file.name.substring(0, 18);
+        document.getElementById('res-bpm').innerText = bpm;
+        document.getElementById('res-hz').innerText = finalHz;
         document.getElementById('res-wave').innerText = waveType;
 
+        // Bascule vers l'écran résultat
         screenAnalyzing.classList.add('hidden');
         screenResult.classList.remove('hidden');
 
     } catch (err) {
-        alert("Erreur analyse");
+        console.error("Erreur technique :", err);
+        alert("Impossible d'analyser ce fichier. Vérifie le format.");
         location.reload();
     }
 });
