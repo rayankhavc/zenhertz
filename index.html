@@ -645,79 +645,54 @@ async function analyzeLink(url){
   S('home-btn').style.display='flex';
 
   try{
-    // Step 1 — cobalt.tools API (open-source media extractor)
-    const cobaltRes=await fetch('https://api.cobalt.tools/',{
-      method:'POST',
-      headers:{'Accept':'application/json','Content-Type':'application/json'},
-      body:JSON.stringify({url:url,downloadMode:'audio',audioFormat:'mp3',filenameStyle:'basic'})
+    // Utilisation d'une instance alternative plus permissive
+    const cobaltRes = await fetch('https://cobalt-api.v0l.io/', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        url: url,
+        downloadMode: 'audio',
+        audioFormat: 'mp3',
+        filenameStyle: 'basic'
+      })
     });
-    if(!cobaltRes.ok)throw new Error('cobalt_fail');
-    const cobalt=await cobaltRes.json();
-    const audioUrl=cobalt.url;
-    if(!audioUrl)throw new Error('no_url');
 
-    // Step 2 — fetch audio (direct, then CORS proxy fallback)
+    if(!cobaltRes.ok) throw new Error('api_error');
+    const cobalt = await cobaltRes.json();
+    
+    if(!cobalt.url) throw new Error('no_url');
+    const audioUrl = cobalt.url;
+
     S('scan-title').textContent=L('scanning');
     S('scan-sub').textContent=L('analyzinglbl');
 
-    let ab;
-    try{
-      const r=await fetch(audioUrl);
-      if(!r.ok)throw new Error('direct_fail');
-      ab=await r.arrayBuffer();
-    }catch{
-      const proxy='https://corsproxy.io/?'+encodeURIComponent(audioUrl);
-      const r2=await fetch(proxy);
-      if(!r2.ok)throw new Error('proxy_fail');
-      ab=await r2.arrayBuffer();
-    }
+    // Tunnel de secours (CORS Proxy) pour forcer la lecture du flux audio
+    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(audioUrl)}`;
+    
+    const r = await fetch(proxyUrl);
+    if(!r.ok) throw new Error('fetch_fail');
+    
+    const ab = await r.arrayBuffer();
 
-    // Step 3 — extract label from URL
-    let label='Audio';
-    try{const u=new URL(url);label=u.hostname.replace('www.','')+' — '+u.pathname.split('/').filter(Boolean).pop();}catch{}
+    let label = 'Audio Link';
+    try { 
+      const u = new URL(url); 
+      label = u.hostname.replace('www.','') + ' — Clip'; 
+    } catch(e){}
 
-    await processArrayBuffer(ab,label);
+    await processArrayBuffer(ab, label);
 
-  }catch(err){
+  } catch(err) {
+    console.error(err);
     S('sc-analyzing').classList.add('hidden');
     S('sc-ready').classList.remove('hidden');
     S('home-btn').style.display='none';
     showAlert(L('errLink'));
   }
 }
-
-/* ══ CAPTURE BILAN (SHARE) ══ */
-async function captureBilan(){
-  const btn = S('btn-share');
-  const originalHTML = btn.innerHTML;
-  btn.innerHTML = `📸 <span>${L('capturing')}</span>`;
-  
-  try {
-    const target = S('rwrap');
-    // On masque temporairement les boutons d'action sur la capture pour faire plus propre
-    const actionsDiv = target.querySelector('.backbtn').parentElement;
-    actionsDiv.style.display = 'none';
-
-    const canvas = await html2canvas(target, {
-      backgroundColor: theme === 'dark' ? '#04040e' : '#eeeef5',
-      scale: 2, // Haute résolution
-      useCORS: true,
-      logging: false
-    });
-
-    actionsDiv.style.display = 'flex'; // On remet les boutons
-
-    // Téléchargement
-    const image = canvas.toDataURL("image/png");
-    const link = document.createElement('a');
-    link.href = image;
-    link.download = `ZenHertz_Bilan_${lastBpm}BPM.png`;
-    link.click();
-
-  } catch(err) {
-    console.error(err);
-    alert('Erreur lors de la capture de l\'image.');
-  }
   
   btn.innerHTML = originalHTML;
 }
