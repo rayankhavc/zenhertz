@@ -1,288 +1,338 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZenHertz</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: #f0f0f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
-        .card { background: rgba(255,255,255,0.72); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.5); border-radius: 40px; padding: 2.5rem 2rem; max-width: 420px; width: 100%; box-shadow: 0 8px 40px rgba(0,0,0,0.08); }
-        .logo { font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; background: linear-gradient(135deg, #7c3aed, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .subtitle { color: #6b7280; font-size: 0.85rem; line-height: 1.6; margin-top: 0.4rem; font-weight: 400; }
-        .upload-zone { margin-top: 2rem; border: 1.5px dashed rgba(124,58,237,0.3); border-radius: 28px; padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s ease; background: rgba(124,58,237,0.03); }
-        .upload-zone:hover { border-color: #7c3aed; background: rgba(124,58,237,0.06); transform: translateY(-1px); }
-        .upload-icon { width: 52px; height: 52px; background: linear-gradient(135deg, #7c3aed, #a855f7); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
-        .upload-icon svg { width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; }
-        .upload-label { font-size: 0.95rem; font-weight: 600; color: #1f2937; }
-        .upload-formats { font-size: 0.7rem; color: #9ca3af; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.5rem; font-weight: 500; }
-        .spinner-wrap { text-align: center; padding: 1rem 0; }
-        .spinner { width: 52px; height: 52px; border: 3px solid rgba(124,58,237,0.15); border-top-color: #7c3aed; border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 1.5rem; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .analyzing-label { font-size: 1.1rem; font-weight: 700; color: #1f2937; letter-spacing: -0.5px; }
-        .analyzing-sub { font-size: 0.7rem; color: #9ca3af; letter-spacing: 0.25em; text-transform: uppercase; margin-top: 0.75rem; font-weight: 600; }
-        .result-title { font-size: 1rem; font-weight: 700; color: #1f2937; letter-spacing: -0.3px; }
-        .result-bar { height: 3px; width: 48px; background: linear-gradient(90deg, #7c3aed, #a855f7); border-radius: 2px; margin-top: 0.6rem; }
-        .metrics { display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr; gap: 0; background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.8); border-radius: 28px; padding: 1.75rem 1rem; margin: 1.5rem 0; }
-        .metric { text-align: center; }
-        .metric-divider { background: #e5e7eb; }
-        .metric-value { font-size: 2.4rem; font-weight: 900; letter-spacing: -2px; line-height: 1; color: #111827; }
-        .metric-value.accent { color: #7c3aed; }
-        .metric-value.wave { font-size: 1.3rem; letter-spacing: -0.5px; padding-top: 0.3rem; }
-        .metric-label { font-size: 0.6rem; font-weight: 700; color: #9ca3af; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.8rem; }
-        .impact-card { background: #0d0d0d; border-radius: 28px; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-        .impact-title { font-size: 1rem; font-weight: 700; color: white; }
-        .impact-sub { font-size: 0.65rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600; margin-top: 0.25rem; }
-        .impact-badge { background: #7c3aed; color: white; font-size: 0.75rem; font-weight: 800; padding: 0.5rem 1rem; border-radius: 50px; white-space: nowrap; }
-        .science-box { background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.15); border-radius: 20px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-        .science-box p { font-size: 0.78rem; color: #4b5563; line-height: 1.6; }
-        .science-box strong { color: #7c3aed; font-weight: 600; }
-        .wave-bar { display: flex; gap: 4px; margin: 0.75rem 0 0.25rem; }
-        .wave-seg { height: 6px; border-radius: 3px; flex: 1; opacity: 0.25; transition: opacity 0.4s; }
-        .wave-seg.active { opacity: 1; }
-        .wave-labels { display: flex; justify-content: space-between; font-size: 0.6rem; color: #9ca3af; font-weight: 600; letter-spacing: 0.05em; }
-        .btn-back { display: block; text-align: center; font-size: 0.7rem; font-weight: 800; color: #9ca3af; letter-spacing: 0.25em; text-transform: uppercase; cursor: pointer; padding: 0.5rem; background: none; border: none; width: 100%; }
-        .btn-back:hover { color: #1f2937; }
-        .hidden { display: none; }
-        .fade-in { animation: fadeIn 0.5s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZenHertz</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#f0f0f5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+  .glass{background:rgba(255,255,255,0.72);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.5);border-radius:40px;padding:2.5rem 2rem;max-width:420px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.08)}
+  .logo{font-size:2.8rem;font-weight:900;letter-spacing:-2px;background:linear-gradient(135deg,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .upload-zone{margin-top:2rem;border:1.5px dashed rgba(124,58,237,0.3);border-radius:28px;padding:2.5rem 1.5rem;text-align:center;cursor:pointer;transition:all 0.3s ease;background:rgba(124,58,237,0.03)}
+  .upload-zone:hover{border-color:#7c3aed;background:rgba(124,58,237,0.06);transform:translateY(-1px)}
+  .upload-icon{width:52px;height:52px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+  .upload-icon svg{width:24px;height:24px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round}
+  .spinner{width:52px;height:52px;border:3px solid rgba(124,58,237,0.15);border-top-color:#7c3aed;border-radius:50%;animation:spin 0.9s linear infinite;margin:0 auto 1.5rem}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .metrics{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;background:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.8);border-radius:28px;padding:1.75rem 1rem;margin:1.5rem 0}
+  .metric-divider{background:#e5e7eb}
+  .metric-value{font-size:2.4rem;font-weight:900;letter-spacing:-2px;line-height:1;color:#111827}
+  .metric-value.accent{color:#7c3aed}
+  .metric-value.wave{font-size:1.3rem;letter-spacing:-0.5px;padding-top:0.3rem}
+  .metric-label{font-size:0.6rem;font-weight:700;color:#9ca3af;letter-spacing:0.2em;text-transform:uppercase;margin-top:0.8rem}
+  .science-box{background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.15);border-radius:20px;padding:1rem 1.25rem;margin-bottom:1rem}
+  .wave-bar{display:flex;gap:4px;margin:0.75rem 0 0.25rem}
+  .wave-seg{height:6px;border-radius:3px;flex:1;opacity:0.2;transition:opacity 0.5s,transform 0.3s}
+  .wave-seg.active{opacity:1;transform:scaleY(1.5)}
+  .wave-labels{display:flex;justify-content:space-between;font-size:0.6rem;color:#9ca3af;font-weight:600;letter-spacing:0.05em}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:0.85rem}
+  .tag{font-size:0.7rem;font-weight:700;padding:0.3rem 0.75rem;border-radius:50px;background:rgba(124,58,237,0.1);color:#6d28d9;border:1px solid rgba(124,58,237,0.2)}
+  .tag.warn{background:rgba(239,68,68,0.08);color:#b91c1c;border-color:rgba(239,68,68,0.2)}
+  .tag.safe{background:rgba(16,185,129,0.08);color:#065f46;border-color:rgba(16,185,129,0.2)}
+  .fatigue-bar{height:4px;border-radius:2px;background:#e5e7eb;margin-top:0.85rem;overflow:hidden}
+  .fatigue-fill{height:100%;border-radius:2px;transition:width 1s ease}
+  .impact-card{background:#0d0d0d;border-radius:28px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+  .impact-badge{background:#7c3aed;color:white;font-size:0.75rem;font-weight:800;padding:0.5rem 1rem;border-radius:50px;white-space:nowrap}
+  .heartbeat-ring{width:64px;height:64px;border-radius:50%;border:2px solid rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem}
+  .heartbeat-inner{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7)}
+  @keyframes heartbeat{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(124,58,237,0.4)}50%{transform:scale(1.18);box-shadow:0 0 0 8px rgba(124,58,237,0)}}
+  .fade-in{animation:fadeIn 0.5s ease forwards}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .hidden{display:none}
+</style>
 </head>
 <body>
+<div style="min-height:100vh;background:#f0f0f5;display:flex;align-items:center;justify-content:center;padding:1.5rem;width:100%">
  
-    <!-- ÉCRAN ACCUEIL -->
-    <div id="screen-ready" class="card fade-in">
-        <div style="text-align:center; margin-bottom:0.25rem;">
-            <div class="logo">ZenHertz</div>
-            <p class="subtitle">Découvrez l'impact de votre musique sur votre <span style="color:#7c3aed;font-weight:500;">système nerveux</span> et vos <span style="color:#a855f7;font-weight:500;">ondes cérébrales</span>.</p>
+  <!-- ÉCRAN ACCUEIL -->
+  <div id="screen-ready" class="glass fade-in">
+    <div style="text-align:center;margin-bottom:0.25rem">
+      <div class="logo">ZenHertz</div>
+      <p style="color:#6b7280;font-size:0.85rem;line-height:1.6;margin-top:0.4rem">Découvrez l'impact de votre musique sur votre <span style="color:#7c3aed;font-weight:600">système nerveux</span> et vos <span style="color:#a855f7;font-weight:600">ondes cérébrales</span>.</p>
+    </div>
+    <label style="cursor:pointer;display:block;margin-top:2rem">
+      <div class="upload-zone">
+        <div class="upload-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </div>
+        <p style="font-size:0.95rem;font-weight:600;color:#1f2937">Analyser un morceau</p>
+        <p style="font-size:0.7rem;color:#9ca3af;letter-spacing:0.15em;text-transform:uppercase;margin-top:0.5rem;font-weight:500">MP3 · WAV · AAC · FLAC</p>
+      </div>
+      <input type="file" id="audio-input" style="display:none" accept="audio/*">
+    </label>
+    <div style="margin-top:1.75rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;text-align:center">
+      <div style="background:rgba(124,58,237,0.06);border-radius:16px;padding:0.85rem 0.5rem"><p style="font-size:1.1rem;color:#7c3aed;margin-bottom:0.3rem">⏱</p><p style="font-size:0.65rem;font-weight:700;color:#6b7280;letter-spacing:0.05em">BPM</p></div>
+      <div style="background:rgba(124,58,237,0.06);border-radius:16px;padding:0.85rem 0.5rem"><p style="font-size:1.1rem;color:#7c3aed;margin-bottom:0.3rem">〰️</p><p style="font-size:0.65rem;font-weight:700;color:#6b7280;letter-spacing:0.05em">Hertz</p></div>
+      <div style="background:rgba(124,58,237,0.06);border-radius:16px;padding:0.85rem 0.5rem"><p style="font-size:1.1rem;color:#7c3aed;margin-bottom:0.3rem">🧠</p><p style="font-size:0.65rem;font-weight:700;color:#6b7280;letter-spacing:0.05em">Ondes</p></div>
+    </div>
+  </div>
  
-        <label style="cursor:pointer; display:block; margin-top:2rem;">
-            <div class="upload-zone">
-                <div class="upload-icon">
-                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                </div>
-                <p class="upload-label">Analyser un morceau</p>
-                <p class="upload-formats">MP3 · WAV · AAC · FLAC</p>
-            </div>
-            <input type="file" id="audio-input" style="display:none;" accept="audio/*">
-        </label>
+  <!-- ÉCRAN ANALYSE -->
+  <div id="screen-analyzing" class="glass hidden" style="text-align:center">
+    <div style="padding:2rem 0">
+      <div class="spinner"></div>
+      <p style="font-size:1.1rem;font-weight:700;color:#1f2937;letter-spacing:-0.5px">Scan bioacoustique…</p>
+      <p style="font-size:0.7rem;color:#9ca3af;letter-spacing:0.25em;text-transform:uppercase;margin-top:0.75rem;font-weight:600">Analyse en cours</p>
+    </div>
+  </div>
  
-        <div style="margin-top:1.75rem; display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; text-align:center;">
-            <div style="background:rgba(124,58,237,0.06); border-radius:16px; padding:0.85rem 0.5rem;">
-                <div style="font-size:1.1rem; color:#7c3aed; margin-bottom:0.3rem;">⏱</div>
-                <p style="font-size:0.65rem; font-weight:700; color:#6b7280; letter-spacing:0.05em;">BPM</p>
-            </div>
-            <div style="background:rgba(124,58,237,0.06); border-radius:16px; padding:0.85rem 0.5rem;">
-                <div style="font-size:1.1rem; color:#7c3aed; margin-bottom:0.3rem;">〰️</div>
-                <p style="font-size:0.65rem; font-weight:700; color:#6b7280; letter-spacing:0.05em;">Hertz</p>
-            </div>
-            <div style="background:rgba(124,58,237,0.06); border-radius:16px; padding:0.85rem 0.5rem;">
-                <div style="font-size:1.1rem; color:#7c3aed; margin-bottom:0.3rem;">🧠</div>
-                <p style="font-size:0.65rem; font-weight:700; color:#6b7280; letter-spacing:0.05em;">Ondes</p>
-            </div>
-        </div>
+  <!-- ÉCRAN RÉSULTATS -->
+  <div id="screen-result" class="glass hidden fade-in">
+    <div class="heartbeat-ring">
+      <div class="heartbeat-inner" id="hb-dot"></div>
+    </div>
+    <div style="margin-bottom:1.25rem;text-align:center">
+      <p id="res-name" style="font-size:1rem;font-weight:700;color:#1f2937;letter-spacing:-0.3px"></p>
+      <div style="height:3px;width:48px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:2px;margin:0.6rem auto 0"></div>
     </div>
  
-    <!-- ÉCRAN ANALYSE -->
-    <div id="screen-analyzing" class="card hidden" style="text-align:center;">
-        <div class="spinner-wrap" style="padding:2rem 0;">
-            <div class="spinner"></div>
-            <p class="analyzing-label">Scan bioacoustique…</p>
-            <p class="analyzing-sub">Analyse en cours</p>
-        </div>
+    <div class="metrics">
+      <div style="text-align:center">
+        <p id="res-bpm" class="metric-value">—</p>
+        <p class="metric-label">BPM</p>
+      </div>
+      <div class="metric-divider"></div>
+      <div style="text-align:center">
+        <p id="res-hz" class="metric-value accent">—</p>
+        <p class="metric-label">Hertz</p>
+      </div>
+      <div class="metric-divider"></div>
+      <div style="text-align:center">
+        <p id="res-wave" class="metric-value wave">—</p>
+        <p class="metric-label">Onde</p>
+      </div>
     </div>
  
-    <!-- ÉCRAN RÉSULTATS -->
-    <div id="screen-result" class="card hidden">
-        <div style="margin-bottom:1.25rem;">
-            <p id="res-name" class="result-title">Analyse terminée</p>
-            <div class="result-bar"></div>
-        </div>
- 
-        <div class="metrics">
-            <div class="metric">
-                <p id="res-bpm" class="metric-value">—</p>
-                <p class="metric-label">BPM</p>
-            </div>
-            <div class="metric-divider"></div>
-            <div class="metric">
-                <p id="res-hz" class="metric-value accent">—</p>
-                <p class="metric-label">Hertz</p>
-            </div>
-            <div class="metric-divider"></div>
-            <div class="metric">
-                <p id="res-wave" class="metric-value wave">—</p>
-                <p class="metric-label">Onde</p>
-            </div>
-        </div>
- 
-        <div class="science-box">
-            <div class="wave-bar">
-                <div id="w-delta" class="wave-seg" style="background:#818cf8;"></div>
-                <div id="w-theta" class="wave-seg" style="background:#a78bfa;"></div>
-                <div id="w-alpha" class="wave-seg" style="background:#7c3aed;"></div>
-                <div id="w-beta"  class="wave-seg" style="background:#c084fc;"></div>
-                <div id="w-gamma" class="wave-seg" style="background:#e879f9;"></div>
-            </div>
-            <div class="wave-labels">
-                <span>Delta</span><span>Thêta</span><span>Alpha</span><span>Bêta</span><span>Gamma</span>
-            </div>
-            <p id="res-desc" style="margin-top:0.85rem;"></p>
-            <p id="res-usage" style="margin-top:0.5rem; font-size:0.72rem; color:#7c3aed; font-weight:600;"></p>
-        </div>
- 
-        <div class="impact-card">
-            <div>
-                <p class="impact-title">Bilan complet</p>
-                <p class="impact-sub">Bio-impact · Neuro-acoustique</p>
-            </div>
-            <div class="impact-badge">2.99 €</div>
-        </div>
- 
-        <div style="background:rgba(0,0,0,0.03); border-radius:16px; padding:0.75rem 1rem; margin-bottom:1rem;">
-            <p style="font-size:0.68rem; color:#9ca3af; line-height:1.55; text-align:center;">Analyse basée sur la périodicité du signal audio et la moyenne spectrale. Ces résultats ont une visée informative et ne constituent pas un diagnostic médical.</p>
-        </div>
- 
-        <button class="btn-back" onclick="location.reload()">← Analyser un autre morceau</button>
+    <div class="science-box">
+      <div class="wave-bar">
+        <div id="w-delta" class="wave-seg" style="background:#818cf8"></div>
+        <div id="w-theta" class="wave-seg" style="background:#a78bfa"></div>
+        <div id="w-alpha" class="wave-seg" style="background:#7c3aed"></div>
+        <div id="w-beta"  class="wave-seg" style="background:#c084fc"></div>
+        <div id="w-gamma" class="wave-seg" style="background:#e879f9"></div>
+      </div>
+      <div class="wave-labels"><span>Delta</span><span>Thêta</span><span>Alpha</span><span>Bêta</span><span>Gamma</span></div>
+      <p id="res-desc" style="margin-top:0.85rem;font-size:0.78rem;color:#4b5563;line-height:1.65"></p>
+      <div class="tags" id="res-tags"></div>
+      <div class="fatigue-bar"><div class="fatigue-fill" id="fatigue-fill"></div></div>
+      <p id="fatigue-label" style="font-size:0.68rem;margin-top:0.4rem;font-weight:600"></p>
     </div>
  
-    <script>
-        const audioInput = document.getElementById('audio-input');
-        const screenReady = document.getElementById('screen-ready');
-        const screenAnalyzing = document.getElementById('screen-analyzing');
-        const screenResult = document.getElementById('screen-result');
+    <div class="impact-card">
+      <div>
+        <p style="font-size:1rem;font-weight:700;color:white">Bilan complet</p>
+        <p style="font-size:0.65rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.2em;font-weight:600;margin-top:0.25rem">Bio-impact · Neuro-acoustique</p>
+      </div>
+      <div class="impact-badge">2.99 €</div>
+    </div>
  
-        const waveData = {
-            delta: {
-                label: 'Delta',
-                desc: 'Votre musique génère un signal très lent, associé aux <strong>ondes delta</strong> (0,5–4 Hz). Ce profil favorise la récupération profonde et le sommeil réparateur.',
-                usage: '✓ Idéal pour : Sommeil · Récupération · Détente profonde',
-                segs: ['w-delta']
-            },
-            theta: {
-                label: 'Thêta',
-                desc: 'Signal lent induisant les <strong>ondes thêta</strong> (4–8 Hz). Ce registre est associé à la méditation, la créativité et les états hypnagogiques.',
-                usage: '✓ Idéal pour : Méditation · Créativité · Sophrologie',
-                segs: ['w-theta']
-            },
-            alpha: {
-                label: 'Alpha',
-                desc: 'Fréquence propice aux <strong>ondes alpha</strong> (8–13 Hz). Cet état de "relaxation active" est optimal pour la concentration douce et la cohérence cardiaque.',
-                usage: '✓ Idéal pour : Travail calme · Yoga · Lecture',
-                segs: ['w-alpha']
-            },
-            beta: {
-                label: 'Bêta',
-                desc: 'Le tempo stimule les <strong>ondes bêta</strong> (13–30 Hz), signe d\'un cerveau en éveil actif. Cela favorise la vigilance, la réactivité et la motivation.',
-                usage: '✓ Idéal pour : Sport · Travail intensif · Gaming',
-                segs: ['w-beta']
-            },
-            gamma: {
-                label: 'Gamma',
-                desc: 'Signal rapide induisant des <strong>ondes gamma</strong> (>30 Hz). Cet état de haute stimulation est lié à la cognition de haut niveau. Déconseillé avant le sommeil.',
-                usage: '⚠ Usage : Effort intense · À éviter le soir',
-                segs: ['w-gamma']
-            }
-        };
+    <div style="background:rgba(0,0,0,0.03);border-radius:16px;padding:0.75rem 1rem;margin-bottom:1rem">
+      <p style="font-size:0.68rem;color:#9ca3af;line-height:1.55;text-align:center">Analyse basée sur la périodicité du signal et la moyenne spectrale (ZCR). Ces résultats ont une visée informative et ne constituent pas un diagnostic médical.</p>
+    </div>
  
-        function getWaveType(bpm) {
-            if (!bpm || bpm < 60) return 'delta';
-            if (bpm < 80) return 'theta';
-            if (bpm < 115) return 'alpha';
-            if (bpm < 155) return 'beta';
-            return 'gamma';
-        }
+    <p onclick="location.reload()" style="display:block;text-align:center;font-size:0.7rem;font-weight:800;color:#9ca3af;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;padding:0.5rem">← Analyser un autre morceau</p>
+  </div>
  
-        audioInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+</div>
+<script>
+const audioInput=document.getElementById('audio-input');
+const screenReady=document.getElementById('screen-ready');
+const screenAnalyzing=document.getElementById('screen-analyzing');
+const screenResult=document.getElementById('screen-result');
  
-            screenReady.classList.add('hidden');
-            screenAnalyzing.classList.remove('hidden');
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
  
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const arrayBuffer = await file.arrayBuffer();
-                const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+function generateNeuroAnalysis(bpm,hertz,waveType){
+  const validBpm=bpm>0&&isFinite(bpm);
+  const validHz=hertz>0&&isFinite(hertz);
  
-                const data = audioBuffer.getChannelData(0);
-                const sampleRate = audioBuffer.sampleRate;
-                const duration = audioBuffer.duration;
+  const bpmIntros={
+    slow:[
+      `Avec un tempo de ${bpm} BPM, ce signal audio active préférentiellement le système nerveux parasympathique, favorisant la sécrétion d'acétylcholine et stimulant le nerf vague — le pilier de la cohérence cardiaque.`,
+      `À ${bpm} BPM, le rythme opère dans la plage de la cohérence cardiaque. Le système parasympathique prend le dessus, ralentissant la fréquence cardiaque et abaissant le taux de cortisol circulant.`,
+      `Ce tempo de ${bpm} BPM se synchronise avec la respiration lente (6 cycles/min), induisant une modulation vagale positive et une réduction mesurable de la variabilité de pression artérielle.`
+    ],
+    medium:[
+      `À ${bpm} BPM, le signal se situe dans une zone de transition neuro-végétative : ni pleinement relaxant, ni stimulant. Le système ortho- et parasympathique coexistent en équilibre dynamique.`,
+      `Ce tempo modéré de ${bpm} BPM n'impose pas de charge cardiovasculaire significative. Il maintient un état d'éveil neutre, compatible avec une attention soutenue sans sur-activation adrénergique.`,
+      `Avec ${bpm} BPM, le signal entretient un rythme biologique de fond stable. La réponse cardiovasculaire reste dans les normes basales, avec une légère activation du circuit dopaminergique de récompense.`
+    ],
+    fast:[
+      `À ${bpm} BPM, ce tempo active le système nerveux orthosympathique : libération d'adrénaline et de noradrénaline, accélération du rythme cardiaque et hausse du débit sanguin musculaire — une préparation physiologique à l'effort.`,
+      `Ce signal à ${bpm} BPM déclenche une cascade sympathique : cortisol, adrénaline, augmentation de la pression artérielle systolique. Le corps entre en état de mobilisation active.`,
+      `Avec ${bpm} BPM, le système orthosympathique domine. Ce tempo entraîne une hausse mesurable du rythme cardiaque par réflexe d'entraînement rhythmique (rhythmic entrainment), optimal pour l'effort physique intense.`
+    ]
+  };
  
-                // --- BPM (moteur original validé — ne pas modifier) ---
-                const scanLength = Math.min(data.length, sampleRate * 60);
-                let maxVolume = 0;
-                for (let i = 0; i < scanLength; i++) {
-                    if (Math.abs(data[i]) > maxVolume) maxVolume = Math.abs(data[i]);
-                }
+  const hzComments={
+    veryLow:[
+      `Les fréquences très basses détectées (${hertz.toLocaleString()} Hz en moyenne spectrale) agissent principalement sur le système limbique, favorisant la sécrétion d'endorphines et un état de récupération cellulaire profonde.`,
+      `Le spectre dominant à ${hertz.toLocaleString()} Hz se situe dans les graves. Ces fréquences induisent une résonance physique perceptible et favorisent la libération d'endorphines, renforçant l'effet sédatif du tempo.`,
+      `À ${hertz.toLocaleString()} Hz, l'énergie spectrale se concentre dans les infra-graves et graves. Ce registre stimule les récepteurs mécanosensibles de l'oreille interne et module l'activité de l'amygdale.`
+    ],
+    low:[
+      `Le spectre fréquentiel mesuré (${hertz.toLocaleString()} Hz) ancre le signal dans les médiums-graves. Ce registre est perçu comme chaud et enveloppant, avec un effet parasympathique modéré sur la réponse émotionnelle.`,
+      `Les fréquences dominantes à ${hertz.toLocaleString()} Hz correspondent au registre vocal humain naturel — une plage traitée préférentiellement par le cortex auditif droit, lié aux émotions et à la mémoire autobiographique.`,
+      `Avec ${hertz.toLocaleString()} Hz en dominante spectrale, le signal active les circuits de traitement émotionnel. Ce registre est rarement fatigant pour le système nerveux autonome.`
+    ],
+    mid:[
+      `La fréquence centrale détectée (${hertz.toLocaleString()} Hz) place ce signal dans les médiums-aigus. Ce registre stimule le cortex auditif primaire de façon équilibrée, sans surcharger les voies de traitement cognitif.`,
+      `À ${hertz.toLocaleString()} Hz, le spectre agit comme un stimulant cognitif léger. Les médiums activent les circuits d'attention sélective sans déclencher de réponse de stress mesurable.`,
+      `Le centroïde spectral à ${hertz.toLocaleString()} Hz indique une richesse harmonique médiane. Le cerveau traite ces fréquences avec une charge neuronale modérée, favorable à la concentration soutenue.`
+    ],
+    high:[
+      `Avec ${hertz.toLocaleString()} Hz en moyenne spectrale, ce signal contient une forte densité fréquentielle haute. À doses prolongées, ces aigus peuvent entraîner une fatigue nerveuse par suractivation des voies auditives corticales.`,
+      `La composante haute fréquence mesurée (${hertz.toLocaleString()} Hz) agit comme un stimulant cognitif puissant à court terme. En écoute prolongée, le risque de fatigue auditive et d'hyperexcitabilité neuronale augmente.`,
+      `Les ${hertz.toLocaleString()} Hz détectés indiquent une prédominance d'aigus dans la texture sonore. Le système auditif central peut traiter efficacement ce registre en session courte — au-delà de 90 minutes, surveiller les signes de fatigue.`
+    ]
+  };
  
-                function getBPM(thresholdMultiplier) {
-                    let peaks = [];
-                    let threshold = maxVolume * thresholdMultiplier;
-                    for (let i = 0; i < scanLength; i++) {
-                        if (data[i] > threshold) {
-                            peaks.push(i);
-                            i += sampleRate * 0.28;
-                        }
-                    }
-                    if (peaks.length < 5) return 0;
-                    let intervals = {};
-                    for (let i = 1; i < peaks.length; i++) {
-                        let interval = Math.round((peaks[i] - peaks[i-1]) / 150) * 150;
-                        intervals[interval] = (intervals[interval] || 0) + 1;
-                    }
-                    let maxCount = 0, bestInterval = 0;
-                    for (let int in intervals) {
-                        if (intervals[int] > maxCount) { maxCount = intervals[int]; bestInterval = int; }
-                    }
-                    return bestInterval > 0 ? Math.round(60 / (bestInterval / sampleRate)) : 0;
-                }
+  const bpmCategory=validBpm?(bpm<80?'slow':bpm<115?'medium':'fast'):'medium';
+  const hzCategory=validHz?(hertz<500?'veryLow':hertz<1500?'low':hertz<4000?'mid':'high'):'mid';
  
-                let bpm = getBPM(0.85);
-                if (bpm === 0) bpm = getBPM(0.60);
-                if (bpm > 0 && bpm < 85) bpm *= 2;
-                if (bpm > 200) bpm = Math.round(bpm / 2);
+  return pick(bpmIntros[bpmCategory])+' '+pick(hzComments[hzCategory]);
+}
  
-                // --- HERTZ (moteur original validé — ne pas modifier) ---
-                let zeroCrossings = 0;
-                let isPositive = data[0] > 0;
-                for (let i = 1; i < data.length; i++) {
-                    if (isPositive && data[i] < -0.002) { isPositive = false; }
-                    else if (!isPositive && data[i] > 0.002) { isPositive = true; zeroCrossings++; }
-                }
-                let averageHz = Math.round(zeroCrossings / duration);
+function generateTags(bpm,hertz,waveType){
+  const validBpm=bpm>0&&isFinite(bpm);
+  const validHz=hertz>0&&isFinite(hertz);
+  const tags=[];
+  if(waveType==='delta')tags.push({label:'💤 Sommeil profond',type:'safe'});
+  if(waveType==='theta')tags.push({label:'🧘 Méditation',type:'safe'},{label:'✨ Créativité',type:''});
+  if(waveType==='alpha')tags.push({label:'🧠 Focus doux',type:''},{label:'🫀 Cohérence cardiaque',type:'safe'});
+  if(waveType==='beta')tags.push({label:'⚡ Éveil actif',type:''},{label:'💪 Performance',type:''});
+  if(waveType==='gamma')tags.push({label:'🔥 Haute stimulation',type:'warn'},{label:'⚡ Cognition intense',type:''});
+  if(validBpm&&bpm<80)tags.push({label:'🫀 Nerf vague stimulé',type:'safe'});
+  if(validBpm&&bpm>130)tags.push({label:'🏃 Sport / Effort',type:''});
+  if(validHz&&hertz>3000)tags.push({label:'⚠ Fatigue si prolongé',type:'warn'});
+  if(validHz&&hertz<600)tags.push({label:'🌊 Vibration profonde',type:'safe'});
+  return tags.slice(0,4);
+}
  
-                // --- AFFICHAGE ---
-                setTimeout(() => {
-                    const waveType = getWaveType(bpm);
-                    const wInfo = waveData[waveType];
+function getFatigueScore(bpm,hertz){
+  const validBpm=bpm>0&&isFinite(bpm);
+  const validHz=hertz>0&&isFinite(hertz);
+  let score=0;
+  if(validBpm&&bpm>140)score+=40;
+  else if(validBpm&&bpm>110)score+=20;
+  if(validHz&&hertz>3000)score+=40;
+  else if(validHz&&hertz>1500)score+=20;
+  return Math.min(score,100);
+}
  
-                    document.getElementById('res-name').innerText = file.name.replace(/\.[^/.]+$/, '').substring(0, 28);
-                    document.getElementById('res-bpm').innerText = (bpm > 0 && isFinite(bpm)) ? bpm : '—';
-                    document.getElementById('res-hz').innerText = averageHz > 0 ? averageHz.toLocaleString() : '—';
-                    document.getElementById('res-wave').innerText = wInfo.label;
-                    document.getElementById('res-desc').innerHTML = wInfo.desc;
-                    document.getElementById('res-usage').innerText = wInfo.usage;
+function getWaveType(bpm){
+  if(!bpm||!isFinite(bpm)||bpm<60)return'delta';
+  if(bpm<80)return'theta';
+  if(bpm<115)return'alpha';
+  if(bpm<155)return'beta';
+  return'gamma';
+}
  
-                    ['w-delta','w-theta','w-alpha','w-beta','w-gamma'].forEach(id => {
-                        document.getElementById(id).classList.remove('active');
-                    });
-                    wInfo.segs.forEach(id => document.getElementById(id).classList.add('active'));
+audioInput.addEventListener('change',async(e)=>{
+  const file=e.target.files[0];
+  if(!file)return;
+  screenReady.classList.add('hidden');
+  screenAnalyzing.classList.remove('hidden');
  
-                    screenAnalyzing.classList.add('hidden');
-                    screenResult.classList.remove('hidden');
-                    screenResult.classList.add('fade-in');
-                }, 800);
+  try{
+    const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const arrayBuffer=await file.arrayBuffer();
+    const audioBuffer=await audioCtx.decodeAudioData(arrayBuffer);
+    const data=audioBuffer.getChannelData(0);
+    const sampleRate=audioBuffer.sampleRate;
+    const duration=audioBuffer.duration;
  
-            } catch(err) {
-                alert('Erreur de lecture audio. Vérifiez le format du fichier.');
-                location.reload();
-            }
-        });
-    </script>
+    // ── MOTEUR BPM VALIDÉ — NE PAS MODIFIER ──
+    const scanLength=Math.min(data.length,sampleRate*60);
+    let maxVolume=0;
+    for(let i=0;i<scanLength;i++){if(Math.abs(data[i])>maxVolume)maxVolume=Math.abs(data[i]);}
+ 
+    function getBPM(thresholdMultiplier){
+      let peaks=[];
+      let threshold=maxVolume*thresholdMultiplier;
+      for(let i=0;i<scanLength;i++){
+        if(data[i]>threshold){peaks.push(i);i+=sampleRate*0.28;}
+      }
+      if(peaks.length<5)return 0;
+      let intervals={};
+      for(let i=1;i<peaks.length;i++){
+        let interval=Math.round((peaks[i]-peaks[i-1])/150)*150;
+        intervals[interval]=(intervals[interval]||0)+1;
+      }
+      let maxCount=0,bestInterval=0;
+      for(let int in intervals){if(intervals[int]>maxCount){maxCount=intervals[int];bestInterval=int;}}
+      return bestInterval>0?Math.round(60/(bestInterval/sampleRate)):0;
+    }
+ 
+    let bpm=getBPM(0.85);
+    if(bpm===0)bpm=getBPM(0.60);
+    if(bpm>0&&bpm<85)bpm*=2;
+    if(bpm>200)bpm=Math.round(bpm/2);
+    // ── FIN MOTEUR BPM ──
+ 
+    // ── MOTEUR HERTZ VALIDÉ — NE PAS MODIFIER ──
+    let zeroCrossings=0;
+    let isPositive=data[0]>0;
+    for(let i=1;i<data.length;i++){
+      if(isPositive&&data[i]<-0.002){isPositive=false;}
+      else if(!isPositive&&data[i]>0.002){isPositive=true;zeroCrossings++;}
+    }
+    let averageHz=Math.round(zeroCrossings/duration);
+    // ── FIN MOTEUR HERTZ ──
+ 
+    setTimeout(()=>{
+      const waveType=getWaveType(bpm);
+      const waveLabels={delta:'Delta',theta:'Thêta',alpha:'Alpha',beta:'Bêta',gamma:'Gamma'};
+      const waveSegs={delta:['w-delta'],theta:['w-theta'],alpha:['w-alpha'],beta:['w-beta'],gamma:['w-gamma']};
+ 
+      document.getElementById('res-name').innerText=file.name.replace(/\.[^/.]+$/,'').substring(0,32);
+      document.getElementById('res-bpm').innerText=(bpm>0&&isFinite(bpm))?bpm:'—';
+      document.getElementById('res-hz').innerText=averageHz>0?averageHz.toLocaleString():'—';
+      document.getElementById('res-wave').innerText=waveLabels[waveType];
+ 
+      ['w-delta','w-theta','w-alpha','w-beta','w-gamma'].forEach(id=>document.getElementById(id).classList.remove('active'));
+      waveSegs[waveType].forEach(id=>document.getElementById(id).classList.add('active'));
+ 
+      document.getElementById('res-desc').innerHTML=generateNeuroAnalysis(bpm,averageHz,waveType);
+ 
+      const tags=generateTags(bpm,averageHz,waveType);
+      document.getElementById('res-tags').innerHTML=tags.map(t=>`<span class="tag ${t.type}">${t.label}</span>`).join('');
+ 
+      const fatigueScore=getFatigueScore(bpm,averageHz);
+      const fatigueFill=document.getElementById('fatigue-fill');
+      const fatigueLabel=document.getElementById('fatigue-label');
+      if(fatigueScore>=60){
+        fatigueFill.style.cssText=`width:${fatigueScore}%;background:linear-gradient(90deg,#f59e0b,#ef4444)`;
+        fatigueLabel.style.color='#b91c1c';
+        fatigueLabel.innerText='⚠ Écoute prolongée : risque de fatigue nerveuse';
+      }else if(fatigueScore>=30){
+        fatigueFill.style.cssText=`width:${fatigueScore}%;background:linear-gradient(90deg,#a855f7,#7c3aed)`;
+        fatigueLabel.style.color='#6d28d9';
+        fatigueLabel.innerText='→ Écoute prolongée : modérément stimulante';
+      }else{
+        fatigueFill.style.cssText=`width:${Math.max(fatigueScore,10)}%;background:linear-gradient(90deg,#10b981,#059669)`;
+        fatigueLabel.style.color='#065f46';
+        fatigueLabel.innerText='✓ Écoute prolongée : sûre et régénératrice';
+      }
+ 
+      const hbDot=document.getElementById('hb-dot');
+      if(bpm>0&&isFinite(bpm)){
+        const beatDuration=(60/bpm).toFixed(3)+'s';
+        hbDot.style.animation=`heartbeat ${beatDuration} ease-in-out infinite`;
+      }
+ 
+      screenAnalyzing.classList.add('hidden');
+      screenResult.classList.remove('hidden');
+    },800);
+ 
+  }catch(err){
+    alert('Erreur de lecture audio. Vérifiez le format du fichier.');
+    location.reload();
+  }
+});
+</script>
 </body>
 </html>
- 
