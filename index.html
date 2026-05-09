@@ -1,338 +1,682 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light" data-lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZenHertz</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',sans-serif;background:#f0f0f5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
-  .glass{background:rgba(255,255,255,0.72);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.5);border-radius:40px;padding:2.5rem 2rem;max-width:420px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.08)}
-  .logo{font-size:2.8rem;font-weight:900;letter-spacing:-2px;background:linear-gradient(135deg,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .upload-zone{margin-top:2rem;border:1.5px dashed rgba(124,58,237,0.3);border-radius:28px;padding:2.5rem 1.5rem;text-align:center;cursor:pointer;transition:all 0.3s ease;background:rgba(124,58,237,0.03)}
-  .upload-zone:hover{border-color:#7c3aed;background:rgba(124,58,237,0.06);transform:translateY(-1px)}
-  .upload-icon{width:52px;height:52px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
-  .upload-icon svg{width:24px;height:24px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round}
-  .spinner{width:52px;height:52px;border:3px solid rgba(124,58,237,0.15);border-top-color:#7c3aed;border-radius:50%;animation:spin 0.9s linear infinite;margin:0 auto 1.5rem}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .metrics{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;background:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.8);border-radius:28px;padding:1.75rem 1rem;margin:1.5rem 0}
-  .metric-divider{background:#e5e7eb}
-  .metric-value{font-size:2.4rem;font-weight:900;letter-spacing:-2px;line-height:1;color:#111827}
-  .metric-value.accent{color:#7c3aed}
-  .metric-value.wave{font-size:1.3rem;letter-spacing:-0.5px;padding-top:0.3rem}
-  .metric-label{font-size:0.6rem;font-weight:700;color:#9ca3af;letter-spacing:0.2em;text-transform:uppercase;margin-top:0.8rem}
-  .science-box{background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.15);border-radius:20px;padding:1rem 1.25rem;margin-bottom:1rem}
-  .wave-bar{display:flex;gap:4px;margin:0.75rem 0 0.25rem}
-  .wave-seg{height:6px;border-radius:3px;flex:1;opacity:0.2;transition:opacity 0.5s,transform 0.3s}
-  .wave-seg.active{opacity:1;transform:scaleY(1.5)}
-  .wave-labels{display:flex;justify-content:space-between;font-size:0.6rem;color:#9ca3af;font-weight:600;letter-spacing:0.05em}
-  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:0.85rem}
-  .tag{font-size:0.7rem;font-weight:700;padding:0.3rem 0.75rem;border-radius:50px;background:rgba(124,58,237,0.1);color:#6d28d9;border:1px solid rgba(124,58,237,0.2)}
-  .tag.warn{background:rgba(239,68,68,0.08);color:#b91c1c;border-color:rgba(239,68,68,0.2)}
-  .tag.safe{background:rgba(16,185,129,0.08);color:#065f46;border-color:rgba(16,185,129,0.2)}
-  .fatigue-bar{height:4px;border-radius:2px;background:#e5e7eb;margin-top:0.85rem;overflow:hidden}
-  .fatigue-fill{height:100%;border-radius:2px;transition:width 1s ease}
-  .impact-card{background:#0d0d0d;border-radius:28px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
-  .impact-badge{background:#7c3aed;color:white;font-size:0.75rem;font-weight:800;padding:0.5rem 1rem;border-radius:50px;white-space:nowrap}
-  .heartbeat-ring{width:64px;height:64px;border-radius:50%;border:2px solid rgba(124,58,237,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem}
-  .heartbeat-inner{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7)}
-  @keyframes heartbeat{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(124,58,237,0.4)}50%{transform:scale(1.18);box-shadow:0 0 0 8px rgba(124,58,237,0)}}
-  .fade-in{animation:fadeIn 0.5s ease forwards}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-  .hidden{display:none}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+ 
+:root{
+  --bg:#f0f0f5;--glass:rgba(255,255,255,0.72);--glass-b:rgba(255,255,255,0.5);
+  --t1:#1f2937;--t2:#6b7280;--t3:#9ca3af;
+  --card:rgba(255,255,255,0.6);--card-b:rgba(255,255,255,0.8);
+  --sci:rgba(124,58,237,0.06);--sci-b:rgba(124,58,237,0.15);
+  --div:#e5e7eb;--dis:rgba(0,0,0,0.03);--dis-t:#9ca3af;
+  --blob1:rgba(124,58,237,0.18);--blob2:rgba(168,85,247,0.12);--blob3:rgba(99,102,241,0.10);
+}
+[data-theme="dark"]{
+  --bg:#07070f;--glass:rgba(15,15,28,0.88);--glass-b:rgba(124,58,237,0.22);
+  --t1:#f3f4f6;--t2:#9ca3af;--t3:#6b7280;
+  --card:rgba(255,255,255,0.05);--card-b:rgba(255,255,255,0.08);
+  --sci:rgba(124,58,237,0.14);--sci-b:rgba(124,58,237,0.28);
+  --div:rgba(255,255,255,0.1);--dis:rgba(255,255,255,0.03);--dis-t:#6b7280;
+  --blob1:rgba(124,58,237,0.25);--blob2:rgba(168,85,247,0.18);--blob3:rgba(99,102,241,0.15);
+}
+ 
+body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transition:background .3s}
+ 
+/* MESH BACKGROUND */
+#mesh-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);transition:transform 2.5s cubic-bezier(.25,.46,.45,.94)}
+#blob1{width:700px;height:700px;background:radial-gradient(circle,var(--blob1),transparent);top:-150px;left:-150px}
+#blob2{width:600px;height:600px;background:radial-gradient(circle,var(--blob2),transparent);bottom:-100px;right:-100px}
+#blob3{width:500px;height:500px;background:radial-gradient(circle,var(--blob3),transparent);top:40%;left:40%;transform:translate(-50%,-50%)}
+ 
+/* TOPBAR */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.5rem}
+.top-btn{display:flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:700;color:var(--t3);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:.45rem .9rem;border-radius:50px;border:1px solid var(--div);background:var(--glass);backdrop-filter:blur(12px);transition:all .2s}
+.top-btn:hover{color:var(--t1);border-color:rgba(124,58,237,.4)}
+.top-right{display:flex;gap:.5rem;align-items:center}
+ 
+/* GLASS CARD */
+.glass{background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--glass-b);border-radius:40px;box-shadow:0 8px 40px rgba(0,0,0,.08)}
+ 
+/* UPLOAD */
+.upload-zone{margin-top:2rem;border:1.5px dashed rgba(124,58,237,.3);border-radius:28px;padding:2.5rem 1.5rem;text-align:center;cursor:pointer;transition:all .3s ease;background:rgba(124,58,237,.03)}
+.upload-zone:hover{border-color:#7c3aed;background:rgba(124,58,237,.06);transform:translateY(-1px)}
+.upload-icon{width:52px;height:52px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+.upload-icon svg{width:24px;height:24px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round}
+ 
+/* SPINNER */
+.spinner{width:52px;height:52px;border:3px solid rgba(124,58,237,.15);border-top-color:#7c3aed;border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 1.5rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+ 
+/* METRICS */
+.metrics{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;background:var(--card);border:1px solid var(--card-b);border-radius:28px;padding:1.75rem 1rem;margin:1.5rem 0}
+.metric-divider{background:var(--div)}
+.mv{font-size:2.4rem;font-weight:900;letter-spacing:-2px;line-height:1;color:var(--t1)}
+.mv.accent{color:#7c3aed}
+.mv.sm{font-size:1.3rem;letter-spacing:-.5px;padding-top:.3rem}
+.ml{font-size:.6rem;font-weight:700;color:var(--t3);letter-spacing:.2em;text-transform:uppercase;margin-top:.8rem}
+ 
+/* SCIENCE BOX */
+.sci-box{background:var(--sci);border:1px solid var(--sci-b);border-radius:20px;padding:1rem 1.25rem;margin-bottom:1rem}
+.wave-bar{display:flex;gap:4px;margin:.75rem 0 .25rem}
+.ws{height:6px;border-radius:3px;flex:1;opacity:.2;transition:opacity .5s,transform .3s}
+.ws.active{opacity:1;transform:scaleY(1.5)}
+.wl{display:flex;justify-content:space-between;font-size:.6rem;color:var(--t3);font-weight:600;letter-spacing:.05em}
+ 
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:.85rem}
+.tag{font-size:.7rem;font-weight:700;padding:.3rem .75rem;border-radius:50px;background:rgba(124,58,237,.1);color:#6d28d9;border:1px solid rgba(124,58,237,.2)}
+.tag.warn{background:rgba(239,68,68,.08);color:#b91c1c;border-color:rgba(239,68,68,.2)}
+.tag.safe{background:rgba(16,185,129,.08);color:#065f46;border-color:rgba(16,185,129,.2)}
+ 
+/* FATIGUE */
+.fatigue-bar{height:4px;border-radius:2px;background:var(--div);margin-top:.85rem;overflow:hidden}
+.fatigue-fill{height:100%;border-radius:2px;transition:width 1.2s ease}
+ 
+/* IMPACT CARD */
+.impact-card{background:#0d0d0d;border-radius:28px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+[data-theme="dark"] .impact-card{background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.3)}
+.impact-badge{background:#7c3aed;color:white;font-size:.75rem;font-weight:800;padding:.5rem 1rem;border-radius:50px;white-space:nowrap;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.impact-badge:hover{transform:scale(1.05);box-shadow:0 4px 20px rgba(124,58,237,.5)}
+ 
+/* HEARTBEAT */
+.hb-ring{width:64px;height:64px;border-radius:50%;border:2px solid rgba(124,58,237,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem}
+.hb-inner{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7)}
+@keyframes heartbeat{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(124,58,237,.45)}50%{transform:scale(1.2);box-shadow:0 0 0 10px rgba(124,58,237,0)}}
+ 
+/* HORMONE GAUGES */
+.hormone-panel{background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--glass-b);border-radius:32px;padding:1.5rem;box-shadow:0 8px 40px rgba(0,0,0,.08)}
+.hormone-item{margin-bottom:1rem}
+.hormone-item:last-child{margin-bottom:0}
+.hormone-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.35rem}
+.hormone-name{font-size:.78rem;font-weight:700;color:var(--t1)}
+.hormone-desc{font-size:.62rem;color:var(--t3);font-weight:500}
+.hormone-val{font-size:.75rem;font-weight:800;color:var(--t2)}
+.hormone-bar{height:5px;border-radius:3px;background:var(--div);overflow:hidden}
+.hormone-fill{height:100%;border-radius:3px;transition:width 1.4s cubic-bezier(.34,1.56,.64,1)}
+ 
+/* TYPEWRITER */
+.typewriter{font-size:.78rem;color:var(--t2);line-height:1.65;min-height:80px}
+.cursor{display:inline-block;width:2px;height:12px;background:#7c3aed;margin-left:1px;animation:blink .7s infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+ 
+/* LOGO */
+.logo{font-size:2.8rem;font-weight:900;letter-spacing:-2px;background:linear-gradient(135deg,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+ 
+/* LAYOUT */
+.page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:5rem 1.5rem 1.5rem;width:100%}
+.card-mobile{max-width:440px;width:100%;padding:2.5rem 2rem}
+ 
+/* DESKTOP RESULT GRID */
+@media(min-width:768px){
+  #result-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:860px;width:100%;align-items:start}
+  #result-left{padding:2rem}
+  #result-right{display:flex;flex-direction:column;gap:1rem}
+}
+@media(max-width:767px){
+  #result-wrap{max-width:440px;width:100%}
+  #result-left{padding:2rem 1.75rem}
+  #result-right{margin-top:1rem}
+  .hormone-panel{padding:1.25rem}
+}
+ 
+/* MISC */
+.fade-in{animation:fadeIn .5s ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hidden{display:none}
+.section-title{font-size:.65rem;font-weight:800;color:var(--t3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.85rem}
+.disclaimer-box{background:var(--dis);border-radius:16px;padding:.75rem 1rem}
+.disclaimer-box p{font-size:.68rem;color:var(--dis-t);line-height:1.55;text-align:center}
+.back-btn{display:block;text-align:center;font-size:.7rem;font-weight:800;color:var(--t3);letter-spacing:.25em;text-transform:uppercase;cursor:pointer;padding:.5rem;margin-top:.5rem}
+.back-btn:hover{color:var(--t1)}
 </style>
 </head>
 <body>
-<div style="min-height:100vh;background:#f0f0f5;display:flex;align-items:center;justify-content:center;padding:1.5rem;width:100%">
  
-  <!-- ÉCRAN ACCUEIL -->
-  <div id="screen-ready" class="glass fade-in">
-    <div style="text-align:center;margin-bottom:0.25rem">
+<!-- MESH BACKGROUND -->
+<div id="mesh-bg">
+  <div class="blob" id="blob1"></div>
+  <div class="blob" id="blob2"></div>
+  <div class="blob" id="blob3"></div>
+</div>
+ 
+<!-- TOPBAR -->
+<div id="topbar">
+  <button class="top-btn" id="home-btn" onclick="goHome()" style="display:none">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <span data-i="homeBtn">Accueil</span>
+  </button>
+  <div style="flex:1"></div>
+  <div class="top-right">
+    <button class="top-btn" id="lang-btn" onclick="toggleLang()">
+      <span id="lang-label">FR</span>
+    </button>
+    <button class="top-btn" id="theme-btn" onclick="toggleTheme()" title="Mode sombre">
+      <span id="theme-icon">🌙</span>
+    </button>
+  </div>
+</div>
+ 
+<!-- ========== SCREEN: READY ========== -->
+<div id="screen-ready" class="page">
+  <div class="glass card-mobile fade-in">
+    <div style="text-align:center;margin-bottom:.25rem">
       <div class="logo">ZenHertz</div>
-      <p style="color:#6b7280;font-size:0.85rem;line-height:1.6;margin-top:0.4rem">Découvrez l'impact de votre musique sur votre <span style="color:#7c3aed;font-weight:600">système nerveux</span> et vos <span style="color:#a855f7;font-weight:600">ondes cérébrales</span>.</p>
+      <p style="color:var(--t2);font-size:.85rem;line-height:1.6;margin-top:.4rem" data-i="tagline">
+        Découvrez l'impact de votre musique sur votre <span style="color:#7c3aed;font-weight:600">système nerveux</span> et vos <span style="color:#a855f7;font-weight:600">ondes cérébrales</span>.
+      </p>
     </div>
     <label style="cursor:pointer;display:block;margin-top:2rem">
       <div class="upload-zone">
         <div class="upload-icon">
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </div>
-        <p style="font-size:0.95rem;font-weight:600;color:#1f2937">Analyser un morceau</p>
-        <p style="font-size:0.7rem;color:#9ca3af;letter-spacing:0.15em;text-transform:uppercase;margin-top:0.5rem;font-weight:500">MP3 · WAV · AAC · FLAC</p>
+        <p style="font-size:.95rem;font-weight:600;color:var(--t1)" data-i="uploadLabel">Analyser un morceau</p>
+        <p style="font-size:.7rem;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;margin-top:.5rem;font-weight:500" data-i="formats">MP3 · WAV · AAC · FLAC</p>
       </div>
       <input type="file" id="audio-input" style="display:none" accept="audio/*">
     </label>
-    <div style="margin-top:1.75rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;text-align:center">
-      <div style="background:rgba(124,58,237,0.06);border-radius:16px;padding:0.85rem 0.5rem"><p style="font-size:1.1rem;color:#7c3aed;margin-bottom:0.3rem">⏱</p><p style="font-size:0.65rem;font-weight:700;color:#6b7280;letter-spacing:0.05em">BPM</p></div>
-      <div style="background:rgba(124,58,237,0.06);border-radius:16px;padding:0.85rem 0.5rem"><p style="font-size:1.1rem;color:#7c3aed;margin-bottom:0.3rem">〰️</p><p style="font-size:0.65rem;font-weight:700;color:#6b7280;letter-spacing:0.05em">Hertz</p></div>
-      <div style="background:rgba(124,58,237,0.06);border-radius:16px;padding:0.85rem 0.5rem"><p style="font-size:1.1rem;color:#7c3aed;margin-bottom:0.3rem">🧠</p><p style="font-size:0.65rem;font-weight:700;color:#6b7280;letter-spacing:0.05em">Ondes</p></div>
+    <div style="margin-top:1.75rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;text-align:center">
+      <div style="background:rgba(124,58,237,.06);border-radius:16px;padding:.85rem .5rem"><p style="font-size:1.1rem;color:#7c3aed;margin-bottom:.3rem">⏱</p><p style="font-size:.65rem;font-weight:700;color:var(--t2);letter-spacing:.05em">BPM</p></div>
+      <div style="background:rgba(124,58,237,.06);border-radius:16px;padding:.85rem .5rem"><p style="font-size:1.1rem;color:#7c3aed;margin-bottom:.3rem">〰️</p><p style="font-size:.65rem;font-weight:700;color:var(--t2);letter-spacing:.05em">Hz</p></div>
+      <div style="background:rgba(124,58,237,.06);border-radius:16px;padding:.85rem .5rem"><p style="font-size:1.1rem;color:#7c3aed;margin-bottom:.3rem">🧠</p><p style="font-size:.65rem;font-weight:700;color:var(--t2);letter-spacing:.05em" data-i="waveLbl">Ondes</p></div>
     </div>
   </div>
- 
-  <!-- ÉCRAN ANALYSE -->
-  <div id="screen-analyzing" class="glass hidden" style="text-align:center">
-    <div style="padding:2rem 0">
-      <div class="spinner"></div>
-      <p style="font-size:1.1rem;font-weight:700;color:#1f2937;letter-spacing:-0.5px">Scan bioacoustique…</p>
-      <p style="font-size:0.7rem;color:#9ca3af;letter-spacing:0.25em;text-transform:uppercase;margin-top:0.75rem;font-weight:600">Analyse en cours</p>
-    </div>
-  </div>
- 
-  <!-- ÉCRAN RÉSULTATS -->
-  <div id="screen-result" class="glass hidden fade-in">
-    <div class="heartbeat-ring">
-      <div class="heartbeat-inner" id="hb-dot"></div>
-    </div>
-    <div style="margin-bottom:1.25rem;text-align:center">
-      <p id="res-name" style="font-size:1rem;font-weight:700;color:#1f2937;letter-spacing:-0.3px"></p>
-      <div style="height:3px;width:48px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:2px;margin:0.6rem auto 0"></div>
-    </div>
- 
-    <div class="metrics">
-      <div style="text-align:center">
-        <p id="res-bpm" class="metric-value">—</p>
-        <p class="metric-label">BPM</p>
-      </div>
-      <div class="metric-divider"></div>
-      <div style="text-align:center">
-        <p id="res-hz" class="metric-value accent">—</p>
-        <p class="metric-label">Hertz</p>
-      </div>
-      <div class="metric-divider"></div>
-      <div style="text-align:center">
-        <p id="res-wave" class="metric-value wave">—</p>
-        <p class="metric-label">Onde</p>
-      </div>
-    </div>
- 
-    <div class="science-box">
-      <div class="wave-bar">
-        <div id="w-delta" class="wave-seg" style="background:#818cf8"></div>
-        <div id="w-theta" class="wave-seg" style="background:#a78bfa"></div>
-        <div id="w-alpha" class="wave-seg" style="background:#7c3aed"></div>
-        <div id="w-beta"  class="wave-seg" style="background:#c084fc"></div>
-        <div id="w-gamma" class="wave-seg" style="background:#e879f9"></div>
-      </div>
-      <div class="wave-labels"><span>Delta</span><span>Thêta</span><span>Alpha</span><span>Bêta</span><span>Gamma</span></div>
-      <p id="res-desc" style="margin-top:0.85rem;font-size:0.78rem;color:#4b5563;line-height:1.65"></p>
-      <div class="tags" id="res-tags"></div>
-      <div class="fatigue-bar"><div class="fatigue-fill" id="fatigue-fill"></div></div>
-      <p id="fatigue-label" style="font-size:0.68rem;margin-top:0.4rem;font-weight:600"></p>
-    </div>
- 
-    <div class="impact-card">
-      <div>
-        <p style="font-size:1rem;font-weight:700;color:white">Bilan complet</p>
-        <p style="font-size:0.65rem;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.2em;font-weight:600;margin-top:0.25rem">Bio-impact · Neuro-acoustique</p>
-      </div>
-      <div class="impact-badge">2.99 €</div>
-    </div>
- 
-    <div style="background:rgba(0,0,0,0.03);border-radius:16px;padding:0.75rem 1rem;margin-bottom:1rem">
-      <p style="font-size:0.68rem;color:#9ca3af;line-height:1.55;text-align:center">Analyse basée sur la périodicité du signal et la moyenne spectrale (ZCR). Ces résultats ont une visée informative et ne constituent pas un diagnostic médical.</p>
-    </div>
- 
-    <p onclick="location.reload()" style="display:block;text-align:center;font-size:0.7rem;font-weight:800;color:#9ca3af;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;padding:0.5rem">← Analyser un autre morceau</p>
-  </div>
- 
 </div>
+ 
+<!-- ========== SCREEN: ANALYZING ========== -->
+<div id="screen-analyzing" class="page hidden">
+  <div class="glass card-mobile" style="text-align:center;padding:3rem 2rem">
+    <div class="spinner"></div>
+    <p style="font-size:1.1rem;font-weight:700;color:var(--t1);letter-spacing:-.5px" data-i="scanning">Scan bioacoustique…</p>
+    <p style="font-size:.7rem;color:var(--t3);letter-spacing:.25em;text-transform:uppercase;margin-top:.75rem;font-weight:600" data-i="analyzing">Analyse en cours</p>
+  </div>
+</div>
+ 
+<!-- ========== SCREEN: RESULT ========== -->
+<div id="screen-result" class="page hidden fade-in">
+  <div id="result-wrap">
+ 
+    <!-- LEFT: MAIN ANALYSIS -->
+    <div class="glass" id="result-left">
+      <div class="hb-ring"><div class="hb-inner" id="hb-dot"></div></div>
+      <div style="margin-bottom:1.25rem;text-align:center">
+        <p id="res-name" style="font-size:1rem;font-weight:700;color:var(--t1);letter-spacing:-.3px"></p>
+        <div style="height:3px;width:48px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:2px;margin:.6rem auto 0"></div>
+      </div>
+ 
+      <div class="metrics">
+        <div style="text-align:center"><p id="res-bpm" class="mv">—</p><p class="ml">BPM</p></div>
+        <div class="metric-divider"></div>
+        <div style="text-align:center"><p id="res-hz" class="mv accent">—</p><p class="ml">Hertz</p></div>
+        <div class="metric-divider"></div>
+        <div style="text-align:center"><p id="res-wave" class="mv sm">—</p><p class="ml" data-i="waveLbl">Onde</p></div>
+      </div>
+ 
+      <div class="sci-box">
+        <p class="section-title" data-i="neuroTitle">Profil Neuro-acoustique</p>
+        <div class="wave-bar">
+          <div id="w-delta" class="ws" style="background:#818cf8"></div>
+          <div id="w-theta" class="ws" style="background:#a78bfa"></div>
+          <div id="w-alpha" class="ws" style="background:#7c3aed"></div>
+          <div id="w-beta"  class="ws" style="background:#c084fc"></div>
+          <div id="w-gamma" class="ws" style="background:#e879f9"></div>
+        </div>
+        <div class="wl"><span>Delta</span><span>Thêta</span><span>Alpha</span><span>Bêta</span><span>Gamma</span></div>
+        <div id="res-desc" class="typewriter" style="margin-top:.85rem"></div>
+        <div class="tags" id="res-tags"></div>
+        <div class="fatigue-bar"><div class="fatigue-fill" id="fatigue-fill"></div></div>
+        <p id="fatigue-label" style="font-size:.68rem;margin-top:.4rem;font-weight:600"></p>
+      </div>
+ 
+      <span class="back-btn" onclick="goHome()" data-i="back">← Analyser un autre morceau</span>
+    </div>
+ 
+    <!-- RIGHT: HORMONES + BILAN -->
+    <div id="result-right">
+ 
+      <!-- HORMONAL DASHBOARD -->
+      <div class="hormone-panel">
+        <p class="section-title" data-i="hormones">Tableau Hormonal Estimé</p>
+        <div id="hormone-gauges"></div>
+      </div>
+ 
+      <!-- BILAN -->
+      <div class="impact-card">
+        <div>
+          <p style="font-size:1rem;font-weight:700;color:white" data-i="bilancTitle">Bilan complet</p>
+          <p style="font-size:.65rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.2em;font-weight:600;margin-top:.25rem" data-i="bilancSub">Bio-impact · Neuro-acoustique</p>
+        </div>
+        <div class="impact-badge">2.99 €</div>
+      </div>
+ 
+      <!-- DISCLAIMER -->
+      <div class="disclaimer-box">
+        <p data-i="disclaimer">Analyse basée sur la périodicité du signal et la moyenne spectrale (ZCR). Ces résultats ont une visée informative et ne constituent pas un diagnostic médical.</p>
+      </div>
+ 
+    </div>
+  </div>
+</div>
+ 
 <script>
-const audioInput=document.getElementById('audio-input');
-const screenReady=document.getElementById('screen-ready');
-const screenAnalyzing=document.getElementById('screen-analyzing');
-const screenResult=document.getElementById('screen-result');
+// =============================================
+// TRANSLATIONS
+// =============================================
+const LANG = {
+  fr:{
+    homeBtn:'Accueil', tagline:'Découvrez l\'impact de votre musique sur votre <span style="color:#7c3aed;font-weight:600">système nerveux</span> et vos <span style="color:#a855f7;font-weight:600">ondes cérébrales</span>.',
+    uploadLabel:'Analyser un morceau', formats:'MP3 · WAV · AAC · FLAC',
+    scanning:'Scan bioacoustique…', analyzing:'Analyse en cours', waveLbl:'Onde',
+    neuroTitle:'Profil Neuro-acoustique', back:'← Analyser un autre morceau',
+    hormones:'Tableau Hormonal Estimé', bilancTitle:'Bilan complet',
+    bilancSub:'Bio-impact · Neuro-acoustique',
+    disclaimer:'Analyse basée sur la périodicité du signal et la moyenne spectrale (ZCR). Ces résultats ont une visée informative et ne constituent pas un diagnostic médical.',
+    fLow:'✓ Écoute prolongée : sûre et régénératrice',
+    fMid:'→ Écoute prolongée : modérément stimulante',
+    fHigh:'⚠ Écoute prolongée : risque de fatigue nerveuse',
+    h:{dopamine:['Dopamine','Motivation & Récompense'],cortisol:['Cortisol','Stress & Vigilance'],serotonin:['Sérotonine','Humeur & Bien-être'],melatonin:['Mélatonine','Sommeil & Récupération'],endorphins:['Endorphines','Euphorie & Analgésie'],noradrenaline:['Noradrénaline','Éveil & Réactivité']},
+  },
+  en:{
+    homeBtn:'Home', tagline:'Discover the impact of your music on your <span style="color:#7c3aed;font-weight:600">nervous system</span> and your <span style="color:#a855f7;font-weight:600">brainwaves</span>.',
+    uploadLabel:'Analyze a track', formats:'MP3 · WAV · AAC · FLAC',
+    scanning:'Bioacoustic scan…', analyzing:'Analysis in progress', waveLbl:'Wave',
+    neuroTitle:'Neuro-acoustic Profile', back:'← Analyze another track',
+    hormones:'Estimated Hormonal Dashboard', bilancTitle:'Full Report',
+    bilancSub:'Bio-impact · Neuro-acoustics',
+    disclaimer:'Analysis based on signal periodicity and spectral average (ZCR). These results are for informational purposes only and do not constitute a medical diagnosis.',
+    fLow:'✓ Extended listening: safe & regenerative',
+    fMid:'→ Extended listening: moderately stimulating',
+    fHigh:'⚠ Extended listening: risk of neural fatigue',
+    h:{dopamine:['Dopamine','Motivation & Reward'],cortisol:['Cortisol','Stress & Alertness'],serotonin:['Serotonin','Mood & Wellbeing'],melatonin:['Melatonin','Sleep & Recovery'],endorphins:['Endorphins','Euphoria & Pain Relief'],noradrenaline:['Noradrenaline','Arousal & Reflexes']},
+  }
+};
  
-function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+let currentLang = 'fr';
+let currentTheme = 'light';
  
-function generateNeuroAnalysis(bpm,hertz,waveType){
-  const validBpm=bpm>0&&isFinite(bpm);
-  const validHz=hertz>0&&isFinite(hertz);
+function L(key){ return LANG[currentLang][key] || LANG.fr[key]; }
  
-  const bpmIntros={
-    slow:[
-      `Avec un tempo de ${bpm} BPM, ce signal audio active préférentiellement le système nerveux parasympathique, favorisant la sécrétion d'acétylcholine et stimulant le nerf vague — le pilier de la cohérence cardiaque.`,
-      `À ${bpm} BPM, le rythme opère dans la plage de la cohérence cardiaque. Le système parasympathique prend le dessus, ralentissant la fréquence cardiaque et abaissant le taux de cortisol circulant.`,
-      `Ce tempo de ${bpm} BPM se synchronise avec la respiration lente (6 cycles/min), induisant une modulation vagale positive et une réduction mesurable de la variabilité de pression artérielle.`
-    ],
-    medium:[
-      `À ${bpm} BPM, le signal se situe dans une zone de transition neuro-végétative : ni pleinement relaxant, ni stimulant. Le système ortho- et parasympathique coexistent en équilibre dynamique.`,
-      `Ce tempo modéré de ${bpm} BPM n'impose pas de charge cardiovasculaire significative. Il maintient un état d'éveil neutre, compatible avec une attention soutenue sans sur-activation adrénergique.`,
-      `Avec ${bpm} BPM, le signal entretient un rythme biologique de fond stable. La réponse cardiovasculaire reste dans les normes basales, avec une légère activation du circuit dopaminergique de récompense.`
-    ],
-    fast:[
-      `À ${bpm} BPM, ce tempo active le système nerveux orthosympathique : libération d'adrénaline et de noradrénaline, accélération du rythme cardiaque et hausse du débit sanguin musculaire — une préparation physiologique à l'effort.`,
-      `Ce signal à ${bpm} BPM déclenche une cascade sympathique : cortisol, adrénaline, augmentation de la pression artérielle systolique. Le corps entre en état de mobilisation active.`,
-      `Avec ${bpm} BPM, le système orthosympathique domine. Ce tempo entraîne une hausse mesurable du rythme cardiaque par réflexe d'entraînement rhythmique (rhythmic entrainment), optimal pour l'effort physique intense.`
-    ]
-  };
- 
-  const hzComments={
-    veryLow:[
-      `Les fréquences très basses détectées (${hertz.toLocaleString()} Hz en moyenne spectrale) agissent principalement sur le système limbique, favorisant la sécrétion d'endorphines et un état de récupération cellulaire profonde.`,
-      `Le spectre dominant à ${hertz.toLocaleString()} Hz se situe dans les graves. Ces fréquences induisent une résonance physique perceptible et favorisent la libération d'endorphines, renforçant l'effet sédatif du tempo.`,
-      `À ${hertz.toLocaleString()} Hz, l'énergie spectrale se concentre dans les infra-graves et graves. Ce registre stimule les récepteurs mécanosensibles de l'oreille interne et module l'activité de l'amygdale.`
-    ],
-    low:[
-      `Le spectre fréquentiel mesuré (${hertz.toLocaleString()} Hz) ancre le signal dans les médiums-graves. Ce registre est perçu comme chaud et enveloppant, avec un effet parasympathique modéré sur la réponse émotionnelle.`,
-      `Les fréquences dominantes à ${hertz.toLocaleString()} Hz correspondent au registre vocal humain naturel — une plage traitée préférentiellement par le cortex auditif droit, lié aux émotions et à la mémoire autobiographique.`,
-      `Avec ${hertz.toLocaleString()} Hz en dominante spectrale, le signal active les circuits de traitement émotionnel. Ce registre est rarement fatigant pour le système nerveux autonome.`
-    ],
-    mid:[
-      `La fréquence centrale détectée (${hertz.toLocaleString()} Hz) place ce signal dans les médiums-aigus. Ce registre stimule le cortex auditif primaire de façon équilibrée, sans surcharger les voies de traitement cognitif.`,
-      `À ${hertz.toLocaleString()} Hz, le spectre agit comme un stimulant cognitif léger. Les médiums activent les circuits d'attention sélective sans déclencher de réponse de stress mesurable.`,
-      `Le centroïde spectral à ${hertz.toLocaleString()} Hz indique une richesse harmonique médiane. Le cerveau traite ces fréquences avec une charge neuronale modérée, favorable à la concentration soutenue.`
-    ],
-    high:[
-      `Avec ${hertz.toLocaleString()} Hz en moyenne spectrale, ce signal contient une forte densité fréquentielle haute. À doses prolongées, ces aigus peuvent entraîner une fatigue nerveuse par suractivation des voies auditives corticales.`,
-      `La composante haute fréquence mesurée (${hertz.toLocaleString()} Hz) agit comme un stimulant cognitif puissant à court terme. En écoute prolongée, le risque de fatigue auditive et d'hyperexcitabilité neuronale augmente.`,
-      `Les ${hertz.toLocaleString()} Hz détectés indiquent une prédominance d'aigus dans la texture sonore. Le système auditif central peut traiter efficacement ce registre en session courte — au-delà de 90 minutes, surveiller les signes de fatigue.`
-    ]
-  };
- 
-  const bpmCategory=validBpm?(bpm<80?'slow':bpm<115?'medium':'fast'):'medium';
-  const hzCategory=validHz?(hertz<500?'veryLow':hertz<1500?'low':hertz<4000?'mid':'high'):'mid';
- 
-  return pick(bpmIntros[bpmCategory])+' '+pick(hzComments[hzCategory]);
+function applyLang(){
+  document.documentElement.setAttribute('data-lang', currentLang);
+  document.getElementById('lang-label').textContent = currentLang.toUpperCase();
+  document.querySelectorAll('[data-i]').forEach(el=>{
+    const k = el.getAttribute('data-i');
+    const v = L(k);
+    if(v) el.innerHTML = v;
+  });
 }
  
-function generateTags(bpm,hertz,waveType){
-  const validBpm=bpm>0&&isFinite(bpm);
-  const validHz=hertz>0&&isFinite(hertz);
+function toggleLang(){
+  currentLang = currentLang === 'fr' ? 'en' : 'fr';
+  applyLang();
+  if(lastBpm !== null) renderHormones(lastBpm, lastHz);
+}
+ 
+function toggleTheme(){
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  document.getElementById('theme-icon').textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+}
+ 
+function goHome(){
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-ready').classList.remove('hidden');
+  document.getElementById('home-btn').style.display = 'none';
+}
+ 
+// =============================================
+// MESH BACKGROUND — MOUSE REACTIVE
+// =============================================
+document.addEventListener('mousemove', e=>{
+  const x = (e.clientX/window.innerWidth - .5)*60;
+  const y = (e.clientY/window.innerHeight - .5)*60;
+  document.getElementById('blob1').style.transform=`translate(${x*.8}px,${y*.8}px)`;
+  document.getElementById('blob2').style.transform=`translate(${-x*.6}px,${-y*.6}px)`;
+  const b3=document.getElementById('blob3');
+  b3.style.transform=`translate(calc(-50% + ${x*.4}px),calc(-50% + ${y*.4}px))`;
+});
+ 
+// =============================================
+// TYPEWRITER EFFECT
+// =============================================
+function typeWriter(el, html, speed=11){
+  const temp = document.createElement('div');
+  temp.innerHTML = html;
+  const plain = temp.textContent;
+  let i = 0;
+  el.innerHTML = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  function next(){
+    if(i <= plain.length){
+      if(i === plain.length){
+        el.innerHTML = html;
+      } else {
+        el.textContent = plain.substring(0, i) + '\u2588';
+      }
+      i++;
+      if(i <= plain.length) setTimeout(next, speed);
+    }
+  }
+  next();
+}
+ 
+// =============================================
+// HORMONAL CALCULATOR
+// =============================================
+function calcHormones(bpm, hz){
+  const vB=bpm>0&&isFinite(bpm), vH=hz>0&&isFinite(hz);
+  const b=vB?bpm:100, h=vH?hz:1200;
+ 
+  let dopamine = 18;
+  if(b>=95&&b<=145) dopamine += Math.min(52,(b-95)*1.05);
+  else if(b>145) dopamine += Math.max(0,52-(b-145)*0.8);
+  if(h>=900&&h<=3800) dopamine += 20; else if(h>3800) dopamine += 8;
+  dopamine = Math.round(Math.min(95, dopamine));
+ 
+  let cortisol = 12;
+  if(b>125) cortisol += Math.min(55,(b-125)*1.4);
+  if(h>2800) cortisol += Math.min(28,(h-2800)/110);
+  cortisol = Math.round(Math.min(95, cortisol));
+ 
+  let serotonin = 18;
+  if(b>=72&&b<=118) serotonin += 42;
+  else if(b<72) serotonin += 28;
+  else if(b>118&&b<150) serotonin += Math.max(0,42-(b-118)*1.2);
+  if(h<1600) serotonin += 22; else if(h<3200) serotonin += 8;
+  serotonin = Math.round(Math.min(92, serotonin));
+ 
+  let melatonin = 8;
+  if(b<82) melatonin += Math.min(58,(82-b)*1.6);
+  if(h<900) melatonin += 22; else if(h<1600) melatonin += 9;
+  if(b>120) melatonin = Math.max(4, melatonin - (b-120)*0.7);
+  melatonin = Math.round(Math.min(88, melatonin));
+ 
+  let endorphins = 14;
+  if(b>128) endorphins += Math.min(48,(b-128)*1.1);
+  if(b<68) endorphins += 32;
+  if(h<700) endorphins += 18;
+  endorphins = Math.round(Math.min(88, endorphins));
+ 
+  let noradrenaline = 10;
+  if(b>138) noradrenaline += Math.min(58,(b-138)*1.6);
+  if(h>3200) noradrenaline += 22;
+  noradrenaline = Math.round(Math.min(90, noradrenaline));
+ 
+  return {dopamine, cortisol, serotonin, melatonin, endorphins, noradrenaline};
+}
+ 
+const HORMONE_COLORS = {
+  dopamine:'linear-gradient(90deg,#7c3aed,#a855f7)',
+  cortisol:'linear-gradient(90deg,#f59e0b,#ef4444)',
+  serotonin:'linear-gradient(90deg,#10b981,#059669)',
+  melatonin:'linear-gradient(90deg,#6366f1,#4338ca)',
+  endorphins:'linear-gradient(90deg,#ec4899,#db2777)',
+  noradrenaline:'linear-gradient(90deg,#f59e0b,#d97706)',
+};
+ 
+let lastBpm = null, lastHz = null;
+ 
+function renderHormones(bpm, hz){
+  const vals = calcHormones(bpm, hz);
+  const container = document.getElementById('hormone-gauges');
+  const hLang = L('h');
+  container.innerHTML = Object.entries(vals).map(([key, val])=>{
+    const [name, desc] = hLang[key]||[key,key];
+    const color = HORMONE_COLORS[key];
+    const lvl = val < 30 ? 'Faible' : val < 60 ? 'Modéré' : 'Élevé';
+    return `<div class="hormone-item">
+      <div class="hormone-header">
+        <div><span class="hormone-name">${name}</span> <span class="hormone-desc">${desc}</span></div>
+        <span class="hormone-val">${val}% <span style="font-size:.6rem;font-weight:500;color:var(--t3)">${lvl}</span></span>
+      </div>
+      <div class="hormone-bar"><div class="hormone-fill" style="width:0%;background:${color}" data-target="${val}"></div></div>
+    </div>`;
+  }).join('');
+  // Animate bars after render
+  setTimeout(()=>{
+    container.querySelectorAll('.hormone-fill').forEach(el=>{
+      el.style.width = el.dataset.target + '%';
+    });
+  }, 50);
+}
+ 
+// =============================================
+// ANALYSIS GENERATOR (Procédural)
+// =============================================
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+ 
+function generateNeuroAnalysis(bpm, hertz, waveType){
+  const validBpm = bpm > 0 && isFinite(bpm);
+  const validHz = hertz > 0 && isFinite(hertz);
+ 
+  const bpmIntros = {
+    slow:[
+      `À ${bpm} BPM, la périodicité du signal active le système nerveux parasympathique, pilier de la récupération.`,
+      `Ce rythme de ${bpm} BPM stimule directement le nerf vague, induisant une baisse du cortisol circulant.`,
+      `La pulsation à ${bpm} BPM favorise la cohérence cardiaque, synchronisant vos cycles respiratoires et cardiaques.`,
+      `Avec un tempo lent de ${bpm} BPM, le corps entre en phase de neuro-régénération et de repos cellulaire.`,
+      `Ce profil de ${bpm} BPM mime les rythmes biologiques de sommeil profond, apaisant la tension artérielle.`,
+      `L'absence de stress acoustique à ${bpm} BPM permet une libération d'acétylcholine, le médiateur du calme.`
+    ],
+    medium:[
+      `Le tempo de ${bpm} BPM maintient une homéostasie neuro-végétative parfaite, ni stressante ni sédative.`,
+      `À ${bpm} BPM, le signal entretient une vigilance neutre, idéale pour des tâches cognitives prolongées.`,
+      `Ce rythme modéré (${bpm} BPM) préserve vos ressources nerveuses tout en évitant la somnolence.`,
+      `L'équilibre sympathique/parasympathique est optimal à ce tempo de ${bpm} BPM.`,
+      `La dynamique à ${bpm} BPM soutient un état d'éveil stable, compatible avec une attention soutenue.`,
+      `À ${bpm} BPM, le circuit de la récompense (dopamine) est stimulé sans surcharger le système cardiovasculaire.`
+    ],
+    fast:[
+      `Ce tempo élevé de ${bpm} BPM déclenche une cascade orthosympathique, libérant adrénaline et noradrénaline.`,
+      `À ${bpm} BPM, le corps se mobilise pour l'action : le débit sanguin s'accélère et la vigilance devient maximale.`,
+      `Le signal à ${bpm} BPM simule un état de stress positif (eustress), boostant la réactivité musculaire.`,
+      `Avec ${bpm} BPM, l'entraînement rythmique force une accélération métabolique préparant à l'effort intense.`,
+      `La dominance orthosympathique à ${bpm} BPM favorise la glycolyse et la disponibilité énergétique immédiate.`,
+      `À ${bpm} BPM, le cerveau passe en mode "haute performance", optimisant les réflexes et la motricité.`
+    ]
+  };
+ 
+  const hzComments = {
+    veryLow:[
+      `Les fréquences infra-basses (${hertz} Hz) créent une résonance limbique favorisant la sécrétion d'endorphines.`,
+      `Le spectre concentré à ${hertz} Hz stimule les récepteurs mécanosensibles, renforçant l'ancrage corporel.`,
+      `À ${hertz} Hz, l'énergie acoustique agit comme un anxiolytique naturel sur l'amygdale cérébrale.`,
+      `Cette dominante de ${hertz} Hz privilégie la relaxation des tissus et la décharge sensorielle.`,
+      `Les ondes sonores à ${hertz} Hz favorisent une déconnexion du cortex préfrontal, propice au lâcher-prise.`,
+      `Le centroïde spectral bas (${hertz} Hz) réduit la pollution mentale et l'hyper-vigilance auditive.`
+    ],
+    low:[
+      `Le registre des médiums-graves (${hertz} Hz) est perçu comme sécurisant par le cortex auditif droit.`,
+      `Les fréquences de ${hertz} Hz imitent les timbres vocaux naturels, stabilisant la réponse émotionnelle.`,
+      `À ${hertz} Hz, le signal sonore enveloppe le système nerveux sans provoquer de fatigue corticale.`,
+      `Ce profil spectral à ${hertz} Hz est idéal pour maintenir un confort acoustique sur de longues durées.`,
+      `La richesse harmonique à ${hertz} Hz favorise la production de sérotonine, l'hormone de l'humeur.`,
+      `À ${hertz} Hz, le traitement neuronal reste fluide, évitant toute saturation des voies ascendantes.`
+    ],
+    mid:[
+      `La présence de médiums-aigus (${hertz} Hz) stimule l'attention sélective et la clarté mentale.`,
+      `À ${hertz} Hz, le cerveau traite le signal comme une information prioritaire, boostant la concentration.`,
+      `Ce niveau fréquentiel de ${hertz} Hz active les circuits de mémorisation à court terme.`,
+      `L'énergie spectrale à ${hertz} Hz favorise un éveil cognitif net, utile pour l'apprentissage.`,
+      `À ${hertz} Hz, le cortex primaire est sollicité pour une analyse précise des textures sonores.`,
+      `Le signal à ${hertz} Hz agit comme un catalyseur pour les tâches demandant de la précision.`
+    ],
+    high:[
+      `La densité d'aigus à ${hertz} Hz provoque une hyperexcitabilité neuronale temporaire.`,
+      `À ${hertz} Hz, le système auditif central est en hyper-alerte, augmentant la tension nerveuse.`,
+      `Ces fréquences élevées (${hertz} Hz) peuvent saturer les neurotransmetteurs en cas d'écoute prolongée.`,
+      `Le spectre riche à ${hertz} Hz est un puissant stimulant, mais peut altérer la qualité du sommeil futur.`,
+      `À ${hertz} Hz, l'activité électrique corticale est intense, typique des phases de stress ou de sport.`,
+      `La dominance de hautes fréquences (${hertz} Hz) accélère la fatigue sensorielle globale.`
+    ]
+  };
+ 
+  const conclusions = {
+    delta:'Privilégiez ce son pour une phase de récupération totale ou avant le sommeil.',
+    theta:'Ce profil est parfait pour les phases de création ou de visualisation mentale.',
+    alpha:'L\'équilibre idéal pour une session d\'étude ou de travail calme.',
+    beta:'Utilisez cette énergie pour vos entraînements physiques ou vos besoins de motivation.',
+    gamma:'Attention : ce niveau de stimulation est à réserver aux efforts explosifs de courte durée.'
+  };
+ 
+  let bpmCat = validBpm ? (bpm<80?'slow':bpm<115?'medium':'fast') : 'medium';
+  let hzCat  = validHz  ? (hertz<500?'veryLow':hertz<1500?'low':hertz<4000?'mid':'high') : 'mid';
+ 
+  return `${pick(bpmIntros[bpmCat])} ${pick(hzComments[hzCat])}<br><br><strong style="color:#7c3aed">Conseil :</strong> ${conclusions[waveType]}`;
+}
+ 
+// =============================================
+// TAGS + FATIGUE
+// =============================================
+function generateTags(bpm, hz, waveType){
+  const vB=bpm>0&&isFinite(bpm), vH=hz>0&&isFinite(hz);
   const tags=[];
-  if(waveType==='delta')tags.push({label:'💤 Sommeil profond',type:'safe'});
-  if(waveType==='theta')tags.push({label:'🧘 Méditation',type:'safe'},{label:'✨ Créativité',type:''});
-  if(waveType==='alpha')tags.push({label:'🧠 Focus doux',type:''},{label:'🫀 Cohérence cardiaque',type:'safe'});
-  if(waveType==='beta')tags.push({label:'⚡ Éveil actif',type:''},{label:'💪 Performance',type:''});
-  if(waveType==='gamma')tags.push({label:'🔥 Haute stimulation',type:'warn'},{label:'⚡ Cognition intense',type:''});
-  if(validBpm&&bpm<80)tags.push({label:'🫀 Nerf vague stimulé',type:'safe'});
-  if(validBpm&&bpm>130)tags.push({label:'🏃 Sport / Effort',type:''});
-  if(validHz&&hertz>3000)tags.push({label:'⚠ Fatigue si prolongé',type:'warn'});
-  if(validHz&&hertz<600)tags.push({label:'🌊 Vibration profonde',type:'safe'});
+  if(waveType==='delta') tags.push({l:'💤 Sommeil profond',t:'safe'});
+  if(waveType==='theta') tags.push({l:'🧘 Méditation',t:'safe'},{l:'✨ Créativité',t:''});
+  if(waveType==='alpha') tags.push({l:'🧠 Focus doux',t:''},{l:'🫀 Cohérence cardiaque',t:'safe'});
+  if(waveType==='beta')  tags.push({l:'⚡ Éveil actif',t:''},{l:'💪 Performance',t:''});
+  if(waveType==='gamma') tags.push({l:'🔥 Haute stimulation',t:'warn'},{l:'⚡ Cognition intense',t:''});
+  if(vB&&bpm<80)  tags.push({l:'🫀 Nerf vague stimulé',t:'safe'});
+  if(vB&&bpm>130) tags.push({l:'🏃 Sport / Effort',t:''});
+  if(vH&&hz>3000) tags.push({l:'⚠ Fatigue si prolongé',t:'warn'});
+  if(vH&&hz<600)  tags.push({l:'🌊 Vibration profonde',t:'safe'});
   return tags.slice(0,4);
 }
  
-function getFatigueScore(bpm,hertz){
-  const validBpm=bpm>0&&isFinite(bpm);
-  const validHz=hertz>0&&isFinite(hertz);
-  let score=0;
-  if(validBpm&&bpm>140)score+=40;
-  else if(validBpm&&bpm>110)score+=20;
-  if(validHz&&hertz>3000)score+=40;
-  else if(validHz&&hertz>1500)score+=20;
-  return Math.min(score,100);
+function getFatigueScore(bpm, hz){
+  let s=0;
+  if(bpm>140) s+=40; else if(bpm>110) s+=20;
+  if(hz>3000) s+=40;  else if(hz>1500) s+=20;
+  return Math.min(s,100);
 }
  
 function getWaveType(bpm){
-  if(!bpm||!isFinite(bpm)||bpm<60)return'delta';
-  if(bpm<80)return'theta';
-  if(bpm<115)return'alpha';
-  if(bpm<155)return'beta';
+  if(!bpm||!isFinite(bpm)||bpm<60) return'delta';
+  if(bpm<80)  return'theta';
+  if(bpm<115) return'alpha';
+  if(bpm<155) return'beta';
   return'gamma';
 }
  
-audioInput.addEventListener('change',async(e)=>{
-  const file=e.target.files[0];
-  if(!file)return;
-  screenReady.classList.add('hidden');
-  screenAnalyzing.classList.remove('hidden');
+// =============================================
+// AUDIO ENGINE
+// =============================================
+const audioInput = document.getElementById('audio-input');
+const S = id => document.getElementById(id);
+ 
+audioInput.addEventListener('change', async e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  S('screen-ready').classList.add('hidden');
+  S('screen-analyzing').classList.remove('hidden');
+  S('home-btn').style.display = 'flex';
  
   try{
-    const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-    const arrayBuffer=await file.arrayBuffer();
-    const audioBuffer=await audioCtx.decodeAudioData(arrayBuffer);
-    const data=audioBuffer.getChannelData(0);
-    const sampleRate=audioBuffer.sampleRate;
-    const duration=audioBuffer.duration;
+    const audioCtx = new(window.AudioContext||window.webkitAudioContext)();
+    const arrayBuffer = await file.arrayBuffer();
+    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+    const data       = audioBuffer.getChannelData(0);
+    const sampleRate = audioBuffer.sampleRate;
+    const duration   = audioBuffer.duration;
  
     // ── MOTEUR BPM VALIDÉ — NE PAS MODIFIER ──
-    const scanLength=Math.min(data.length,sampleRate*60);
-    let maxVolume=0;
-    for(let i=0;i<scanLength;i++){if(Math.abs(data[i])>maxVolume)maxVolume=Math.abs(data[i]);}
+    const scanLength = Math.min(data.length, sampleRate * 60);
+    let maxVolume = 0;
+    for(let i=0;i<scanLength;i++) if(Math.abs(data[i])>maxVolume) maxVolume=Math.abs(data[i]);
  
     function getBPM(thresholdMultiplier){
-      let peaks=[];
-      let threshold=maxVolume*thresholdMultiplier;
-      for(let i=0;i<scanLength;i++){
-        if(data[i]>threshold){peaks.push(i);i+=sampleRate*0.28;}
-      }
-      if(peaks.length<5)return 0;
+      let peaks=[]; const threshold=maxVolume*thresholdMultiplier;
+      for(let i=0;i<scanLength;i++) if(data[i]>threshold){peaks.push(i);i+=sampleRate*0.28;}
+      if(peaks.length<5) return 0;
       let intervals={};
       for(let i=1;i<peaks.length;i++){
         let interval=Math.round((peaks[i]-peaks[i-1])/150)*150;
         intervals[interval]=(intervals[interval]||0)+1;
       }
       let maxCount=0,bestInterval=0;
-      for(let int in intervals){if(intervals[int]>maxCount){maxCount=intervals[int];bestInterval=int;}}
+      for(let k in intervals) if(intervals[k]>maxCount){maxCount=intervals[k];bestInterval=k;}
       return bestInterval>0?Math.round(60/(bestInterval/sampleRate)):0;
     }
  
-    let bpm=getBPM(0.85);
-    if(bpm===0)bpm=getBPM(0.60);
-    if(bpm>0&&bpm<85)bpm*=2;
-    if(bpm>200)bpm=Math.round(bpm/2);
+    let bpm = getBPM(0.85);
+    if(bpm===0) bpm = getBPM(0.60);
+    if(bpm>0&&bpm<85)  bpm *= 2;
+    if(bpm>200) bpm = Math.round(bpm/2);
     // ── FIN MOTEUR BPM ──
  
     // ── MOTEUR HERTZ VALIDÉ — NE PAS MODIFIER ──
-    let zeroCrossings=0;
-    let isPositive=data[0]>0;
+    let zeroCrossings=0, isPositive=data[0]>0;
     for(let i=1;i<data.length;i++){
-      if(isPositive&&data[i]<-0.002){isPositive=false;}
+      if(isPositive&&data[i]<-0.002) isPositive=false;
       else if(!isPositive&&data[i]>0.002){isPositive=true;zeroCrossings++;}
     }
-    let averageHz=Math.round(zeroCrossings/duration);
+    let averageHz = Math.round(zeroCrossings/duration);
     // ── FIN MOTEUR HERTZ ──
  
     setTimeout(()=>{
-      const waveType=getWaveType(bpm);
-      const waveLabels={delta:'Delta',theta:'Thêta',alpha:'Alpha',beta:'Bêta',gamma:'Gamma'};
-      const waveSegs={delta:['w-delta'],theta:['w-theta'],alpha:['w-alpha'],beta:['w-beta'],gamma:['w-gamma']};
+      const waveType = getWaveType(bpm);
+      const waveLabels = {delta:'Delta',theta:'Thêta',alpha:'Alpha',beta:'Bêta',gamma:'Gamma'};
  
-      document.getElementById('res-name').innerText=file.name.replace(/\.[^/.]+$/,'').substring(0,32);
-      document.getElementById('res-bpm').innerText=(bpm>0&&isFinite(bpm))?bpm:'—';
-      document.getElementById('res-hz').innerText=averageHz>0?averageHz.toLocaleString():'—';
-      document.getElementById('res-wave').innerText=waveLabels[waveType];
+      S('res-name').innerText = file.name.replace(/\.[^/.]+$/,'').substring(0,30);
+      S('res-bpm').innerText  = (bpm>0&&isFinite(bpm)) ? bpm : '—';
+      S('res-hz').innerText   = averageHz>0 ? averageHz.toLocaleString() : '—';
+      S('res-wave').innerText = waveLabels[waveType];
  
-      ['w-delta','w-theta','w-alpha','w-beta','w-gamma'].forEach(id=>document.getElementById(id).classList.remove('active'));
-      waveSegs[waveType].forEach(id=>document.getElementById(id).classList.add('active'));
+      ['w-delta','w-theta','w-alpha','w-beta','w-gamma'].forEach(id=>S(id).classList.remove('active'));
+      S('w-'+waveType).classList.add('active');
  
-      document.getElementById('res-desc').innerHTML=generateNeuroAnalysis(bpm,averageHz,waveType);
+      // Typewriter analysis
+      const analysisHTML = generateNeuroAnalysis(bpm, averageHz, waveType);
+      typeWriter(S('res-desc'), analysisHTML, 10);
  
-      const tags=generateTags(bpm,averageHz,waveType);
-      document.getElementById('res-tags').innerHTML=tags.map(t=>`<span class="tag ${t.type}">${t.label}</span>`).join('');
+      // Tags
+      const tags = generateTags(bpm, averageHz, waveType);
+      S('res-tags').innerHTML = tags.map(t=>`<span class="tag ${t.t}">${t.l}</span>`).join('');
  
-      const fatigueScore=getFatigueScore(bpm,averageHz);
-      const fatigueFill=document.getElementById('fatigue-fill');
-      const fatigueLabel=document.getElementById('fatigue-label');
-      if(fatigueScore>=60){
-        fatigueFill.style.cssText=`width:${fatigueScore}%;background:linear-gradient(90deg,#f59e0b,#ef4444)`;
-        fatigueLabel.style.color='#b91c1c';
-        fatigueLabel.innerText='⚠ Écoute prolongée : risque de fatigue nerveuse';
-      }else if(fatigueScore>=30){
-        fatigueFill.style.cssText=`width:${fatigueScore}%;background:linear-gradient(90deg,#a855f7,#7c3aed)`;
-        fatigueLabel.style.color='#6d28d9';
-        fatigueLabel.innerText='→ Écoute prolongée : modérément stimulante';
-      }else{
-        fatigueFill.style.cssText=`width:${Math.max(fatigueScore,10)}%;background:linear-gradient(90deg,#10b981,#059669)`;
-        fatigueLabel.style.color='#065f46';
-        fatigueLabel.innerText='✓ Écoute prolongée : sûre et régénératrice';
+      // Fatigue
+      const fs = getFatigueScore(bpm, averageHz);
+      const ff = S('fatigue-fill'), fl = S('fatigue-label');
+      if(fs>=60){
+        ff.style.cssText=`width:${fs}%;background:linear-gradient(90deg,#f59e0b,#ef4444)`;
+        fl.style.color='#b91c1c'; fl.textContent=L('fHigh');
+      } else if(fs>=30){
+        ff.style.cssText=`width:${fs}%;background:linear-gradient(90deg,#a855f7,#7c3aed)`;
+        fl.style.color='#6d28d9'; fl.textContent=L('fMid');
+      } else {
+        ff.style.cssText=`width:${Math.max(fs,10)}%;background:linear-gradient(90deg,#10b981,#059669)`;
+        fl.style.color='#065f46'; fl.textContent=L('fLow');
       }
  
-      const hbDot=document.getElementById('hb-dot');
+      // Heartbeat at BPM
       if(bpm>0&&isFinite(bpm)){
-        const beatDuration=(60/bpm).toFixed(3)+'s';
-        hbDot.style.animation=`heartbeat ${beatDuration} ease-in-out infinite`;
+        const bd=(60/bpm).toFixed(3)+'s';
+        S('hb-dot').style.animation=`heartbeat ${bd} ease-in-out infinite`;
       }
  
-      screenAnalyzing.classList.add('hidden');
-      screenResult.classList.remove('hidden');
-    },800);
+      // Hormones
+      lastBpm=bpm; lastHz=averageHz;
+      renderHormones(bpm, averageHz);
  
-  }catch(err){
+      S('screen-analyzing').classList.add('hidden');
+      S('screen-result').classList.remove('hidden');
+    }, 800);
+ 
+  } catch(err){
     alert('Erreur de lecture audio. Vérifiez le format du fichier.');
-    location.reload();
+    goHome();
   }
 });
+ 
+// Init
+applyLang();
 </script>
 </body>
 </html>
