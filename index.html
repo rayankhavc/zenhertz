@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZenHertz</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -120,12 +121,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 .hbg{height:5px;border-radius:3px;background:var(--div);overflow:hidden}
 .hfill{height:100%;border-radius:3px;width:0%;transition:width 1.5s cubic-bezier(.34,1.56,.64,1)}
 
-/* DISC */
+/* DISC & BUTTONS */
 .disc{background:var(--dis);border-radius:14px;padding:.7rem 1rem}
 .disc p{font-size:.66rem;color:var(--dis-t);line-height:1.55;text-align:center}
 .logo{font-size:2.75rem;font-weight:900;letter-spacing:-2px;background:linear-gradient(135deg,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.backbtn{display:block;text-align:center;font-size:.68rem;font-weight:800;color:var(--t3);letter-spacing:.22em;text-transform:uppercase;cursor:pointer;padding:.55rem;margin-top:.25rem;transition:color .2s}
+.backbtn{display:block;text-align:center;font-size:.68rem;font-weight:800;color:var(--t3);letter-spacing:.22em;text-transform:uppercase;cursor:pointer;padding:.55rem;transition:color .2s}
 .backbtn:hover{color:var(--t1)}
+
+/* BOUTON PARTAGER */
+.sharebtn{display:flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:800;color:white;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:.55rem 1.2rem;border-radius:50px;background:linear-gradient(135deg,#7c3aed,#a855f7);transition:transform .2s,box-shadow .2s;box-shadow:0 4px 15px rgba(124,58,237,.3)}
+.sharebtn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,58,237,.45)}
 
 /* HEARTBEAT */
 .hbring{width:60px;height:60px;border-radius:50%;border:2px solid rgba(124,58,237,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 1.1rem}
@@ -134,7 +139,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 
 /* LAYOUT */
 .result-page{min-height:100vh;padding:5.5rem 2rem 3rem;display:flex;justify-content:center;align-items:flex-start}
-#rwrap{width:100%;max-width:1080px}
+#rwrap{width:100%;max-width:1080px;border-radius:36px;} /* Ajout border-radius pour la capture */
 @media(min-width:768px){#rwrap{display:grid;grid-template-columns:1.1fr 1fr;gap:1.5rem;align-items:start}}
 @media(max-width:767px){#rwrap{max-width:440px;margin:0 auto}#rright{margin-top:1rem}}
 
@@ -147,7 +152,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 
 <div id="mesh"><div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div></div>
 
-<!-- TOPBAR -->
 <div id="topbar">
   <button class="tbtn" id="home-btn" onclick="goHome()" style="display:none">
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
@@ -160,7 +164,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
   </div>
 </div>
 
-<!-- ══ SCREEN READY ══ -->
 <div id="sc-ready" class="screen">
   <div class="glass fade" style="max-width:440px;width:100%;padding:2.5rem 2rem">
     <div style="text-align:center;margin-bottom:1.5rem">
@@ -170,18 +173,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
       </p>
     </div>
 
-    <!-- URL INPUT -->
     <div class="url-wrap">
       <input type="text" id="url-input" class="url-input" data-i-ph="urlph">
       <button class="url-btn" onclick="triggerAnalyzeLink()" data-i="urlbtn">→</button>
     </div>
 
-    <!-- ALERT -->
     <div id="alert-box"><p id="alert-msg"></p></div>
 
     <div class="or-line"><span data-i="orLabel">ou</span></div>
 
-    <!-- FILE UPLOAD -->
     <label style="cursor:pointer;display:block">
       <div class="uzone">
         <div class="uico">
@@ -201,7 +201,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
   </div>
 </div>
 
-<!-- ══ SCREEN ANALYZING ══ -->
 <div id="sc-analyzing" class="screen hidden">
   <div class="glass fade" style="max-width:430px;width:100%;padding:3.5rem 2rem;text-align:center">
     <div class="spin"></div>
@@ -210,10 +209,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
   </div>
 </div>
 
-<!-- ══ SCREEN RESULT ══ -->
 <div id="sc-result" class="result-page hidden fade">
   <div id="rwrap">
-    <!-- LEFT -->
     <div class="glass" id="rleft" style="padding:2rem 1.75rem">
       <div class="hbring"><div class="hbdot" id="hbdot"></div></div>
       <div style="text-align:center;margin-bottom:1.2rem">
@@ -242,10 +239,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
         <div class="fbar"><div class="ffill" id="ffill"></div></div>
         <p id="flbl" style="font-size:.67rem;margin-top:.38rem;font-weight:600"></p>
       </div>
-      <div class="disc" style="margin-bottom:.75rem"><p data-i="disclaimer"></p></div>
-      <span class="backbtn" onclick="goHome()" data-i="back">← Analyser un autre morceau</span>
+      <div class="disc" style="margin-bottom:1.2rem"><p data-i="disclaimer"></p></div>
+      
+      <div style="display:flex; gap:1rem; align-items:center; justify-content:center; flex-wrap:wrap;">
+        <span class="backbtn" onclick="goHome()" data-i="back">← Analyser un autre morceau</span>
+        <div class="sharebtn" id="btn-share" onclick="captureBilan()">📸 <span data-i="share">Partager</span></div>
+      </div>
     </div>
-    <!-- RIGHT -->
     <div id="rright" style="display:flex;flex-direction:column;gap:1.2rem">
       <div class="hpanel">
         <p class="stitle" data-i="hormones">Tableau Hormonal Estimé</p>
@@ -269,7 +269,7 @@ const TR = {
     extracting:'Extraction du flux audio…', extractsub:'Récupération de la source',
     neuroprofile:'Profil Neuro-acoustique', hormones:'Tableau Hormonal Estimé',
     disclaimer:'Analyse basée sur la périodicité du signal et la moyenne spectrale (ZCR). Visée informative — ne constitue pas un diagnostic médical.',
-    back:'← Analyser un autre morceau',
+    back:'← Analyser un autre morceau', share:'Partager le bilan', capturing:'Capture...',
     fLow:'✓ Écoute prolongée : sûre et régénératrice',
     fMid:'→ Écoute prolongée : modérément stimulante',
     fHigh:'⚠ Écoute prolongée : risque de fatigue nerveuse',
@@ -293,7 +293,7 @@ const TR = {
     extracting:'Extracting audio stream…', extractsub:'Retrieving source',
     neuroprofile:'Neuro-acoustic Profile', hormones:'Estimated Hormonal Dashboard',
     disclaimer:'Analysis based on signal periodicity and spectral average (ZCR). For informational purposes only — not a medical diagnosis.',
-    back:'← Analyze another track',
+    back:'← Analyze another track', share:'Share Results', capturing:'Capturing...',
     fLow:'✓ Extended listening: safe & regenerative',
     fMid:'→ Extended listening: moderately stimulating',
     fHigh:'⚠ Extended listening: risk of neural fatigue',
@@ -684,6 +684,42 @@ async function analyzeLink(url){
     S('home-btn').style.display='none';
     showAlert(L('errLink'));
   }
+}
+
+/* ══ CAPTURE BILAN (SHARE) ══ */
+async function captureBilan(){
+  const btn = S('btn-share');
+  const originalHTML = btn.innerHTML;
+  btn.innerHTML = `📸 <span>${L('capturing')}</span>`;
+  
+  try {
+    const target = S('rwrap');
+    // On masque temporairement les boutons d'action sur la capture pour faire plus propre
+    const actionsDiv = target.querySelector('.backbtn').parentElement;
+    actionsDiv.style.display = 'none';
+
+    const canvas = await html2canvas(target, {
+      backgroundColor: theme === 'dark' ? '#04040e' : '#eeeef5',
+      scale: 2, // Haute résolution
+      useCORS: true,
+      logging: false
+    });
+
+    actionsDiv.style.display = 'flex'; // On remet les boutons
+
+    // Téléchargement
+    const image = canvas.toDataURL("image/png");
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = `ZenHertz_Bilan_${lastBpm}BPM.png`;
+    link.click();
+
+  } catch(err) {
+    console.error(err);
+    alert('Erreur lors de la capture de l\'image.');
+  }
+  
+  btn.innerHTML = originalHTML;
 }
 
 applyLang();
