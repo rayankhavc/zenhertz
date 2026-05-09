@@ -6,188 +6,283 @@
     <title>ZenHertz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #f0f0f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+        .card { background: rgba(255,255,255,0.72); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.5); border-radius: 40px; padding: 2.5rem 2rem; max-width: 420px; width: 100%; box-shadow: 0 8px 40px rgba(0,0,0,0.08); }
+        .logo { font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; background: linear-gradient(135deg, #7c3aed, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .subtitle { color: #6b7280; font-size: 0.85rem; line-height: 1.6; margin-top: 0.4rem; font-weight: 400; }
+        .upload-zone { margin-top: 2rem; border: 1.5px dashed rgba(124,58,237,0.3); border-radius: 28px; padding: 2.5rem 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s ease; background: rgba(124,58,237,0.03); }
+        .upload-zone:hover { border-color: #7c3aed; background: rgba(124,58,237,0.06); transform: translateY(-1px); }
+        .upload-icon { width: 52px; height: 52px; background: linear-gradient(135deg, #7c3aed, #a855f7); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+        .upload-icon svg { width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; }
+        .upload-label { font-size: 0.95rem; font-weight: 600; color: #1f2937; }
+        .upload-formats { font-size: 0.7rem; color: #9ca3af; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.5rem; font-weight: 500; }
+        .spinner-wrap { text-align: center; padding: 1rem 0; }
+        .spinner { width: 52px; height: 52px; border: 3px solid rgba(124,58,237,0.15); border-top-color: #7c3aed; border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 1.5rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .analyzing-label { font-size: 1.1rem; font-weight: 700; color: #1f2937; letter-spacing: -0.5px; }
+        .analyzing-sub { font-size: 0.7rem; color: #9ca3af; letter-spacing: 0.25em; text-transform: uppercase; margin-top: 0.75rem; font-weight: 600; }
+        .result-title { font-size: 1rem; font-weight: 700; color: #1f2937; letter-spacing: -0.3px; }
+        .result-bar { height: 3px; width: 48px; background: linear-gradient(90deg, #7c3aed, #a855f7); border-radius: 2px; margin-top: 0.6rem; }
+        .metrics { display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr; gap: 0; background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.8); border-radius: 28px; padding: 1.75rem 1rem; margin: 1.5rem 0; }
+        .metric { text-align: center; }
+        .metric-divider { background: #e5e7eb; }
+        .metric-value { font-size: 2.4rem; font-weight: 900; letter-spacing: -2px; line-height: 1; color: #111827; }
+        .metric-value.accent { color: #7c3aed; }
+        .metric-value.wave { font-size: 1.3rem; letter-spacing: -0.5px; padding-top: 0.3rem; }
+        .metric-label { font-size: 0.6rem; font-weight: 700; color: #9ca3af; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.8rem; }
+        .impact-card { background: #0d0d0d; border-radius: 28px; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+        .impact-title { font-size: 1rem; font-weight: 700; color: white; }
+        .impact-sub { font-size: 0.65rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600; margin-top: 0.25rem; }
+        .impact-badge { background: #7c3aed; color: white; font-size: 0.75rem; font-weight: 800; padding: 0.5rem 1rem; border-radius: 50px; white-space: nowrap; }
+        .science-box { background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.15); border-radius: 20px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+        .science-box p { font-size: 0.78rem; color: #4b5563; line-height: 1.6; }
+        .science-box strong { color: #7c3aed; font-weight: 600; }
+        .wave-bar { display: flex; gap: 4px; margin: 0.75rem 0 0.25rem; }
+        .wave-seg { height: 6px; border-radius: 3px; flex: 1; opacity: 0.25; transition: opacity 0.4s; }
+        .wave-seg.active { opacity: 1; }
+        .wave-labels { display: flex; justify-content: space-between; font-size: 0.6rem; color: #9ca3af; font-weight: 600; letter-spacing: 0.05em; }
+        .btn-back { display: block; text-align: center; font-size: 0.7rem; font-weight: 800; color: #9ca3af; letter-spacing: 0.25em; text-transform: uppercase; cursor: pointer; padding: 0.5rem; background: none; border: none; width: 100%; }
+        .btn-back:hover { color: #1f2937; }
+        .hidden { display: none; }
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-[#f0f0f5]">
-
-    <div class="min-h-screen flex items-center justify-center p-6">
-        
-        <!-- ÉCRAN D'ACCUEIL -->
-        <div id="screen-ready" class="max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl border border-white">
-            <h1 class="text-6xl font-black mb-4 tracking-tighter bg-gradient-to-br from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
-                ZenHertz
-            </h1>
-            <p class="text-gray-500 font-semibold mb-10 leading-relaxed px-4">
-                Découvrez l'impact de votre musique sur votre <span class="text-violet-600">système nerveux</span> et vos <span class="text-fuchsia-500">ondes cérébrales</span>.
-            </p>
-
-            <label class="cursor-pointer group block">
-                <div class="bg-black text-white p-10 rounded-[45px] border-2 border-transparent group-hover:border-violet-500 transition-all duration-500 shadow-2xl scale-100 group-hover:scale-[1.02]">
-                    <div class="bg-white/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-3xl">＋</span>
-                    </div>
-                    <p class="font-bold text-xl tracking-tight">Analyser un morceau</p>
-                    <p class="text-[10px] opacity-40 uppercase tracking-[0.3em] mt-2 font-black">MP3, WAV, AAC</p>
-                </div>
-                <input type="file" id="audio-input" class="hidden" accept="audio/*">
-            </label>
+<body>
+ 
+    <!-- ÉCRAN ACCUEIL -->
+    <div id="screen-ready" class="card fade-in">
+        <div style="text-align:center; margin-bottom:0.25rem;">
+            <div class="logo">ZenHertz</div>
+            <p class="subtitle">Découvrez l'impact de votre musique sur votre <span style="color:#7c3aed;font-weight:500;">système nerveux</span> et vos <span style="color:#a855f7;font-weight:500;">ondes cérébrales</span>.</p>
         </div>
-
-        <!-- ÉCRAN ANALYSE -->
-        <div id="screen-analyzing" class="hidden max-w-lg w-full glass rounded-[50px] p-16 text-center shadow-2xl">
-            <div class="relative w-24 h-24 mx-auto mb-10">
-                <div class="absolute inset-0 border-4 border-violet-100 rounded-full"></div>
-                <div class="absolute inset-0 border-4 border-violet-600 rounded-full border-t-transparent animate-spin"></div>
+ 
+        <label style="cursor:pointer; display:block; margin-top:2rem;">
+            <div class="upload-zone">
+                <div class="upload-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <p class="upload-label">Analyser un morceau</p>
+                <p class="upload-formats">MP3 · WAV · AAC · FLAC</p>
             </div>
-            <h2 class="text-3xl font-black text-gray-800 animate-pulse tracking-tighter">Scan Bioacoustique...</h2>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-6">Analyse Profonde</p>
+            <input type="file" id="audio-input" style="display:none;" accept="audio/*">
+        </label>
+ 
+        <div style="margin-top:1.75rem; display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.75rem; text-align:center;">
+            <div style="background:rgba(124,58,237,0.06); border-radius:16px; padding:0.85rem 0.5rem;">
+                <div style="font-size:1.1rem; color:#7c3aed; margin-bottom:0.3rem;">⏱</div>
+                <p style="font-size:0.65rem; font-weight:700; color:#6b7280; letter-spacing:0.05em;">BPM</p>
+            </div>
+            <div style="background:rgba(124,58,237,0.06); border-radius:16px; padding:0.85rem 0.5rem;">
+                <div style="font-size:1.1rem; color:#7c3aed; margin-bottom:0.3rem;">〰️</div>
+                <p style="font-size:0.65rem; font-weight:700; color:#6b7280; letter-spacing:0.05em;">Hertz</p>
+            </div>
+            <div style="background:rgba(124,58,237,0.06); border-radius:16px; padding:0.85rem 0.5rem;">
+                <div style="font-size:1.1rem; color:#7c3aed; margin-bottom:0.3rem;">🧠</div>
+                <p style="font-size:0.65rem; font-weight:700; color:#6b7280; letter-spacing:0.05em;">Ondes</p>
+            </div>
         </div>
-
-        <!-- ÉCRAN RÉSULTATS -->
-        <div id="screen-result" class="hidden max-w-lg w-full glass rounded-[50px] p-10 text-center shadow-2xl border border-white">
-            <div class="mb-10">
-                <h2 id="res-name" class="text-2xl font-black text-gray-900 tracking-tight">Analyse terminée</h2>
-                <div class="h-1.5 w-16 bg-violet-600 mx-auto mt-3 rounded-full"></div>
-            </div>
-            
-            <div class="grid grid-cols-3 gap-3 bg-white/50 border border-white p-8 rounded-[40px] mb-10 shadow-inner">
-                <div>
-                    <p id="res-bpm" class="text-5xl font-black text-gray-900 leading-none">0</p>
-                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-4">BPM</p>
-                </div>
-                <div class="border-x border-gray-100">
-                    <p id="res-hz" class="text-5xl font-black text-violet-600 leading-none">0</p>
-                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-4">Hertz</p>
-                </div>
-                <div>
-                    <p id="res-wave" class="text-2xl font-black text-gray-900 leading-none pt-2 uppercase">--</p>
-                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-6">Ondes</p>
-                </div>
-            </div>
-
-            <div class="bg-black p-8 rounded-[45px] text-white flex justify-between items-center mb-8 shadow-2xl">
-                <div class="text-left">
-                    <p class="font-bold text-lg leading-tight">Bilan Complet</p>
-                    <p class="text-[10px] opacity-40 uppercase tracking-widest font-bold">Bio-impact cellulaire</p>
-                </div>
-                <div class="bg-violet-600 px-6 py-3 rounded-full text-xs font-black shadow-lg">2.99€</div>
-            </div>
-            
-            <button onclick="location.reload()" class="text-gray-400 text-[11px] font-black uppercase tracking-[0.3em] hover:text-black transition-colors">Retour</button>
-        </div>
-
     </div>
-
+ 
+    <!-- ÉCRAN ANALYSE -->
+    <div id="screen-analyzing" class="card hidden" style="text-align:center;">
+        <div class="spinner-wrap" style="padding:2rem 0;">
+            <div class="spinner"></div>
+            <p class="analyzing-label">Scan bioacoustique…</p>
+            <p class="analyzing-sub">Analyse en cours</p>
+        </div>
+    </div>
+ 
+    <!-- ÉCRAN RÉSULTATS -->
+    <div id="screen-result" class="card hidden">
+        <div style="margin-bottom:1.25rem;">
+            <p id="res-name" class="result-title">Analyse terminée</p>
+            <div class="result-bar"></div>
+        </div>
+ 
+        <div class="metrics">
+            <div class="metric">
+                <p id="res-bpm" class="metric-value">—</p>
+                <p class="metric-label">BPM</p>
+            </div>
+            <div class="metric-divider"></div>
+            <div class="metric">
+                <p id="res-hz" class="metric-value accent">—</p>
+                <p class="metric-label">Hertz</p>
+            </div>
+            <div class="metric-divider"></div>
+            <div class="metric">
+                <p id="res-wave" class="metric-value wave">—</p>
+                <p class="metric-label">Onde</p>
+            </div>
+        </div>
+ 
+        <div class="science-box">
+            <div class="wave-bar">
+                <div id="w-delta" class="wave-seg" style="background:#818cf8;"></div>
+                <div id="w-theta" class="wave-seg" style="background:#a78bfa;"></div>
+                <div id="w-alpha" class="wave-seg" style="background:#7c3aed;"></div>
+                <div id="w-beta"  class="wave-seg" style="background:#c084fc;"></div>
+                <div id="w-gamma" class="wave-seg" style="background:#e879f9;"></div>
+            </div>
+            <div class="wave-labels">
+                <span>Delta</span><span>Thêta</span><span>Alpha</span><span>Bêta</span><span>Gamma</span>
+            </div>
+            <p id="res-desc" style="margin-top:0.85rem;"></p>
+            <p id="res-usage" style="margin-top:0.5rem; font-size:0.72rem; color:#7c3aed; font-weight:600;"></p>
+        </div>
+ 
+        <div class="impact-card">
+            <div>
+                <p class="impact-title">Bilan complet</p>
+                <p class="impact-sub">Bio-impact · Neuro-acoustique</p>
+            </div>
+            <div class="impact-badge">2.99 €</div>
+        </div>
+ 
+        <div style="background:rgba(0,0,0,0.03); border-radius:16px; padding:0.75rem 1rem; margin-bottom:1rem;">
+            <p style="font-size:0.68rem; color:#9ca3af; line-height:1.55; text-align:center;">Analyse basée sur la périodicité du signal audio et la moyenne spectrale. Ces résultats ont une visée informative et ne constituent pas un diagnostic médical.</p>
+        </div>
+ 
+        <button class="btn-back" onclick="location.reload()">← Analyser un autre morceau</button>
+    </div>
+ 
     <script>
         const audioInput = document.getElementById('audio-input');
         const screenReady = document.getElementById('screen-ready');
         const screenAnalyzing = document.getElementById('screen-analyzing');
         const screenResult = document.getElementById('screen-result');
-
+ 
+        const waveData = {
+            delta: {
+                label: 'Delta',
+                desc: 'Votre musique génère un signal très lent, associé aux <strong>ondes delta</strong> (0,5–4 Hz). Ce profil favorise la récupération profonde et le sommeil réparateur.',
+                usage: '✓ Idéal pour : Sommeil · Récupération · Détente profonde',
+                segs: ['w-delta']
+            },
+            theta: {
+                label: 'Thêta',
+                desc: 'Signal lent induisant les <strong>ondes thêta</strong> (4–8 Hz). Ce registre est associé à la méditation, la créativité et les états hypnagogiques.',
+                usage: '✓ Idéal pour : Méditation · Créativité · Sophrologie',
+                segs: ['w-theta']
+            },
+            alpha: {
+                label: 'Alpha',
+                desc: 'Fréquence propice aux <strong>ondes alpha</strong> (8–13 Hz). Cet état de "relaxation active" est optimal pour la concentration douce et la cohérence cardiaque.',
+                usage: '✓ Idéal pour : Travail calme · Yoga · Lecture',
+                segs: ['w-alpha']
+            },
+            beta: {
+                label: 'Bêta',
+                desc: 'Le tempo stimule les <strong>ondes bêta</strong> (13–30 Hz), signe d\'un cerveau en éveil actif. Cela favorise la vigilance, la réactivité et la motivation.',
+                usage: '✓ Idéal pour : Sport · Travail intensif · Gaming',
+                segs: ['w-beta']
+            },
+            gamma: {
+                label: 'Gamma',
+                desc: 'Signal rapide induisant des <strong>ondes gamma</strong> (>30 Hz). Cet état de haute stimulation est lié à la cognition de haut niveau. Déconseillé avant le sommeil.',
+                usage: '⚠ Usage : Effort intense · À éviter le soir',
+                segs: ['w-gamma']
+            }
+        };
+ 
+        function getWaveType(bpm) {
+            if (!bpm || bpm < 60) return 'delta';
+            if (bpm < 80) return 'theta';
+            if (bpm < 115) return 'alpha';
+            if (bpm < 155) return 'beta';
+            return 'gamma';
+        }
+ 
         audioInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
+ 
             screenReady.classList.add('hidden');
             screenAnalyzing.classList.remove('hidden');
-
+ 
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const arrayBuffer = await file.arrayBuffer();
                 const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-                
+ 
                 const data = audioBuffer.getChannelData(0);
                 const sampleRate = audioBuffer.sampleRate;
                 const duration = audioBuffer.duration;
-
-                // --- 1. BPM ROBUSTE (Scan 60s + Sensibilité Auto) ---
+ 
+                // --- BPM (moteur original validé — ne pas modifier) ---
                 const scanLength = Math.min(data.length, sampleRate * 60);
                 let maxVolume = 0;
                 for (let i = 0; i < scanLength; i++) {
                     if (Math.abs(data[i]) > maxVolume) maxVolume = Math.abs(data[i]);
                 }
-
+ 
                 function getBPM(thresholdMultiplier) {
                     let peaks = [];
                     let threshold = maxVolume * thresholdMultiplier;
                     for (let i = 0; i < scanLength; i++) {
                         if (data[i] > threshold) {
                             peaks.push(i);
-                            i += sampleRate * 0.28; // Intervalle anti-rebond légèrement augmenté
+                            i += sampleRate * 0.28;
                         }
                     }
                     if (peaks.length < 5) return 0;
-
                     let intervals = {};
                     for (let i = 1; i < peaks.length; i++) {
                         let interval = Math.round((peaks[i] - peaks[i-1]) / 150) * 150;
                         intervals[interval] = (intervals[interval] || 0) + 1;
                     }
-
                     let maxCount = 0, bestInterval = 0;
                     for (let int in intervals) {
-                        if (intervals[int] > maxCount) {
-                            maxCount = intervals[int];
-                            bestInterval = int;
-                        }
+                        if (intervals[int] > maxCount) { maxCount = intervals[int]; bestInterval = int; }
                     }
                     return bestInterval > 0 ? Math.round(60 / (bestInterval / sampleRate)) : 0;
                 }
-
-                // Premier essai (Standard)
+ 
                 let bpm = getBPM(0.85);
-                
-                // Deuxième essai si échec (Sensibilité accrue pour PNL/Cloud Rap)
                 if (bpm === 0) bpm = getBPM(0.60);
-
-                if (bpm > 0 && bpm < 85) bpm *= 2; 
+                if (bpm > 0 && bpm < 85) bpm *= 2;
                 if (bpm > 200) bpm = Math.round(bpm / 2);
-
-                // --- 2. HERTZ (Zero-Crossing Rate) ---
+ 
+                // --- HERTZ (moteur original validé — ne pas modifier) ---
                 let zeroCrossings = 0;
                 let isPositive = data[0] > 0;
                 for (let i = 1; i < data.length; i++) {
-                    if (isPositive && data[i] < -0.002) {
-                        isPositive = false;
-                    } else if (!isPositive && data[i] > 0.002) {
-                        isPositive = true;
-                        zeroCrossings++;
-                    }
+                    if (isPositive && data[i] < -0.002) { isPositive = false; }
+                    else if (!isPositive && data[i] > 0.002) { isPositive = true; zeroCrossings++; }
                 }
                 let averageHz = Math.round(zeroCrossings / duration);
-
-                // --- 3. AFFICHAGE ---
+ 
+                // --- AFFICHAGE ---
                 setTimeout(() => {
-                    document.getElementById('res-name').innerText = file.name.substring(0, 18);
-                    const resBpm = document.getElementById('res-bpm');
-                    const resHz = document.getElementById('res-hz');
-                    const resWave = document.getElementById('res-wave');
-
-                    if (bpm === 0 || !isFinite(bpm)) {
-                        resBpm.innerText = "0";
-                        resWave.innerText = "Stable";
-                    } else {
-                        resBpm.innerText = bpm;
-                        resWave.innerText = bpm < 115 ? "Alpha" : (bpm > 155 ? "Gamma" : "Bêta");
-                    }
-
-                    resHz.innerText = averageHz === 0 ? "0" : averageHz;
-
+                    const waveType = getWaveType(bpm);
+                    const wInfo = waveData[waveType];
+ 
+                    document.getElementById('res-name').innerText = file.name.replace(/\.[^/.]+$/, '').substring(0, 28);
+                    document.getElementById('res-bpm').innerText = (bpm > 0 && isFinite(bpm)) ? bpm : '—';
+                    document.getElementById('res-hz').innerText = averageHz > 0 ? averageHz.toLocaleString() : '—';
+                    document.getElementById('res-wave').innerText = wInfo.label;
+                    document.getElementById('res-desc').innerHTML = wInfo.desc;
+                    document.getElementById('res-usage').innerText = wInfo.usage;
+ 
+                    ['w-delta','w-theta','w-alpha','w-beta','w-gamma'].forEach(id => {
+                        document.getElementById(id).classList.remove('active');
+                    });
+                    wInfo.segs.forEach(id => document.getElementById(id).classList.add('active'));
+ 
                     screenAnalyzing.classList.add('hidden');
                     screenResult.classList.remove('hidden');
-                }, 600);
-
-            } catch (err) {
-                alert("Erreur de lecture");
+                    screenResult.classList.add('fade-in');
+                }, 800);
+ 
+            } catch(err) {
+                alert('Erreur de lecture audio. Vérifiez le format du fichier.');
                 location.reload();
             }
         });
     </script>
 </body>
 </html>
+ 
