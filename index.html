@@ -585,7 +585,12 @@ function showResults(bpm,hz,label){
 async function processArrayBuffer(ab, label){
   const ctx=new(window.AudioContext||window.webkitAudioContext)();
   const buf=await ctx.decodeAudioData(ab);
-  const data=buf.getChannelData(0),sr=buf.sampleRate,dur=buf.duration;
+  // getChannelData D'ABORD, ctx.close() ensuite — sinon tue le décodage sur certains codecs MP4
+  const sr=buf.sampleRate, durFull=buf.duration;
+  const rawData=buf.getChannelData(0);
+  ctx.close();
+  const data=rawData.subarray(0,Math.min(rawData.length,Math.floor(90*sr)));
+  const dur=Math.min(durFull,90);
 
   // ── BPM VALIDÉ ──
   const scan=Math.min(data.length,sr*60);
@@ -644,46 +649,68 @@ async function analyzeLink(url){
   S('scan-sub').textContent=L('extractsub');
   S('home-btn').style.display='flex';
 
-  try{
-    // Step 1 — cobalt.tools API (open-source media extractor)
-    const cobaltRes=await fetch('https://api.cobalt.tools/',{
-      method:'POST',
-      headers:{'Accept':'application/json','Content-Type':'application/json'},
-      body:JSON.stringify({url:url,downloadMode:'audio',audioFormat:'mp3',filenameStyle:'basic'})
-    });
-    if(!cobaltRes.ok)throw new Error('cobalt_fail');
-    const cobalt=await cobaltRes.json();
-    const audioUrl=cobalt.url;
-    if(!audioUrl)throw new Error('no_url');
+  // Instances Cobalt tentées en cascade
+  const COBALT=[
+    'https://cobalt-api.v0l.io/',
+    'https://cobalt.api.timkodiert.de/',
+    'https://api.cobalt.tools/',
+  ];
 
-    // Step 2 — fetch audio (direct, then CORS proxy fallback)
-    S('scan-title').textContent=L('scanning');
-    S('scan-sub').textContent=L('analyzinglbl');
-
-    let ab;
+  let audioUrl=null;
+  for(const inst of COBALT){
     try{
-      const r=await fetch(audioUrl);
-      if(!r.ok)throw new Error('direct_fail');
-      ab=await r.arrayBuffer();
-    }catch{
-      const proxy='https://corsproxy.io/?'+encodeURIComponent(audioUrl);
-      const r2=await fetch(proxy);
-      if(!r2.ok)throw new Error('proxy_fail');
-      ab=await r2.arrayBuffer();
-    }
+      const r=await fetch(inst,{
+        method:'POST',
+        headers:{'Accept':'application/json','Content-Type':'application/json'},
+        body:JSON.stringify({url,downloadMode:'audio',audioFormat:'mp3',filenameStyle:'basic'}),
+        signal:AbortSignal.timeout(9000)
+      });
+      if(!r.ok) continue;
+      const d=await r.json();
+      const u=d.url||d.tunnel;
+      if(u){audioUrl=u;break;}
+    }catch(e){console.warn('[Cobalt]',inst,e.message);}
+  }
 
-    // Step 3 — extract label from URL
-    let label='Audio';
-    try{const u=new URL(url);label=u.hostname.replace('www.','')+' — '+u.pathname.split('/').filter(Boolean).pop();}catch{}
-
-    await processArrayBuffer(ab,label);
-
-  }catch(err){
+  if(!audioUrl){
     S('sc-analyzing').classList.add('hidden');
     S('sc-ready').classList.remove('hidden');
     S('home-btn').style.display='none';
     showAlert(L('errLink'));
+    return;
   }
+
+  S('scan-title').textContent=L('scanning');
+  S('scan-sub').textContent=L('analyzinglbl');
+
+  // Fetch audio : direct puis proxies CORS
+  const PROXIES=[
+    u=>u,
+    u=>'https://corsproxy.io/?'+encodeURIComponent(u),
+    u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
+  ];
+
+  let ab=null;
+  for(const makeUrl of PROXIES){
+    try{
+      const r=await fetch(makeUrl(audioUrl),{signal:AbortSignal.timeout(20000)});
+      if(!r.ok) continue;
+      const buf=await r.arrayBuffer();
+      if(buf.byteLength>1000){ab=buf;break;}
+    }catch(e){console.warn('[fetch]',e.message);}
+  }
+
+  if(!ab){
+    S('sc-analyzing').classList.add('hidden');
+    S('sc-ready').classList.remove('hidden');
+    S('home-btn').style.display='none';
+    showAlert(L('errLink'));
+    return;
+  }
+
+  let label='Audio';
+  try{const u=new URL(url);label=u.hostname.replace('www.','')+' — '+u.pathname.split('/').filter(Boolean).pop();}catch{}
+  await processArrayBuffer(ab,label);
 }
 
 /* ══ CAPTURE BILAN (SHARE) ══ */
@@ -694,32 +721,52 @@ async function captureBilan(){
   
   try {
     const target = S('rwrap');
-    // On masque temporairement les boutons d'action sur la capture pour faire plus propre
     const actionsDiv = target.querySelector('.backbtn').parentElement;
     actionsDiv.style.display = 'none';
 
     const canvas = await html2canvas(target, {
       backgroundColor: theme === 'dark' ? '#04040e' : '#eeeef5',
-      scale: 2, // Haute résolution
+      scale: 2,
       useCORS: true,
       logging: false
     });
 
-    actionsDiv.style.display = 'flex'; // On remet les boutons
+    actionsDiv.style.display = 'flex';
+    btn.innerHTML = originalHTML;
 
-    // Téléchargement
-    const image = canvas.toDataURL("image/png");
-    const link = document.createElement('a');
-    link.href = image;
-    link.download = `ZenHertz_Bilan_${lastBpm}BPM.png`;
-    link.click();
+    // Web Share API native (mobile : Snapchat, Instagram, WhatsApp…)
+    const shareText = `🎵 Mon score ZenHertz : ${lastBpm} BPM / ${lastHz} Hz ! Viens tester comment ta musique impacte ton corps.`;
+    if (typeof navigator.share === 'function') {
+      const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+      const file = new File([blob], `ZenHertz_${lastBpm}BPM.png`, {type:'image/png'});
+      let shared = false;
+      // Essai 1 : partage avec fichier image
+      try {
+        if (navigator.canShare && navigator.canShare({files:[file]})) {
+          await navigator.share({title:'ZenHertz', text:shareText, files:[file]});
+          shared = true;
+        }
+      } catch(e){ if(e.name==='AbortError'){return;} }
+      // Essai 2 : partage texte seul (si fichier refusé)
+      if (!shared) {
+        try {
+          await navigator.share({title:'ZenHertz', text:shareText});
+          shared = true;
+        } catch(e){ if(e.name==='AbortError'){return;} }
+      }
+      if (shared) return;
+    }
+    // Fallback téléchargement (desktop sans share ou échec total)
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = `ZenHertz_Bilan_${lastBpm}BPM.png`;
+    a.click();
 
   } catch(err) {
     console.error(err);
+    btn.innerHTML = originalHTML;
     alert('Erreur lors de la capture de l\'image.');
   }
-  
-  btn.innerHTML = originalHTML;
 }
 
 applyLang();
