@@ -584,6 +584,21 @@ function showResults(bpm,hz,label){
   lastBpm=bpm;lastHz=hz;renderHormones(bpm,hz);
   S('sc-analyzing').classList.add('hidden');
   S('sc-result').classList.remove('hidden');
+  // Pré-génère le canvas en arrière-plan dès que les résultats s'affichent
+  // → share() sera appelé instantanément au clic, dans le geste utilisateur
+  cachedShareCanvas=null;
+  setTimeout(async()=>{
+    try{
+      const target=S('rwrap');
+      const actionsDiv=target.querySelector('.backbtn').parentElement;
+      actionsDiv.style.display='none';
+      cachedShareCanvas=await html2canvas(target,{
+        backgroundColor:theme==='dark'?'#04040e':'#eeeef5',
+        scale:2,useCORS:true,logging:false
+      });
+      actionsDiv.style.display='flex';
+    }catch{}
+  },400);
 }
 
 /* ══════════════════════════════════
@@ -850,58 +865,62 @@ async function analyzeLink(url){
   await processArrayBuffer(ab,label);
 }
 
+let cachedShareCanvas=null;
+
 /* ══ CAPTURE BILAN (SHARE) ══ */
 async function captureBilan(){
-  const btn = S('btn-share');
-  const originalHTML = btn.innerHTML;
-  btn.innerHTML = `📸 <span>${L('capturing')}</span>`;
-  
-  try {
-    const target = S('rwrap');
-    const actionsDiv = target.querySelector('.backbtn').parentElement;
-    actionsDiv.style.display = 'none';
+  const btn=S('btn-share');
+  const originalHTML=btn.innerHTML;
+  btn.innerHTML=`📸 <span>${L('capturing')}</span>`;
 
-    const canvas = await html2canvas(target, {
-      backgroundColor: theme === 'dark' ? '#04040e' : '#eeeef5',
-      scale: 2,
-      useCORS: true,
-      logging: false
-    });
+  try{
+    let canvas=cachedShareCanvas;
 
-    actionsDiv.style.display = 'flex';
-    btn.innerHTML = originalHTML;
-
-    // Web Share API native (mobile : Snapchat, Instagram, WhatsApp…)
-    const shareText = `🎵 Mon score ZenHertz : ${lastBpm} BPM / ${lastHz} Hz ! Viens tester comment ta musique impacte ton corps.`;
-    if (typeof navigator.share === 'function') {
-      const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-      const file = new File([blob], `ZenHertz_${lastBpm}BPM.png`, {type:'image/png'});
-      let shared = false;
-      // Essai 1 : partage avec fichier image
-      try {
-        if (navigator.canShare && navigator.canShare({files:[file]})) {
-          await navigator.share({title:'ZenHertz', text:shareText, files:[file]});
-          shared = true;
-        }
-      } catch(e){ if(e.name==='AbortError'){return;} }
-      // Essai 2 : partage texte seul (si fichier refusé)
-      if (!shared) {
-        try {
-          await navigator.share({title:'ZenHertz', text:shareText});
-          shared = true;
-        } catch(e){ if(e.name==='AbortError'){return;} }
-      }
-      if (shared) return;
+    // Si le canvas pré-généré est dispo → on l'utilise directement (share immédiat)
+    // Sinon → on le génère maintenant (cas rare : clic très rapide)
+    if(!canvas){
+      const target=S('rwrap');
+      const actionsDiv=target.querySelector('.backbtn').parentElement;
+      actionsDiv.style.display='none';
+      canvas=await html2canvas(target,{
+        backgroundColor:theme==='dark'?'#04040e':'#eeeef5',
+        scale:2,useCORS:true,logging:false
+      });
+      actionsDiv.style.display='flex';
     }
-    // Fallback téléchargement (desktop sans share ou échec total)
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    a.download = `ZenHertz_Bilan_${lastBpm}BPM.png`;
+
+    btn.innerHTML=originalHTML;
+
+    const shareText=`🎵 Mon score ZenHertz : ${lastBpm} BPM / ${lastHz} Hz ! Viens tester comment ta musique impacte ton corps.`;
+
+    if(typeof navigator.share==='function'){
+      const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
+      const file=new File([blob],`ZenHertz_${lastBpm}BPM.png`,{type:'image/png'});
+      let shared=false;
+      try{
+        if(navigator.canShare&&navigator.canShare({files:[file]})){
+          await navigator.share({title:'ZenHertz',text:shareText,files:[file]});
+          shared=true;
+        }
+      }catch(e){if(e.name==='AbortError'){return;}}
+      if(!shared){
+        try{
+          await navigator.share({title:'ZenHertz',text:shareText});
+          shared=true;
+        }catch(e){if(e.name==='AbortError'){return;}}
+      }
+      if(shared)return;
+    }
+
+    // Fallback téléchargement
+    const a=document.createElement('a');
+    a.href=canvas.toDataURL('image/png');
+    a.download=`ZenHertz_Bilan_${lastBpm}BPM.png`;
     a.click();
 
-  } catch(err) {
+  }catch(err){
     console.error(err);
-    btn.innerHTML = originalHTML;
+    btn.innerHTML=originalHTML;
     alert('Erreur lors de la capture de l\'image.');
   }
 }
