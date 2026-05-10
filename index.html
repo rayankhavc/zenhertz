@@ -78,6 +78,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 
 /* SPINNER */
 .spin{width:52px;height:52px;border:3px solid rgba(124,58,237,.15);border-top-color:#7c3aed;border-radius:50%;animation:rot .85s linear infinite;margin:0 auto 1.5rem}
+
+/* WAVEFORM ANIMÉE */
+.zh-wave{display:flex;align-items:center;justify-content:center;gap:4px;height:52px;margin:0 auto 1.5rem;width:fit-content}
+.zh-wave span{display:block;width:4px;border-radius:4px;background:linear-gradient(180deg,#7c3aed,#a855f7);animation:zhbar 1.3s ease-in-out infinite}
+.zh-wave span:nth-child(1){animation-delay:.00s}.zh-wave span:nth-child(2){animation-delay:.09s}
+.zh-wave span:nth-child(3){animation-delay:.18s}.zh-wave span:nth-child(4){animation-delay:.27s}
+.zh-wave span:nth-child(5){animation-delay:.36s}.zh-wave span:nth-child(6){animation-delay:.45s}
+.zh-wave span:nth-child(7){animation-delay:.36s}.zh-wave span:nth-child(8){animation-delay:.27s}
+.zh-wave span:nth-child(9){animation-delay:.18s}.zh-wave span:nth-child(10){animation-delay:.09s}
+.zh-wave span:nth-child(11){animation-delay:.00s}
+@keyframes zhbar{0%,100%{height:5px;opacity:.35}50%{height:44px;opacity:1}}
 @keyframes rot{to{transform:rotate(360deg)}}
 
 /* METRICS */
@@ -231,7 +242,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 
 <div id="sc-analyzing" class="screen hidden">
   <div class="glass fade" style="max-width:430px;width:100%;padding:3.5rem 2rem;text-align:center">
-    <div class="spin"></div>
+    <div id="zh-wave" class="zh-wave">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span>
+    </div>
     <p id="scan-title" style="font-size:1.1rem;font-weight:700;color:var(--t1);letter-spacing:-.4px"></p>
     <p id="scan-sub" style="font-size:.68rem;color:var(--t3);letter-spacing:.25em;text-transform:uppercase;margin-top:.7rem;font-weight:600"></p>
     <div class="pbar-wrap hidden" id="pbar-wrap"><div class="pbar-fill" id="pbar-fill"></div></div>
@@ -637,28 +652,54 @@ async function processArrayBuffer(ab, label){
   const data=rawData.subarray(0,Math.min(rawData.length,Math.floor(90*sr)));
   const dur=Math.min(durFull,90);
 
-  // ── BPM VALIDÉ ──
+  // ── BPM AMÉLIORÉ ──
   const scan=Math.min(data.length,sr*60);
   let maxV=0;for(let i=0;i<scan;i++)if(Math.abs(data[i])>maxV)maxV=Math.abs(data[i]);
+
   function getBPM(tm){
-    let peaks=[],thr=maxV*tm;
-    for(let i=0;i<scan;i++)if(data[i]>thr){peaks.push(i);i+=sr*0.28;}
-    if(peaks.length<5)return 0;
-    let iv={};for(let i=1;i<peaks.length;i++){let x=Math.round((peaks[i]-peaks[i-1])/150)*150;iv[x]=(iv[x]||0)+1;}
-    let mc=0,bi=0;for(let k in iv)if(iv[k]>mc){mc=iv[k];bi=k;}
+    let peaks=[], thr=maxV*tm;
+
+    // Anti-Bruit Blanc : vérifie que le signal a de la variabilité réelle
+    let sampleCheck=data.slice(0,sr);
+    let sum=0;
+    for(let v of sampleCheck) sum+=Math.abs(v);
+    let avg=sum/sr;
+    let variability=0;
+    for(let i=0;i<sr;i+=100) variability+=Math.abs(Math.abs(data[i])-avg);
+    if(variability<0.5) return 0;
+
+    // Détection avec debounce 270ms (anti-double-tap / anti-Stromae)
+    for(let i=0;i<scan;i++){
+      if(Math.abs(data[i])>thr){
+        peaks.push(i);
+        i+=Math.floor(sr*0.27); // silence forcé ~270ms ≈ 220 BPM max
+      }
+    }
+
+    if(peaks.length<5) return 0;
+
+    let iv={};
+    for(let i=1;i<peaks.length;i++){
+      let diff=peaks[i]-peaks[i-1];
+      let rounded=Math.round(diff/120)*120;
+      iv[rounded]=(iv[rounded]||0)+1;
+    }
+
+    let mc=0,bi=0;
+    for(let k in iv) if(iv[k]>mc){mc=iv[k];bi=parseInt(k);}
     return bi>0?Math.round(60/(bi/sr)):0;
   }
-  let bpm=getBPM(0.85);if(!bpm)bpm=getBPM(0.60);
-  if(bpm>0&&bpm<85)bpm*=2;if(bpm>200)bpm=Math.round(bpm/2);
 
-  // ── HZ — ZCR sur segments actifs (méthode Gemini améliorée) ──
-  // On ignore les échantillons sous 10% du max pour éviter les valeurs aberrantes
-  // dues aux silences et passages plats
-  // ── HZ VALIDÉ (Gemini original) ──
+  // Premier essai haute précision, second plus sensible pour techno/kicks profonds
+  let bpm=getBPM(0.85);
+  if(!bpm||bpm<40) bpm=getBPM(0.55);
+  if(bpm>200) bpm=Math.round(bpm/2);
+
+  // ── HZ — ZCR robuste (ignore le souffle et micro-sons) ──
   let zc=0,pos=data[0]>0;
   for(let i=1;i<data.length;i++){
-    if(pos&&data[i]<-0.002)pos=false;
-    else if(!pos&&data[i]>0.002){pos=true;zc++;}
+    if(pos&&data[i]<-0.005) pos=false;
+    else if(!pos&&data[i]>0.005){pos=true;zc++;}
   }
   const hz=Math.round(zc/dur);
 
@@ -721,19 +762,20 @@ function startProgressBar(durationSec){
   const wrap=document.getElementById('pbar-wrap');
   const fill=document.getElementById('pbar-fill');
   const msg=document.getElementById('pbar-msg');
+  const wave=document.getElementById('zh-wave');
   const msgs=WAVE_MSGS[lang]||WAVE_MSGS.fr;
+  // Cache la wave, affiche la barre
+  wave.style.display='none';
   wrap.classList.remove('hidden');
   fill.style.width='0%';
   msg.textContent=msgs[0];
 
-  let elapsed=0;
-  let msgIdx=0;
+  let elapsed=0, msgIdx=0;
   const interval=setInterval(()=>{
     elapsed+=1;
-    const pct=Math.min(96, Math.round((elapsed/durationSec)*100));
+    const pct=Math.min(96,Math.round((elapsed/durationSec)*100));
     fill.style.width=pct+'%';
-    // Change le texte toutes les ~8s
-    const newIdx=Math.min(msgs.length-1, Math.floor(elapsed/8));
+    const newIdx=Math.min(msgs.length-1,Math.floor(elapsed/8));
     if(newIdx!==msgIdx){
       msgIdx=newIdx;
       msg.style.opacity='0';
@@ -746,7 +788,10 @@ function startProgressBar(durationSec){
       clearInterval(interval);
       fill.style.width='100%';
       msg.textContent='';
-      setTimeout(()=>wrap.classList.add('hidden'),600);
+      setTimeout(()=>{
+        wrap.classList.add('hidden');
+        wave.style.display='flex'; // remet la wave
+      },600);
     }
   };
 }
@@ -758,7 +803,8 @@ function processViaVideoElement(file, label){
     const video=document.createElement('video');
     video.src=url;
     video.preload='auto';
-    video.muted=false;
+    video.muted=true;
+    video.playsInline=true;
     video.style.cssText='position:fixed;top:-9999px;left:-9999px;width:1px;height:1px';
     document.body.appendChild(video);
 
@@ -768,14 +814,16 @@ function processViaVideoElement(file, label){
       reject(new Error('video_load_error'));
     });
 
-    video.addEventListener('canplaythrough',async()=>{
+    let started=false;
+    const startCapture=async()=>{
+      if(started) return; started=true;
       try{
         const durSec=Math.min(video.duration||90, 90);
-        // Lance la barre de progression
-        const progress=startProgressBar(durSec);
+        const progress = durSec > 10 ? startProgressBar(durSec) : null;
 
         const AC=window.AudioContext||window.webkitAudioContext;
         const liveCtx=new AC();
+        video.muted=false;
         const liveSrc=liveCtx.createMediaElementSource(video);
         const dest=liveCtx.createMediaStreamDestination();
         liveSrc.connect(dest);
@@ -784,7 +832,7 @@ function processViaVideoElement(file, label){
         const recorder=new MediaRecorder(dest.stream);
         recorder.ondataavailable=ev=>{if(ev.data.size>0)chunks.push(ev.data);};
         recorder.onstop=async()=>{
-          progress.stop();
+          if(progress) progress.stop();
           liveCtx.close();
           URL.revokeObjectURL(url);
           try{document.body.removeChild(video);}catch{}
@@ -804,7 +852,14 @@ function processViaVideoElement(file, label){
         try{document.body.removeChild(video);}catch{}
         reject(e);
       }
-    },{once:true});
+    };
+
+    // canplaythrough ou loadeddata en fallback (certains codecs longs ne triggent pas canplaythrough)
+    video.addEventListener('canplaythrough', startCapture, {once:true});
+    video.addEventListener('loadeddata', ()=>{
+      // Si canplaythrough n'a pas encore lancé startCapture, on le fait ici
+      if(video.readyState >= 2) startCapture();
+    }, {once:true});
 
     video.load();
   });
