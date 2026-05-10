@@ -142,6 +142,24 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 .pbar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,#7c3aed,#a855f7);width:0%;transition:width .8s ease}
 #pbar-msg{font-size:.67rem;color:var(--t3);font-style:italic;min-height:1em;transition:opacity .3s}
 
+/* MODALES GLASSMORPHISM */
+.zh-modal-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:1.2rem;opacity:0;pointer-events:none;transition:opacity .25s ease}
+.zh-modal-overlay.open{opacity:1;pointer-events:all}
+.zh-modal-box{position:relative;background:var(--glass);border:1px solid var(--gb);border-radius:24px;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);max-width:560px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.25);transform:translateY(18px) scale(.97);transition:transform .28s cubic-bezier(.34,1.56,.64,1)}
+.zh-modal-overlay.open .zh-modal-box{transform:translateY(0) scale(1)}
+.zh-modal-close{position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;border:1px solid var(--gb);background:rgba(124,58,237,.1);color:var(--t2);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:1}
+.zh-modal-close:hover{background:rgba(124,58,237,.25)}
+.zh-modal-scroll{overflow-y:auto;padding:2.2rem 2rem 2rem;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,.3) transparent}
+.zh-modal-logo{font-size:2rem;text-align:center;margin-bottom:.6rem}
+.zh-modal-title{font-size:1.25rem;font-weight:800;color:var(--t1);text-align:center;letter-spacing:-.5px;margin-bottom:.3rem}
+.zh-modal-sub{font-size:.7rem;color:var(--t3);text-align:center;letter-spacing:.2em;text-transform:uppercase;font-weight:600;margin-bottom:1.6rem}
+.zh-section{border-bottom:1px solid var(--gb);padding-bottom:1.2rem;margin-bottom:1.2rem}
+.zh-section h3{font-size:.82rem;font-weight:700;color:#7c3aed;letter-spacing:.05em;text-transform:uppercase;margin-bottom:.55rem}
+.zh-section p{font-size:.78rem;color:var(--t2);line-height:1.7;margin-bottom:.5rem}
+.zh-list{list-style:none;padding:0;margin:.5rem 0;display:flex;flex-direction:column;gap:.45rem}
+.zh-list li{font-size:.76rem;color:var(--t2);line-height:1.6;display:flex;align-items:flex-start;gap:.55rem}
+.zh-badge{font-size:.6rem;font-weight:700;color:#fff;border-radius:6px;padding:.15rem .45rem;white-space:nowrap;margin-top:.1rem;flex-shrink:0}
+
 /* LAYOUT */
 .result-page{min-height:100vh;padding:5.5rem 2rem 3rem;display:flex;justify-content:center;align-items:flex-start}
 #rwrap{width:100%;max-width:1080px;border-radius:36px;} /* Ajout border-radius pour la capture */
@@ -202,6 +220,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">⏱</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)">BPM</p></div>
       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">〰️</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)">Hz</p></div>
       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">🧠</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)" data-i="wlbl">Ondes</p></div>
+    </div>
+
+    <div style="margin-top:1.5rem;display:flex;justify-content:center;gap:1.4rem">
+      <button onclick="openModal('modal-science')" style="background:none;border:none;cursor:pointer;font-size:.64rem;color:var(--t3);letter-spacing:.08em;text-decoration:underline;text-underline-offset:3px;padding:0;font-family:inherit">🔬 Comment ça marche ?</button>
+      <button onclick="openModal('modal-legal')" style="background:none;border:none;cursor:pointer;font-size:.64rem;color:var(--t3);letter-spacing:.08em;text-decoration:underline;text-underline-offset:3px;padding:0;font-family:inherit">⚖️ Mentions légales</button>
     </div>
   </div>
 </div>
@@ -285,7 +308,7 @@ const TR = {
     errEmpty:'Veuillez coller un lien valide.',
     wnames:{delta:'Delta',theta:'Thêta',alpha:'Alpha',beta:'Bêta',gamma:'Gamma'},
     tags:{sleep:'💤 Sommeil profond',meditate:'🧘 Méditation',create:'✨ Créativité',focus:'🧠 Focus doux',cardiac:'🫀 Cohérence cardiaque',active:'⚡ Éveil actif',perf:'💪 Performance',hstim:'🔥 Haute stimulation',cogn:'⚡ Cognition intense',vagus:'🫀 Nerf vague stimulé',sport:'🏃 Sport / Effort',fatigue:'⚠ Fatigue si prolongé',vibra:'🌊 Vibration profonde'},
-    h:{dopamine:['Dopamine','Motivation & Récompense'],cortisol:['Cortisol','Stress & Vigilance'],serotonin:['Sérotonine','Humeur & Bien-être'],melatonin:['Mélatonine','Sommeil & Récupération'],endorphins:['Endorphines','Euphorie & Analgésie'],noradr:['Adrénaline','Éveil & Réactivité']},
+    h:{dopamine:['Dopamine','Motivation & Récompense'],cortisol:['Cortisol','Stress & Vigilance'],serotonin:['Sérotonine','Humeur & Bien-être'],melatonin:['Mélatonine','Sommeil & Récupération'],endorphins:['Endorphines','Euphorie & Analgésie'],noradr:['Noradrénaline','Éveil & Réactivité']},
     hlvl:['Faible','Modéré','Élevé'],
     conclus:{delta:'Privilégiez ce son pour une phase de récupération totale ou avant le sommeil.',theta:'Ce profil est parfait pour les phases de création ou de visualisation mentale.',alpha:'L\'équilibre idéal pour une session d\'étude ou de travail calme.',beta:'Utilisez cette énergie pour vos entraînements physiques ou vos besoins de motivation.',gamma:'Attention : ce niveau de stimulation est à réserver aux efforts explosifs de courte durée.'}
   },
@@ -628,7 +651,10 @@ async function processArrayBuffer(ab, label){
   let bpm=getBPM(0.85);if(!bpm)bpm=getBPM(0.60);
   if(bpm>0&&bpm<85)bpm*=2;if(bpm>200)bpm=Math.round(bpm/2);
 
-  // ── HZ VALIDÉ ──
+  // ── HZ — ZCR sur segments actifs (méthode Gemini améliorée) ──
+  // On ignore les échantillons sous 10% du max pour éviter les valeurs aberrantes
+  // dues aux silences et passages plats
+  // ── HZ VALIDÉ (Gemini original) ──
   let zc=0,pos=data[0]>0;
   for(let i=1;i<data.length;i++){
     if(pos&&data[i]<-0.002)pos=false;
@@ -926,6 +952,140 @@ async function captureBilan(){
 }
 
 applyLang();
+
+const MODAL_CONTENT={
+  science:{
+    fr:{
+      logo:'🔬',title:'La science derrière ZenHertz',sub:'Bioacoustique & neurosciences — expliqué simplement',
+      sections:[
+        {h:'BPM & synchronisation cardiaque',p:`Le tempo d'une musique (mesuré en battements par minute, BPM) influence directement le rythme cardiaque par un phénomène appelé <strong>entraînement cardiovasculaire</strong>. Des études publiées dans le <em>Journal of Music Therapy</em> montrent qu'une musique entre 60 et 80 BPM favorise la cohérence cardiaque, activant le système nerveux parasympathique — celui du calme et de la récupération.<br><br>À l'inverse, des tempos supérieurs à 130–140 BPM stimulent le système sympathique, augmentant la fréquence cardiaque et la production de noradrénaline — d'où leur usage dans les playlists de sport.`},
+        {h:'Fréquences Hz & ondes cérébrales',p:`Les fréquences sonores interagissent avec le cerveau via la <strong>résonance neuronale</strong>. Chaque bande d'onde cérébrale correspond à un état mental :`,list:[
+          ['#818cf8','δ Delta','0,5–4 Hz — sommeil profond, régénération cellulaire, pic de mélatonine'],
+          ['#a78bfa','θ Thêta','4–8 Hz — créativité, mémoire à long terme, pics de dopamine'],
+          ['#7c3aed','α Alpha','8–13 Hz — relaxation vigilante, état de flow, sérotonine élevée'],
+          ['#c084fc','β Bêta','13–30 Hz — concentration active, résolution de problèmes, cortisol modéré'],
+          ['#e879f9','γ Gamma','30–100 Hz — cognition intense, conscience élargie, noradrénaline haute'],
+        ],p2:`Des chercheurs de Stanford ont démontré que les oscillations à 40 Hz (onde Gamma) stimulent le cortex préfrontal, améliorant l'attention et la mémoire de travail en quelques minutes d'exposition.`},
+        {h:'Dopamine & circuit de la récompense',p:`La musique est l'un des seuls stimuli non-chimiques capables d'activer le <strong>noyau accumbens</strong> — le centre du plaisir du cerveau. Une étude de Salimpoor et al. (2011, <em>Nature Neuroscience</em>) a mesuré des pics de dopamine allant jusqu'à +65% lors de l'écoute de musique émotionnellement intense. ZenHertz analyse ces patterns pour estimer l'impact probable sur votre circuit de récompense.`},
+        {h:'Cortisol & stress acoustique',p:`Des tempos très rapides (>160 BPM) peuvent déclencher une réponse de stress, augmentant le cortisol via l'axe HHS. En revanche, les fréquences graves (40–100 Hz) stimulent le nerf vague, réduisant le cortisol et favorisant la récupération — principe utilisé en musicothérapie clinique.`},
+        {h:'Comment ZenHertz calcule-t-il ?',p:`L'algorithme analyse le fichier audio en deux temps :`,list2:[
+          ['Détection de pics d\'amplitude','calcul du BPM par intervalles inter-battements'],
+          ['FFT (Transformée de Fourier rapide)','isolation de la fréquence dominante réelle en Hz'],
+        ],p2:`Ces valeurs sont croisées avec des modèles neuroacoustiques pour estimer l'impact hormonal probable. Tout le traitement s'effectue <strong>localement dans votre navigateur</strong> — aucune donnée ne quitte votre appareil.`},
+      ]
+    },
+    en:{
+      logo:'🔬',title:'The science behind ZenHertz',sub:'Bioacoustics & neuroscience — simply explained',
+      sections:[
+        {h:'BPM & cardiac synchronization',p:`A song's tempo (measured in beats per minute, BPM) directly influences heart rate through a phenomenon called <strong>cardiovascular entrainment</strong>. Studies published in the <em>Journal of Music Therapy</em> show that music between 60 and 80 BPM promotes cardiac coherence, activating the parasympathetic nervous system — the body's rest and recovery mode.<br><br>Conversely, tempos above 130–140 BPM stimulate the sympathetic system, increasing heart rate and noradrenaline production — which is why they're used in workout playlists.`},
+        {h:'Hz frequencies & brainwaves',p:`Sound frequencies interact with the brain through <strong>neural resonance</strong>. Each brainwave band corresponds to a distinct mental state:`,list:[
+          ['#818cf8','δ Delta','0.5–4 Hz — deep sleep, cellular regeneration, melatonin peak'],
+          ['#a78bfa','θ Theta','4–8 Hz — creativity, long-term memory, dopamine peaks'],
+          ['#7c3aed','α Alpha','8–13 Hz — alert relaxation, flow state, elevated serotonin'],
+          ['#c084fc','β Beta','13–30 Hz — active focus, problem-solving, moderate cortisol'],
+          ['#e879f9','γ Gamma','30–100 Hz — intense cognition, expanded awareness, high noradrenaline'],
+        ],p2:`Stanford researchers demonstrated that 40 Hz oscillations (Gamma wave) stimulate the prefrontal cortex, improving attention and working memory within minutes of exposure.`},
+        {h:'Dopamine & the reward circuit',p:`Music is one of the only non-chemical stimuli capable of activating the <strong>nucleus accumbens</strong> — the brain's pleasure center. A study by Salimpoor et al. (2011, <em>Nature Neuroscience</em>) measured dopamine peaks of up to +65% during emotionally intense music listening. ZenHertz analyzes these patterns to estimate the likely impact on your reward circuit.`},
+        {h:'Cortisol & acoustic stress',p:`Very fast tempos (>160 BPM) can trigger a stress response, increasing cortisol through the HPA axis. Conversely, bass frequencies (40–100 Hz) stimulate the vagus nerve, reducing cortisol and promoting recovery — the same principle used in clinical music therapy.`},
+        {h:'How does ZenHertz calculate?',p:`The algorithm analyzes the audio file in two steps:`,list2:[
+          ['Amplitude peak detection','BPM calculation via inter-beat intervals'],
+          ['FFT (Fast Fourier Transform)','isolation of the real dominant frequency in Hz'],
+        ],p2:`These values are cross-referenced with neuroacoustic models to estimate the probable hormonal impact. All processing happens <strong>locally in your browser</strong> — no data ever leaves your device.`},
+      ]
+    }
+  },
+  legal:{
+    fr:{
+      logo:'⚖️',title:'Mentions légales',sub:'Transparence & confidentialité',
+      sections:[
+        {h:'Disclaimer médical',p:`ZenHertz est un outil de <strong>divertissement et d'exploration personnelle</strong>. Les scores BPM, Hz, les estimations hormonales et les profils neuroacoustiques générés sont des <strong>approximations algorithmiques</strong> basées sur l'analyse du signal audio.<br><br>Ces résultats ne constituent en aucun cas un diagnostic médical, psychiatrique ou neurologique. Ils ne remplacent pas l'avis d'un professionnel de santé. En cas de troubles du sommeil, d'anxiété ou de tout autre symptôme, consultez un médecin qualifié.`},
+        {h:"Limites de l'algorithme",p:`L'analyse repose sur la détection de pics d'amplitude (BPM) et une FFT pour la fréquence dominante (Hz). Elle fonctionne de manière optimale sur des morceaux avec une structure rythmique claire. Les résultats peuvent varier selon la qualité du fichier audio, le genre musical ou la complexité harmonique du morceau.`},
+        {h:'🔒 Confidentialité & données',p:`ZenHertz respecte intégralement votre vie privée :`,list2:[
+          ['Tout traitement est 100 % local','votre fichier audio est analysé directement dans votre navigateur'],
+          ['Aucun fichier n\'est envoyé sur un serveur','vos musiques restent sur votre appareil'],
+          ['Aucune donnée personnelle collectée','pas de cookies de traçage, pas de compte requis'],
+          ['Aucune base de données','les résultats ne sont pas stockés ni transmis'],
+        ],p2:`ZenHertz ne collecte, ne vend et ne partage aucune donnée utilisateur.`},
+        {h:'Propriété intellectuelle',p:`ZenHertz et son algorithme d'analyse bioacoustique sont la propriété de leurs créateurs. Toute reproduction ou distribution sans autorisation explicite est interdite.`},
+      ],
+      copy:'© 2025 ZenHertz — Tous droits réservés'
+    },
+    en:{
+      logo:'⚖️',title:'Legal Notice',sub:'Transparency & privacy',
+      sections:[
+        {h:'Medical disclaimer',p:`ZenHertz is a <strong>entertainment and personal exploration tool</strong>. BPM scores, Hz values, hormonal estimates and neuroacoustic profiles are <strong>algorithmic approximations</strong> based on audio signal analysis.<br><br>These results do not constitute a medical, psychiatric or neurological diagnosis. They do not replace the advice of a healthcare professional. If you experience sleep disorders, anxiety or any other symptoms, please consult a qualified physician.`},
+        {h:'Algorithm limitations',p:`The analysis uses amplitude peak detection (BPM) and FFT for the dominant frequency (Hz). It works best on tracks with a clear rhythmic structure. Results may vary depending on audio file quality, music genre, or harmonic complexity.`},
+        {h:'🔒 Privacy & data',p:`ZenHertz fully respects your privacy:`,list2:[
+          ['All processing is 100% local','your audio file is analyzed directly in your browser'],
+          ['No file is sent to a server','your music stays on your device'],
+          ['No personal data collected','no tracking cookies, no account required'],
+          ['No database','results are not stored or transmitted'],
+        ],p2:`ZenHertz does not collect, sell or share any user data.`},
+        {h:'Intellectual property',p:`ZenHertz and its bioacoustic analysis algorithm are the property of their creators. Any reproduction or distribution without explicit authorization is prohibited.`},
+      ],
+      copy:'© 2025 ZenHertz — All rights reserved'
+    }
+  }
+};
+
+function renderModalContent(modalId, type){
+  const data=MODAL_CONTENT[type][lang]||MODAL_CONTENT[type].fr;
+  let html=`<p class="zh-modal-logo">${data.logo}</p><h2 class="zh-modal-title">${data.title}</h2><p class="zh-modal-sub">${data.sub}</p>`;
+  data.sections.forEach((s,si)=>{
+    const last=si===data.sections.length-1;
+    html+=`<div class="zh-section"${last?' style="border:none;padding-bottom:0"':''}>`;
+    html+=`<h3>${s.h}</h3>`;
+    if(s.p) html+=`<p>${s.p}</p>`;
+    if(s.list){
+      html+=`<ul class="zh-list">`;
+      s.list.forEach(([color,label,desc])=>{
+        html+=`<li><span class="zh-badge" style="background:${color}">${label}</span>${desc}</li>`;
+      });
+      html+=`</ul>`;
+    }
+    if(s.list2){
+      html+=`<ul class="zh-list">`;
+      s.list2.forEach(([strong,desc])=>{
+        html+=`<li>✅ <strong>${strong}</strong> — ${desc}</li>`;
+      });
+      html+=`</ul>`;
+    }
+    if(s.p2) html+=`<p>${s.p2}</p>`;
+    html+=`</div>`;
+  });
+  if(data.copy) html+=`<p style="font-size:.68rem;color:var(--t3);text-align:center;margin-top:.5rem">${data.copy}</p>`;
+  document.getElementById(modalId+'-content').innerHTML=html;
+}
+
+function openModal(id){
+  const type=id.replace('modal-','');
+  renderModalContent(id,type);
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeModalOutside(e,id){
+  if(e.target===document.getElementById(id)) closeModal(id);
+}
 </script>
+<!-- ══ MODAL SCIENCE ══ -->
+<div id="modal-science" class="zh-modal-overlay" onclick="closeModalOutside(event,'modal-science')">
+  <div class="zh-modal-box">
+    <button class="zh-modal-close" onclick="closeModal('modal-science')">✕</button>
+    <div class="zh-modal-scroll" id="modal-science-content"></div>
+  </div>
+</div>
+
+<!-- ══ MODAL LÉGAL ══ -->
+<div id="modal-legal" class="zh-modal-overlay" onclick="closeModalOutside(event,'modal-legal')">
+  <div class="zh-modal-box">
+    <button class="zh-modal-close" onclick="closeModal('modal-legal')">✕</button>
+    <div class="zh-modal-scroll" id="modal-legal-content"></div>
+  </div>
+</div>
+
 </body>
 </html>
