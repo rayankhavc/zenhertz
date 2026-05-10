@@ -653,11 +653,11 @@ S('audio-input').addEventListener('change',async e=>{
     const ab=await file.arrayBuffer();
     await processArrayBuffer(ab,label);
   }catch(err){
-    // decodeAudioData a échoué (codec MP4 non supporté) → fallback via <video>
+    // decodeAudioData a échoué → fallback silencieux via <video> (codec non supporté)
+    // Pas d'alerte : la barre de progression ondes cérébrales prend le relais
     try{
       await processViaVideoElement(file,label);
     }catch(err2){
-      alert(lang==='fr'?'Erreur de lecture audio.':'Audio read error.');
       goHome();
     }
   }
@@ -891,7 +891,7 @@ async function captureBilan(){
 
     btn.innerHTML=originalHTML;
 
-    const shareText=`🎵 Mon score ZenHertz : ${lastBpm} BPM / ${lastHz} Hz ! Viens tester comment ta musique impacte ton corps.`;
+    const shareText=`🎵 Mon score ZenHertz : ${lastBpm} BPM / ${lastHz} Hz ! Viens tester comment ta musique impacte ton corps 👉 https://zenhertz.app`;
 
     if(typeof navigator.share==='function'){
       const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
