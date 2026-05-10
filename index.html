@@ -137,6 +137,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 .hbdot{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7)}
 @keyframes heartbeat{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(124,58,237,.45)}50%{transform:scale(1.22);box-shadow:0 0 0 10px rgba(124,58,237,0)}}
 
+/* PROGRESS BAR FALLBACK */
+.pbar-wrap{width:100%;background:rgba(124,58,237,.1);border-radius:50px;height:5px;margin:1.4rem 0 .5rem;overflow:hidden}
+.pbar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,#7c3aed,#a855f7);width:0%;transition:width .8s ease}
+#pbar-msg{font-size:.67rem;color:var(--t3);font-style:italic;min-height:1em;transition:opacity .3s}
+
 /* LAYOUT */
 .result-page{min-height:100vh;padding:5.5rem 2rem 3rem;display:flex;justify-content:center;align-items:flex-start}
 #rwrap{width:100%;max-width:1080px;border-radius:36px;} /* Ajout border-radius pour la capture */
@@ -206,6 +211,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     <div class="spin"></div>
     <p id="scan-title" style="font-size:1.1rem;font-weight:700;color:var(--t1);letter-spacing:-.4px"></p>
     <p id="scan-sub" style="font-size:.68rem;color:var(--t3);letter-spacing:.25em;text-transform:uppercase;margin-top:.7rem;font-weight:600"></p>
+    <div class="pbar-wrap hidden" id="pbar-wrap"><div class="pbar-fill" id="pbar-fill"></div></div>
+    <p id="pbar-msg"></p>
   </div>
 </div>
 
@@ -214,7 +221,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     <div class="glass" id="rleft" style="padding:2rem 1.75rem">
       <div class="hbring"><div class="hbdot" id="hbdot"></div></div>
       <div style="text-align:center;margin-bottom:1.2rem">
-        <p id="rname" style="font-size:1rem;font-weight:700;color:var(--t1);letter-spacing:-.3px"></p>
+        <p id="rname" style="font-size:1rem;font-weight:700;color:var(--t1);letter-spacing:-.3px;word-break:break-word;line-height:1.35"></p>
         <div style="height:3px;width:44px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:2px;margin:.55rem auto 0"></div>
       </div>
       <div class="mgrid">
@@ -560,7 +567,7 @@ function getWave(bpm){if(!bpm||!isFinite(bpm)||bpm<60)return'delta';if(bpm<80)re
 function showResults(bpm,hz,label){
   const wt=getWave(bpm);
   const wn=L('wnames');
-  S('rname').innerText=label.substring(0,36);
+  S('rname').innerText=label.length>42?label.substring(0,40)+'…':label;
   S('rbpm').innerText=(bpm>0&&isFinite(bpm))?bpm:'—';
   S('rhz').innerText=hz>0?hz.toLocaleString():'—';
   S('rwave').innerText=wn[wt];
@@ -626,11 +633,141 @@ S('audio-input').addEventListener('change',async e=>{
   S('scan-title').textContent=L('scanning');
   S('scan-sub').textContent=L('analyzinglbl');
   S('home-btn').style.display='flex';
+  const label=file.name.replace(/\.[^/.]+$/,'');
   try{
     const ab=await file.arrayBuffer();
-    await processArrayBuffer(ab, file.name.replace(/\.[^/.]+$/,''));
-  }catch(err){alert(lang==='fr'?'Erreur de lecture audio.':'Audio read error.');goHome();}
+    await processArrayBuffer(ab,label);
+  }catch(err){
+    // decodeAudioData a échoué (codec MP4 non supporté) → fallback via <video>
+    try{
+      await processViaVideoElement(file,label);
+    }catch(err2){
+      alert(lang==='fr'?'Erreur de lecture audio.':'Audio read error.');
+      goHome();
+    }
+  }
 });
+
+// Textes ondes cérébrales affichés pendant le fallback vidéo
+const WAVE_MSGS = {
+  fr:[
+    'Synchronisation des ondes delta…',
+    'Lecture des fréquences thêta…',
+    'Calibration neuronale en cours…',
+    'Détection des oscillations alpha…',
+    'Analyse du spectre bêta…',
+    'Mesure des vibrations gamma…',
+    'Décodage bioacoustique…',
+    'Alignement des fréquences cérébrales…',
+    'Cartographie des ondes neurales…',
+    'Résonance corticale en calcul…',
+  ],
+  en:[
+    'Synchronizing delta waves…',
+    'Reading theta frequencies…',
+    'Neural calibration in progress…',
+    'Detecting alpha oscillations…',
+    'Analyzing beta spectrum…',
+    'Measuring gamma vibrations…',
+    'Bioacoustic decoding…',
+    'Aligning brainwave frequencies…',
+    'Mapping neural oscillations…',
+    'Cortical resonance computing…',
+  ]
+};
+
+function startProgressBar(durationSec){
+  const wrap=document.getElementById('pbar-wrap');
+  const fill=document.getElementById('pbar-fill');
+  const msg=document.getElementById('pbar-msg');
+  const msgs=WAVE_MSGS[lang]||WAVE_MSGS.fr;
+  wrap.classList.remove('hidden');
+  fill.style.width='0%';
+  msg.textContent=msgs[0];
+
+  let elapsed=0;
+  let msgIdx=0;
+  const interval=setInterval(()=>{
+    elapsed+=1;
+    const pct=Math.min(96, Math.round((elapsed/durationSec)*100));
+    fill.style.width=pct+'%';
+    // Change le texte toutes les ~8s
+    const newIdx=Math.min(msgs.length-1, Math.floor(elapsed/8));
+    if(newIdx!==msgIdx){
+      msgIdx=newIdx;
+      msg.style.opacity='0';
+      setTimeout(()=>{msg.textContent=msgs[msgIdx];msg.style.opacity='1';},300);
+    }
+  },1000);
+
+  return {
+    stop(){
+      clearInterval(interval);
+      fill.style.width='100%';
+      msg.textContent='';
+      setTimeout(()=>wrap.classList.add('hidden'),600);
+    }
+  };
+}
+
+// Fallback : capture audio via MediaElementSource sur un <video> invisible
+function processViaVideoElement(file, label){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(file);
+    const video=document.createElement('video');
+    video.src=url;
+    video.preload='auto';
+    video.muted=false;
+    video.style.cssText='position:fixed;top:-9999px;left:-9999px;width:1px;height:1px';
+    document.body.appendChild(video);
+
+    video.addEventListener('error',()=>{
+      URL.revokeObjectURL(url);
+      try{document.body.removeChild(video);}catch{}
+      reject(new Error('video_load_error'));
+    });
+
+    video.addEventListener('canplaythrough',async()=>{
+      try{
+        const durSec=Math.min(video.duration||90, 90);
+        // Lance la barre de progression
+        const progress=startProgressBar(durSec);
+
+        const AC=window.AudioContext||window.webkitAudioContext;
+        const liveCtx=new AC();
+        const liveSrc=liveCtx.createMediaElementSource(video);
+        const dest=liveCtx.createMediaStreamDestination();
+        liveSrc.connect(dest);
+
+        const chunks=[];
+        const recorder=new MediaRecorder(dest.stream);
+        recorder.ondataavailable=ev=>{if(ev.data.size>0)chunks.push(ev.data);};
+        recorder.onstop=async()=>{
+          progress.stop();
+          liveCtx.close();
+          URL.revokeObjectURL(url);
+          try{document.body.removeChild(video);}catch{}
+          const blob=new Blob(chunks,{type:'audio/webm'});
+          const ab=await blob.arrayBuffer();
+          try{await processArrayBuffer(ab,label);resolve();}
+          catch(e){reject(e);}
+        };
+
+        recorder.start();
+        video.currentTime=0;
+        await video.play();
+        setTimeout(()=>{recorder.stop();video.pause();}, durSec*1000);
+
+      }catch(e){
+        URL.revokeObjectURL(url);
+        try{document.body.removeChild(video);}catch{}
+        reject(e);
+      }
+    },{once:true});
+
+    video.load();
+  });
+}
 
 /* ══ URL ANALYSIS ══ */
 function triggerAnalyzeLink(){
