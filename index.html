@@ -235,9 +235,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">🧠</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)" data-i="wlbl">Ondes</p></div>
     </div>
 
-    <div style="margin-top:1.5rem;display:flex;justify-content:center;gap:1.4rem">
-      <button onclick="openModal('modal-science')" style="background:none;border:none;cursor:pointer;font-size:.64rem;color:var(--t3);letter-spacing:.08em;text-decoration:underline;text-underline-offset:3px;padding:0;font-family:inherit">🔬 Comment ça marche ?</button>
-      <button onclick="openModal('modal-legal')" style="background:none;border:none;cursor:pointer;font-size:.64rem;color:var(--t3);letter-spacing:.08em;text-decoration:underline;text-underline-offset:3px;padding:0;font-family:inherit">⚖️ Mentions légales</button>
+    <div style="margin-top:1.5rem;display:flex;justify-content:center;align-items:center;gap:1.2rem;flex-wrap:wrap">
+      <button onclick="openModal('modal-science')" style="background:none;border:none;cursor:pointer;font-size:.64rem;color:var(--t3);letter-spacing:.06em;text-decoration:none;padding:.3rem .6rem;font-family:inherit;border-bottom:1px solid var(--t3);line-height:1;white-space:nowrap">Comment ça marche ?</button>
+      <span style="color:var(--t3);font-size:.5rem">●</span>
+      <button onclick="openModal('modal-legal')" style="background:none;border:none;cursor:pointer;font-size:.64rem;color:var(--t3);letter-spacing:.06em;text-decoration:none;padding:.3rem .6rem;font-family:inherit;border-bottom:1px solid var(--t3);line-height:1;white-space:nowrap">Mentions légales</button>
     </div>
   </div>
 </div>
@@ -729,17 +730,22 @@ S('audio-input').addEventListener('change',async e=>{
   S('scan-sub').textContent=L('analyzinglbl');
   S('home-btn').style.display='flex';
   const label=file.name.replace(/\.[^/.]+$/,'');
+
+  // Si c'est une vidéo → direct sur processViaVideoElement (évite arrayBuffer qui sature la RAM mobile)
+  const isVideo=file.type.startsWith('video/')||/\.(mp4|mov|avi|mkv|webm)$/i.test(file.name);
+  if(isVideo){
+    try{ await processViaVideoElement(file,label); }
+    catch(e){ goHome(); }
+    return;
+  }
+
+  // Audio → chemin normal
   try{
     const ab=await file.arrayBuffer();
     await processArrayBuffer(ab,label);
   }catch(err){
-    // decodeAudioData a échoué → fallback silencieux via <video> (codec non supporté)
-    // Pas d'alerte : la barre de progression ondes cérébrales prend le relais
-    try{
-      await processViaVideoElement(file,label);
-    }catch(err2){
-      goHome();
-    }
+    try{ await processViaVideoElement(file,label); }
+    catch(err2){ goHome(); }
   }
 });
 
