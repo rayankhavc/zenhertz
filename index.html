@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#eeeef5" id="meta-theme-color">
 <title>ZenHertz</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -15,7 +16,7 @@
   --card:rgba(255,255,255,0.65);--card-b:rgba(255,255,255,0.9);
   --sci:rgba(124,58,237,0.07);--sci-b:rgba(124,58,237,0.18);
   --div:#e5e7eb;--dis:rgba(0,0,0,0.04);--dis-t:#9ca3af;--shadow:0 8px 40px rgba(0,0,0,.09);
-  --blob1:rgba(124,58,237,0.22);--blob2:rgba(168,85,247,0.15);--blob3:rgba(99,102,241,0.12);
+  --blob1:rgba(124,58,237,0.08);--blob2:rgba(168,85,247,0.06);--blob3:rgba(99,102,241,0.05);
 }
 [data-theme="dark"]{
   --bg:#04040e;--glass:rgba(8,8,22,0.92);--glass-b:rgba(124,58,237,0.20);
@@ -26,14 +27,15 @@
   --shadow:0 8px 40px rgba(0,0,0,.5);
   --blob1:rgba(124,58,237,0.28);--blob2:rgba(168,85,247,0.20);--blob3:rgba(99,102,241,0.16);
 }
+html{background:var(--bg)}
 body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transition:background .35s,color .35s;color:var(--t1)}
 
 /* MESH */
-#mesh{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-.blob{position:absolute;border-radius:50%;filter:blur(100px);transition:transform 3s cubic-bezier(.25,.46,.45,.94)}
-#b1{width:800px;height:800px;background:radial-gradient(circle,var(--blob1),transparent 70%);top:-200px;left:-200px;animation:bf1 18s ease-in-out infinite}
-#b2{width:700px;height:700px;background:radial-gradient(circle,var(--blob2),transparent 70%);bottom:-150px;right:-150px;animation:bf2 22s ease-in-out infinite}
-#b3{width:600px;height:600px;background:radial-gradient(circle,var(--blob3),transparent 70%);top:45%;left:45%;animation:bf3 16s ease-in-out infinite}
+#mesh{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;width:100%;height:100%}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);transition:transform 3s cubic-bezier(.25,.46,.45,.94)}
+#b1{width:max(800px,120vw);height:max(800px,120vw);background:radial-gradient(circle,var(--blob1),transparent 70%);top:-20%;left:-20%;animation:bf1 18s ease-in-out infinite}
+#b2{width:max(700px,110vw);height:max(700px,110vw);background:radial-gradient(circle,var(--blob2),transparent 70%);bottom:-20%;right:-20%;animation:bf2 22s ease-in-out infinite}
+#b3{width:max(600px,100vw);height:max(600px,100vw);background:radial-gradient(circle,var(--blob3),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:bf3 16s ease-in-out infinite}
 @keyframes bf1{0%,100%{transform:translate(0,0)}33%{transform:translate(40px,-30px)}66%{transform:translate(-25px,45px)}}
 @keyframes bf2{0%,100%{transform:translate(0,0)}40%{transform:translate(-35px,25px)}80%{transform:translate(30px,-40px)}}
 @keyframes bf3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(calc(-50% + 30px),calc(-50% + 20px))}}
@@ -374,6 +376,7 @@ function toggleTheme(){
   theme=theme==='light'?'dark':'light';
   document.documentElement.setAttribute('data-theme',theme);
   S('thbtn').textContent=theme==='dark'?'☀️':'🌙';
+  document.getElementById('meta-theme-color').content=theme==='dark'?'#04040e':'#eeeef5';
 }
 
 function showAlert(msg){ S('alert-box').style.display='block'; S('alert-msg').textContent=msg; }
@@ -389,8 +392,12 @@ function goHome(){
   S('hbdot').style.animation='';
   ['wd','wt','wa','wb','wg'].forEach(id=>S(id).classList.remove('on'));
   S('sc-result').classList.add('hidden');
+  S('sc-analyzing').classList.add('hidden'); // Fix : remet analyzing hidden
   S('sc-ready').classList.remove('hidden');
   S('home-btn').style.display='none';
+  // Remet la wave visible au cas où la barre l'aurait cachée
+  const wave=document.getElementById('zh-wave');
+  if(wave) wave.style.display='flex';
 }
 
 /* ══ MOUSE MESH ══ */
@@ -622,6 +629,7 @@ function showResults(bpm,hz,label){
   lastBpm=bpm;lastHz=hz;renderHormones(bpm,hz);
   S('sc-analyzing').classList.add('hidden');
   S('sc-result').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
   // Pré-génère le canvas en arrière-plan dès que les résultats s'affichent
   // → share() sera appelé instantanément au clic, dans le geste utilisateur
   cachedShareCanvas=null;
@@ -668,32 +676,37 @@ async function processArrayBuffer(ab, label){
     for(let i=0;i<sr;i+=100) variability+=Math.abs(Math.abs(data[i])-avg);
     if(variability<0.5) return 0;
 
-    // Détection avec debounce 270ms (anti-double-tap / anti-Stromae)
+    // Détection avec intervalle court pour le Metal
     for(let i=0;i<scan;i++){
       if(Math.abs(data[i])>thr){
         peaks.push(i);
-        i+=Math.floor(sr*0.27); // silence forcé ~270ms ≈ 220 BPM max
+        i+=Math.floor(sr*0.22);
       }
     }
 
     if(peaks.length<5) return 0;
 
-    let iv={};
+    let intervals={};
     for(let i=1;i<peaks.length;i++){
       let diff=peaks[i]-peaks[i-1];
-      let rounded=Math.round(diff/120)*120;
-      iv[rounded]=(iv[rounded]||0)+1;
+      let rounded=Math.round(diff/50)*50;
+      intervals[rounded]=(intervals[rounded]||0)+1;
     }
 
-    let mc=0,bi=0;
-    for(let k in iv) if(iv[k]>mc){mc=iv[k];bi=parseInt(k);}
-    return bi>0?Math.round(60/(bi/sr)):0;
+    let maxCount=0,bestInterval=0;
+    for(let k in intervals){
+      if(intervals[k]>maxCount){maxCount=intervals[k];bestInterval=parseInt(k);}
+    }
+
+    let result=Math.round(60/(bestInterval/sr));
+    // Correction Stromae (doublement si trop lent)
+    if(result>0&&result<72) result*=2;
+    if(result>210) result=Math.round(result/2);
+    return result;
   }
 
-  // Premier essai haute précision, second plus sensible pour techno/kicks profonds
-  let bpm=getBPM(0.85);
-  if(!bpm||bpm<40) bpm=getBPM(0.55);
-  if(bpm>200) bpm=Math.round(bpm/2);
+  let bpm=getBPM(0.80);
+  if(!bpm||bpm<40) bpm=getBPM(0.50);
 
   // ── HZ — ZCR robuste (ignore le souffle et micro-sons) ──
   let zc=0,pos=data[0]>0;
@@ -836,16 +849,27 @@ function processViaVideoElement(file, label){
           liveCtx.close();
           URL.revokeObjectURL(url);
           try{document.body.removeChild(video);}catch{}
+          if(chunks.length===0){reject(new Error('no_audio_chunks'));return;}
           const blob=new Blob(chunks,{type:'audio/webm'});
           const ab=await blob.arrayBuffer();
           try{await processArrayBuffer(ab,label);resolve();}
           catch(e){reject(e);}
         };
 
-        recorder.start();
+        recorder.start(1000); // collecte un chunk toutes les 1s (évite le blocage final)
         video.currentTime=0;
         await video.play();
-        setTimeout(()=>{recorder.stop();video.pause();}, durSec*1000);
+
+        // Timeout de fin + sécurité si recorder reste bloqué
+        const stopTimer=setTimeout(()=>{
+          video.pause();
+          if(recorder.state!=='inactive') recorder.stop();
+        }, durSec*1000);
+
+        video.addEventListener('ended',()=>{
+          clearTimeout(stopTimer);
+          if(recorder.state!=='inactive') recorder.stop();
+        },{once:true});
 
       }catch(e){
         URL.revokeObjectURL(url);
@@ -975,25 +999,26 @@ async function captureBilan(){
     const shareText=`🎵 Mon score ZenHertz : ${lastBpm} BPM / ${lastHz} Hz ! Viens tester comment ta musique impacte ton corps 👉 https://zenhertz.app`;
 
     if(typeof navigator.share==='function'){
-      const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
-      const file=new File([blob],`ZenHertz_${lastBpm}BPM.png`,{type:'image/png'});
-      let shared=false;
+      // Essai 1 : image + texte + lien (WhatsApp, iMessage, etc.)
       try{
+        const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
+        const file=new File([blob],`ZenHertz_${lastBpm}BPM.png`,{type:'image/png'});
         if(navigator.canShare&&navigator.canShare({files:[file]})){
           await navigator.share({title:'ZenHertz',text:shareText,files:[file]});
-          shared=true;
+          btn.innerHTML=originalHTML;
+          return;
         }
-      }catch(e){if(e.name==='AbortError'){return;}}
-      if(!shared){
-        try{
-          await navigator.share({title:'ZenHertz',text:shareText});
-          shared=true;
-        }catch(e){if(e.name==='AbortError'){return;}}
-      }
-      if(shared)return;
+      }catch(e){if(e.name==='AbortError'){btn.innerHTML=originalHTML;return;}}
+
+      // Essai 2 : texte + lien seul (Snap, navigateurs sans support fichier)
+      try{
+        await navigator.share({title:'ZenHertz',text:shareText});
+        btn.innerHTML=originalHTML;
+        return;
+      }catch(e){if(e.name==='AbortError'){btn.innerHTML=originalHTML;return;}}
     }
 
-    // Fallback téléchargement
+    // Fallback desktop : téléchargement image
     const a=document.createElement('a');
     a.href=canvas.toDataURL('image/png');
     a.download=`ZenHertz_Bilan_${lastBpm}BPM.png`;
