@@ -235,10 +235,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">🧠</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)" data-i="wlbl">Ondes</p></div>
     </div>
 
-    <div style="margin-top:1.5rem;display:flex;justify-content:center;align-items:center;gap:1.2rem;flex-wrap:wrap">
-      <button onclick="openModal('modal-science')" style="background:none;border:none;cursor:pointer;font-size:.64rem;color:var(--t3);letter-spacing:.06em;text-decoration:none;padding:.3rem .6rem;font-family:inherit;border-bottom:1px solid var(--t3);line-height:1;white-space:nowrap">Comment ça marche ?</button>
-      <span style="color:var(--t3);font-size:.5rem">●</span>
-      <button onclick="openModal('modal-legal')" style="background:none;border:none;cursor:pointer;font-size:.64rem;color:var(--t3);letter-spacing:.06em;text-decoration:none;padding:.3rem .6rem;font-family:inherit;border-bottom:1px solid var(--t3);line-height:1;white-space:nowrap">Mentions légales</button>
+    <div style="margin-top:1.5rem;display:flex;justify-content:center;gap:1.4rem">
+      <button onclick="openModal('modal-science')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">🔬 Comment ça marche ?</button>
+      <button onclick="openModal('modal-legal')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">⚖️ Mentions légales</button>
     </div>
   </div>
 </div>
@@ -651,13 +650,39 @@ function showResults(bpm,hz,label){
 /* ══════════════════════════════════
    AUDIO ENGINE — NE PAS MODIFIER
 ══════════════════════════════════ */
+
+/* ── iOS/Safari : AudioContext partagé ── */
+let sharedAudioCtx=null;
+function getAudioCtx(){
+  if(!sharedAudioCtx||sharedAudioCtx.state==='closed'){
+    sharedAudioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  }
+  return sharedAudioCtx;
+}
+
+/* ── Unlock silencieux sur premier geste utilisateur (iOS Safari bloque les AudioContext) ── */
+['click','touchstart'].forEach(evt=>{
+  document.addEventListener(evt,()=>{
+    const ctx=getAudioCtx();
+    if(ctx.state==='suspended') ctx.resume();
+  },{once:true,passive:true});
+});
+
+/* ── decodeAudioData universel : callback-style supporté par tous (Safari inclus) ── */
+function decodeAudioDataUniversal(ctx,ab){
+  return new Promise((resolve,reject)=>{
+    ctx.decodeAudioData(ab,resolve,reject);
+  });
+}
+
 async function processArrayBuffer(ab, label){
-  const ctx=new(window.AudioContext||window.webkitAudioContext)();
-  const buf=await ctx.decodeAudioData(ab);
-  // getChannelData D'ABORD, ctx.close() ensuite — sinon tue le décodage sur certains codecs MP4
+  const ctx=getAudioCtx();
+  if(ctx.state==='suspended') await ctx.resume();
+  const buf=await decodeAudioDataUniversal(ctx,ab);
+  // getChannelData D'ABORD — sinon tue le décodage sur certains codecs MP4
   const sr=buf.sampleRate, durFull=buf.duration;
   const rawData=buf.getChannelData(0);
-  ctx.close();
+  // Ne pas fermer le contexte partagé
   const data=rawData.subarray(0,Math.min(rawData.length,Math.floor(90*sr)));
   const dur=Math.min(durFull,90);
 
@@ -730,22 +755,17 @@ S('audio-input').addEventListener('change',async e=>{
   S('scan-sub').textContent=L('analyzinglbl');
   S('home-btn').style.display='flex';
   const label=file.name.replace(/\.[^/.]+$/,'');
-
-  // Si c'est une vidéo → direct sur processViaVideoElement (évite arrayBuffer qui sature la RAM mobile)
-  const isVideo=file.type.startsWith('video/')||/\.(mp4|mov|avi|mkv|webm)$/i.test(file.name);
-  if(isVideo){
-    try{ await processViaVideoElement(file,label); }
-    catch(e){ goHome(); }
-    return;
-  }
-
-  // Audio → chemin normal
   try{
     const ab=await file.arrayBuffer();
     await processArrayBuffer(ab,label);
   }catch(err){
-    try{ await processViaVideoElement(file,label); }
-    catch(err2){ goHome(); }
+    // decodeAudioData a échoué → fallback silencieux via <video> (codec non supporté)
+    // Pas d'alerte : la barre de progression ondes cérébrales prend le relais
+    try{
+      await processViaVideoElement(file,label);
+    }catch(err2){
+      goHome();
+    }
   }
 });
 
@@ -1002,7 +1022,8 @@ async function captureBilan(){
 
     btn.innerHTML=originalHTML;
 
-    const shareText=`🎵 Mon score ZenHertz : ${lastBpm} BPM / ${lastHz} Hz ! Viens tester comment ta musique impacte ton corps 👉 https://zenhertz.app`;
+    const zenScore=Math.max(0,100-fatigueScore(lastBpm,lastHz));
+    const shareText=`Score Zen Hertz : ${zenScore} 🧠\nRythme : ${lastBpm} BPM 🥁\nFréquence : ${lastHz} Hz 🌊\n\nViens tester l'impact de ta musique sur ton cerveau : https://zenhertz.com`;
 
     if(typeof navigator.share==='function'){
       // Essai 1 : image + texte + lien (WhatsApp, iMessage, etc.)
@@ -1024,11 +1045,9 @@ async function captureBilan(){
       }catch(e){if(e.name==='AbortError'){btn.innerHTML=originalHTML;return;}}
     }
 
-    // Fallback desktop : téléchargement image
-    const a=document.createElement('a');
-    a.href=canvas.toDataURL('image/png');
-    a.download=`ZenHertz_Bilan_${lastBpm}BPM.png`;
-    a.click();
+    // Fallback desktop : copie du texte dans le presse-papier
+    await navigator.clipboard.writeText(shareText);
+    alert('Résultat copié dans le presse-papier !');
 
   }catch(err){
     console.error(err);
