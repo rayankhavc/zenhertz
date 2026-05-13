@@ -291,6 +291,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
       <div style="display:flex; gap:1rem; align-items:center; justify-content:center; flex-wrap:wrap;">
         <span class="backbtn" onclick="goHome()" data-i="back">← Analyser un autre morceau</span>
         <div class="sharebtn" id="btn-share" onclick="captureBilan()">📸 <span data-i="share">Partager</span></div>
+        <div class="sharebtn" onclick="copierTexte()" style="background:var(--card);border:1px solid var(--div);color:var(--t2);box-shadow:none">📋 <span data-i="copyBtn">Copier</span></div>
       </div>
     </div>
     <div id="rright" style="display:flex;flex-direction:column;gap:1.2rem">
@@ -316,7 +317,7 @@ const TR = {
     extracting:'Extraction du flux audio…', extractsub:'Récupération de la source',
     neuroprofile:'Profil Neuro-acoustique', hormones:'Tableau Hormonal Estimé',
     disclaimer:'Analyse basée sur la périodicité du signal et la moyenne spectrale (ZCR). Visée informative — ne constitue pas un diagnostic médical.',
-    back:'← Analyser un autre morceau', share:'Partager le bilan', capturing:'Capture...',
+    back:'← Analyser un autre morceau', share:'Partager le bilan', capturing:'Capture...', copyBtn:'Copier',
     fLow:'✓ Écoute prolongée : sûre et régénératrice',
     fMid:'→ Écoute prolongée : modérément stimulante',
     fHigh:'⚠ Écoute prolongée : risque de fatigue nerveuse',
@@ -340,7 +341,7 @@ const TR = {
     extracting:'Extracting audio stream…', extractsub:'Retrieving source',
     neuroprofile:'Neuro-acoustic Profile', hormones:'Estimated Hormonal Dashboard',
     disclaimer:'Analysis based on signal periodicity and spectral average (ZCR). For informational purposes only — not a medical diagnosis.',
-    back:'← Analyze another track', share:'Share Results', capturing:'Capturing...',
+    back:'← Analyze another track', share:'Share Results', capturing:'Capturing...', copyBtn:'Copy',
     fLow:'✓ Extended listening: safe & regenerative',
     fMid:'→ Extended listening: moderately stimulating',
     fHigh:'⚠ Extended listening: risk of neural fatigue',
@@ -635,12 +636,12 @@ function showResults(bpm,hz,label){
   cachedShareCanvas=null;
   setTimeout(async()=>{
     try{
-      const target=S('rwrap');
+      const target=S('rleft');
       const actionsDiv=target.querySelector('.backbtn').parentElement;
       actionsDiv.style.display='none';
       cachedShareCanvas=await html2canvas(target,{
         backgroundColor:theme==='dark'?'#04040e':'#eeeef5',
-        scale:2,useCORS:true,logging:false
+        scale:1,useCORS:true,logging:false
       });
       actionsDiv.style.display='flex';
     }catch{}
@@ -675,57 +676,30 @@ function decodeAudioDataUniversal(ctx,ab){
   });
 }
 
-async function processArrayBuffer(ab, label){
-  const ctx=getAudioCtx();
-  if(ctx.state==='suspended') await ctx.resume();
-  const buf=await decodeAudioDataUniversal(ctx,ab);
-  // getChannelData D'ABORD — sinon tue le décodage sur certains codecs MP4
-  const sr=buf.sampleRate, durFull=buf.duration;
-  const rawData=buf.getChannelData(0);
-  // Ne pas fermer le contexte partagé
-  const data=rawData.subarray(0,Math.min(rawData.length,Math.floor(90*sr)));
-  const dur=Math.min(durFull,90);
-
-  // ── BPM AMÉLIORÉ ──
+/* ── Analyse BPM + Hz partagée (utilisée par tous les chemins d'analyse) ── */
+function analyzeRawSamples(data,sr,dur,label){
   const scan=Math.min(data.length,sr*60);
   let maxV=0;for(let i=0;i<scan;i++)if(Math.abs(data[i])>maxV)maxV=Math.abs(data[i]);
 
   function getBPM(tm){
-    let peaks=[], thr=maxV*tm;
-
-    // Anti-Bruit Blanc : vérifie que le signal a de la variabilité réelle
-    let sampleCheck=data.slice(0,sr);
-    let sum=0;
+    let peaks=[],thr=maxV*tm;
+    let sampleCheck=data.slice(0,sr),sum=0;
     for(let v of sampleCheck) sum+=Math.abs(v);
-    let avg=sum/sr;
-    let variability=0;
+    let avg=sum/sr,variability=0;
     for(let i=0;i<sr;i+=100) variability+=Math.abs(Math.abs(data[i])-avg);
     if(variability<0.5) return 0;
-
-    // Détection avec intervalle court pour le Metal
     for(let i=0;i<scan;i++){
-      if(Math.abs(data[i])>thr){
-        peaks.push(i);
-        i+=Math.floor(sr*0.22);
-      }
+      if(Math.abs(data[i])>thr){peaks.push(i);i+=Math.floor(sr*0.22);}
     }
-
     if(peaks.length<5) return 0;
-
     let intervals={};
     for(let i=1;i<peaks.length;i++){
-      let diff=peaks[i]-peaks[i-1];
-      let rounded=Math.round(diff/50)*50;
+      let diff=peaks[i]-peaks[i-1],rounded=Math.round(diff/50)*50;
       intervals[rounded]=(intervals[rounded]||0)+1;
     }
-
     let maxCount=0,bestInterval=0;
-    for(let k in intervals){
-      if(intervals[k]>maxCount){maxCount=intervals[k];bestInterval=parseInt(k);}
-    }
-
+    for(let k in intervals){if(intervals[k]>maxCount){maxCount=intervals[k];bestInterval=parseInt(k);}}
     let result=Math.round(60/(bestInterval/sr));
-    // Correction Stromae (doublement si trop lent)
     if(result>0&&result<72) result*=2;
     if(result>210) result=Math.round(result/2);
     return result;
@@ -734,15 +708,76 @@ async function processArrayBuffer(ab, label){
   let bpm=getBPM(0.80);
   if(!bpm||bpm<40) bpm=getBPM(0.50);
 
-  // ── HZ — ZCR robuste (ignore le souffle et micro-sons) ──
+  // ── HZ — ZCR robuste ──
   let zc=0,pos=data[0]>0;
   for(let i=1;i<data.length;i++){
     if(pos&&data[i]<-0.005) pos=false;
     else if(!pos&&data[i]>0.005){pos=true;zc++;}
   }
   const hz=Math.round(zc/dur);
-
   setTimeout(()=>showResults(bpm,hz,label),800);
+}
+
+async function processArrayBuffer(ab,label){
+  const ctx=getAudioCtx();
+  if(ctx.state==='suspended') await ctx.resume();
+  const buf=await decodeAudioDataUniversal(ctx,ab);
+  const sr=buf.sampleRate,durFull=buf.duration;
+  const rawData=buf.getChannelData(0);
+  const data=rawData.subarray(0,Math.min(rawData.length,Math.floor(90*sr)));
+  analyzeRawSamples(data,sr,Math.min(durFull,90),label);
+}
+
+/* ── Fallback iOS : AnalyserNode (sans MediaRecorder, pour Safari iOS) ── */
+function processViaAnalyserSampling(file,label){
+  return new Promise(async(resolve,reject)=>{
+    const url=URL.createObjectURL(file);
+    const video=document.createElement('video');
+    video.src=url;video.preload='auto';video.playsInline=true;
+    video.style.cssText='position:fixed;top:-9999px;left:-9999px;width:1px;height:1px';
+    document.body.appendChild(video);
+    const cleanup=()=>{URL.revokeObjectURL(url);try{document.body.removeChild(video);}catch{}};
+    video.addEventListener('error',()=>{cleanup();reject(new Error('video_error'));});
+    video.addEventListener('loadeddata',async()=>{
+      try{
+        const durSec=Math.min(video.duration||60,90);
+        const progress=durSec>10?startProgressBar(durSec):null;
+        const ctx=getAudioCtx();
+        await ctx.resume();
+        const mediaSrc=ctx.createMediaElementSource(video);
+        const analyser=ctx.createAnalyser();
+        analyser.fftSize=2048;
+        mediaSrc.connect(analyser);
+        mediaSrc.connect(ctx.destination); // iOS : obligatoire
+        const frameSize=analyser.frequencyBinCount;
+        const allSamples=[];
+        let sampling=true;
+        const sampleInterval=setInterval(()=>{
+          if(!sampling)return;
+          const buf=new Float32Array(frameSize);
+          analyser.getFloatTimeDomainData(buf);
+          for(let v of buf) allSamples.push(v);
+          if(allSamples.length>ctx.sampleRate*90) sampling=false;
+        },50);
+        let finished=false;
+        const finish=()=>{
+          if(finished)return;finished=true;
+          sampling=false;clearInterval(sampleInterval);
+          if(progress)progress.stop();
+          try{mediaSrc.disconnect();}catch{}
+          cleanup();
+          if(allSamples.length<1000){reject(new Error('no_samples'));return;}
+          analyzeRawSamples(new Float32Array(allSamples),ctx.sampleRate,durSec,label);
+          resolve();
+        };
+        video.addEventListener('ended',finish,{once:true});
+        setTimeout(finish,(durSec+3)*1000);
+        video.currentTime=0;
+        await video.play();
+      }catch(e){cleanup();reject(e);}
+    },{once:true});
+    video.load();
+  });
 }
 
 /* ══ FILE UPLOAD (audio + video) ══ */
@@ -756,14 +791,19 @@ S('audio-input').addEventListener('change',async e=>{
   S('home-btn').style.display='flex';
   const label=file.name.replace(/\.[^/.]+$/,'');
   try{
+    // Chemin 1 : decodeAudioData direct (MP3/WAV/AAC et certains MP4)
     const ab=await file.arrayBuffer();
     await processArrayBuffer(ab,label);
   }catch(err){
-    // decodeAudioData a échoué → fallback silencieux via <video> (codec non supporté)
-    // Pas d'alerte : la barre de progression ondes cérébrales prend le relais
+    // Chemin 2 : MediaRecorder (Chrome/Firefox/Android — MP4 vidéo)
+    if(typeof MediaRecorder!=='undefined'){
+      try{await processViaVideoElement(file,label);return;}
+      catch(err2){console.warn('[MediaRecorder fallback]',err2);}
+    }
+    // Chemin 3 : AnalyserNode (iOS Safari — MediaRecorder absent)
     try{
-      await processViaVideoElement(file,label);
-    }catch(err2){
+      await processViaAnalyserSampling(file,label);
+    }catch(err3){
       goHome();
     }
   }
@@ -1010,12 +1050,12 @@ async function captureBilan(){
     // Si le canvas pré-généré est dispo → on l'utilise directement (share immédiat)
     // Sinon → on le génère maintenant (cas rare : clic très rapide)
     if(!canvas){
-      const target=S('rwrap');
+      const target=S('rleft');
       const actionsDiv=target.querySelector('.backbtn').parentElement;
       actionsDiv.style.display='none';
       canvas=await html2canvas(target,{
         backgroundColor:theme==='dark'?'#04040e':'#eeeef5',
-        scale:2,useCORS:true,logging:false
+        scale:1,useCORS:true,logging:false
       });
       actionsDiv.style.display='flex';
     }
@@ -1053,6 +1093,18 @@ async function captureBilan(){
     console.error(err);
     btn.innerHTML=originalHTML;
     alert('Erreur lors de la capture de l\'image.');
+  }
+}
+
+/* ══ COPIER TEXTE SEUL ══ */
+async function copierTexte(){
+  const zenScore=Math.max(0,100-fatigueScore(lastBpm,lastHz));
+  const txt=`Score Zen Hertz : ${zenScore} 🧠\nRythme : ${lastBpm} BPM 🥁\nFréquence : ${lastHz} Hz 🌊\n\nViens tester l'impact de ta musique sur ton cerveau : https://zenhertz.com`;
+  try{
+    await navigator.clipboard.writeText(txt);
+    alert('Résultat copié dans le presse-papier !');
+  }catch(e){
+    alert(txt);
   }
 }
 
