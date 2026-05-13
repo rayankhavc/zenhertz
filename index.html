@@ -631,21 +631,25 @@ function showResults(bpm,hz,label){
   S('sc-analyzing').classList.add('hidden');
   S('sc-result').classList.remove('hidden');
   window.scrollTo({top:0,behavior:'smooth'});
-  // Pré-génère le canvas en arrière-plan dès que les résultats s'affichent
-  // → share() sera appelé instantanément au clic, dans le geste utilisateur
+  // Pré-génère le canvas après la fin de l'animation typeWords (~3s max)
   cachedShareCanvas=null;
   setTimeout(async()=>{
     try{
       const target=S('rleft');
       const actionsDiv=target.querySelector('.backbtn').parentElement;
       actionsDiv.style.display='none';
+      // Force le texte animé à son état final avant capture
+      const rdesc=S('rdesc');
+      const cur=rdesc.querySelector('.cur');
+      if(cur) cur.style.display='none';
       cachedShareCanvas=await html2canvas(target,{
         backgroundColor:theme==='dark'?'#04040e':'#eeeef5',
         scale:1,useCORS:true,logging:false
       });
+      if(cur) cur.style.display='';
       actionsDiv.style.display='flex';
     }catch{}
-  },400);
+  },3500);
 }
 
 /* ══════════════════════════════════
@@ -730,53 +734,75 @@ async function processArrayBuffer(ab,label){
 
 /* ── Fallback iOS : AnalyserNode (sans MediaRecorder, pour Safari iOS) ── */
 function processViaAnalyserSampling(file,label){
-  return new Promise(async(resolve,reject)=>{
+  return new Promise((resolve,reject)=>{
     const url=URL.createObjectURL(file);
     const video=document.createElement('video');
-    video.src=url;video.preload='auto';video.playsInline=true;
-    video.style.cssText='position:fixed;top:-9999px;left:-9999px;width:1px;height:1px';
+    video.src=url;
+    video.playsInline=true;
+    video.preload='auto';
+    // muted=true : bypass autoplay restriction iOS — l'AnalyserNode capte quand même
+    // l'audio via Web Audio API (muted n'affecte que les haut-parleurs, pas le graph)
+    video.muted=true;
+    video.style.cssText='position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none';
     document.body.appendChild(video);
-    const cleanup=()=>{URL.revokeObjectURL(url);try{document.body.removeChild(video);}catch{}};
-    video.addEventListener('error',()=>{cleanup();reject(new Error('video_error'));});
-    video.addEventListener('loadeddata',async()=>{
-      try{
-        const durSec=Math.min(video.duration||60,90);
-        const progress=durSec>10?startProgressBar(durSec):null;
-        const ctx=getAudioCtx();
-        await ctx.resume();
-        const mediaSrc=ctx.createMediaElementSource(video);
-        const analyser=ctx.createAnalyser();
-        analyser.fftSize=2048;
-        mediaSrc.connect(analyser);
-        mediaSrc.connect(ctx.destination); // iOS : obligatoire
-        const frameSize=analyser.frequencyBinCount;
-        const allSamples=[];
-        let sampling=true;
-        const sampleInterval=setInterval(()=>{
-          if(!sampling)return;
-          const buf=new Float32Array(frameSize);
-          analyser.getFloatTimeDomainData(buf);
-          for(let v of buf) allSamples.push(v);
-          if(allSamples.length>ctx.sampleRate*90) sampling=false;
-        },50);
-        let finished=false;
-        const finish=()=>{
-          if(finished)return;finished=true;
-          sampling=false;clearInterval(sampleInterval);
-          if(progress)progress.stop();
-          try{mediaSrc.disconnect();}catch{}
-          cleanup();
-          if(allSamples.length<1000){reject(new Error('no_samples'));return;}
-          analyzeRawSamples(new Float32Array(allSamples),ctx.sampleRate,durSec,label);
-          resolve();
-        };
-        video.addEventListener('ended',finish,{once:true});
-        setTimeout(finish,(durSec+3)*1000);
-        video.currentTime=0;
-        await video.play();
-      }catch(e){cleanup();reject(e);}
+
+    const cleanup=()=>{
+      try{video.pause();}catch{}
+      URL.revokeObjectURL(url);
+      try{document.body.removeChild(video);}catch{}
+    };
+
+    // ── Mise en place du graph audio en synchrone (proche du geste utilisateur) ──
+    const ctx=getAudioCtx();
+    ctx.resume().catch(()=>{});
+    let mediaSrc,analyser;
+    try{
+      mediaSrc=ctx.createMediaElementSource(video);
+      analyser=ctx.createAnalyser();
+      analyser.fftSize=2048;
+      mediaSrc.connect(analyser);
+      mediaSrc.connect(ctx.destination); // iOS : obligatoire même si muted
+    }catch(e){cleanup();reject(e);return;}
+
+    const frameSize=analyser.frequencyBinCount;
+    const allSamples=[];
+    let sampleInterval=null,progress=null,finished=false;
+
+    const finish=()=>{
+      if(finished)return;finished=true;
+      clearInterval(sampleInterval);
+      if(progress)progress.stop();
+      try{mediaSrc.disconnect();}catch{}
+      cleanup();
+      if(allSamples.length<500){reject(new Error('no_samples'));return;}
+      const durSec=Math.max(1,allSamples.length/ctx.sampleRate);
+      analyzeRawSamples(new Float32Array(allSamples),ctx.sampleRate,durSec,label);
+      resolve();
+    };
+
+    video.addEventListener('error',()=>{
+      clearInterval(sampleInterval);cleanup();reject(new Error('video_error'));
+    });
+
+    // Démarrage de l'échantillonnage dès que la vidéo joue réellement
+    video.addEventListener('playing',()=>{
+      const durSec=Math.min(isFinite(video.duration)?video.duration:60,90);
+      if(durSec>10) progress=startProgressBar(durSec);
+      sampleInterval=setInterval(()=>{
+        const buf=new Float32Array(frameSize);
+        analyser.getFloatTimeDomainData(buf);
+        for(let v of buf) allSamples.push(v);
+        if(allSamples.length>ctx.sampleRate*90){clearInterval(sampleInterval);finish();}
+      },50);
+      video.addEventListener('ended',finish,{once:true});
+      setTimeout(finish,(durSec+3)*1000);
     },{once:true});
-    video.load();
+
+    // Safety : si le playing event ne fire jamais en 12s
+    setTimeout(()=>{if(!finished&&allSamples.length===0){cleanup();reject(new Error('play_timeout'));}},12000);
+
+    // Lance la lecture immédiatement (toujours proche du geste utilisateur)
+    video.play().catch(()=>{cleanup();reject(new Error('play_rejected'));});
   });
 }
 
@@ -789,7 +815,13 @@ S('audio-input').addEventListener('change',async e=>{
   S('scan-title').textContent=L('scanning');
   S('scan-sub').textContent=L('analyzinglbl');
   S('home-btn').style.display='flex';
-  const label=file.name.replace(/\.[^/.]+$/,'');
+  const label=(()=>{
+    let l=file.name.replace(/\.[^/.]+$/,'');
+    // iOS gallery → UUID filename (ex: B25B7713-01B7-42AA-BE52-BFF6EAE87722)
+    if(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(l)||l.length>40)
+      l=lang==='en'?'Audio Analysis':'Analyse audio';
+    return l;
+  })();
   try{
     // Chemin 1 : decodeAudioData direct (MP3/WAV/AAC et certains MP4)
     const ab=await file.arrayBuffer();
