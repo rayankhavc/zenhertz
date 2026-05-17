@@ -653,6 +653,67 @@ function showResults(bpm,hz,label){
 }
 
 /* ══════════════════════════════════
+   FFMPEG.WASM — Décodeur universel
+   Single-thread (core-st) : aucun
+   header COEP requis, fonctionne
+   sur tout navigateur / iOS / Android
+══════════════════════════════════ */
+let _ffmpegInst=null;
+let _ffmpegLoadPromise=null;
+
+function loadFFmpeg(){
+  if(_ffmpegInst) return Promise.resolve(_ffmpegInst);
+  if(_ffmpegLoadPromise) return _ffmpegLoadPromise;
+  _ffmpegLoadPromise=(async()=>{
+    // Charge le script FFmpeg.wasm 0.11 (UMD, ~8 Ko)
+    if(!window.FFmpeg){
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src='https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js';
+        s.onload=res; s.onerror=rej;
+        document.head.appendChild(s);
+      });
+    }
+    // core-st = single-thread, pas besoin de SharedArrayBuffer ni de headers COEP
+    const {createFFmpeg}=FFmpeg;
+    const ff=createFFmpeg({
+      log:false,
+      corePath:'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js'
+    });
+    await ff.load(); // télécharge le WASM (~10 Mo, mis en cache ensuite)
+    _ffmpegInst=ff;
+    return ff;
+  })();
+  return _ffmpegLoadPromise;
+}
+
+async function processViaFFmpeg(file,label){
+  const {fetchFile}=FFmpeg;
+  const ff=await loadFFmpeg();
+  const ext=(file.name.split('.').pop()||'mp4').toLowerCase();
+  const inName=`input.${ext}`;
+
+  // Écrit le fichier dans le système de fichiers virtuel FFmpeg
+  ff.FS('writeFile',inName,await fetchFile(file));
+
+  // Extrait l'audio : PCM float 32-bit, mono, 44100 Hz
+  // -vn = pas de vidéo  |  -f f32le = raw float little-endian
+  await ff.run('-i',inName,'-vn','-ar','44100','-ac','1','-f','f32le','out.raw');
+
+  const raw=ff.FS('readFile','out.raw');
+
+  // Nettoyage du FS virtuel
+  try{ff.FS('unlink',inName);}catch{}
+  try{ff.FS('unlink','out.raw');}catch{}
+
+  const samples=new Float32Array(raw.buffer);
+  if(samples.length<1000) throw new Error('ffmpeg_empty');
+
+  const sr=44100;
+  analyzeRawSamples(samples,sr,Math.max(1,samples.length/sr),label);
+}
+
+/* ══════════════════════════════════
    AUDIO ENGINE — NE PAS MODIFIER
 ══════════════════════════════════ */
 
@@ -853,9 +914,16 @@ S('audio-input').addEventListener('change',async e=>{
     catch(err2){console.warn('[MediaRecorder]',err2);}
   }
 
-  // Chemin vidéo iOS — AnalyserNode (Safari, pas de MediaRecorder)
+  // Chemin vidéo iOS — FFmpeg.wasm (décode tous les codecs, déterministe)
+  try{
+    S('scan-sub').textContent=lang==='en'?'Loading decoder…':'Chargement du décodeur…';
+    await processViaFFmpeg(file,label);
+    return;
+  }catch(err3){console.warn('[FFmpeg]',err3);}
+
+  // Chemin vidéo iOS — ScriptProcessorNode (last resort si FFmpeg échoue)
   try{await processViaAnalyserSampling(file,label);}
-  catch(err3){goHome();}
+  catch(err4){goHome();}
 });
 
 // Textes ondes cérébrales affichés pendant le fallback vidéo
