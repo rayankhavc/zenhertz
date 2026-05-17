@@ -29,7 +29,7 @@
 }
 html{background:var(--bg)}
 body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transition:background .35s,color .35s;color:var(--t1)}
- 
+
 /* MESH */
 #mesh{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;width:100%;height:100%}
 .blob{position:absolute;border-radius:50%;filter:blur(80px);transition:transform 3s cubic-bezier(.25,.46,.45,.94)}
@@ -39,20 +39,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 @keyframes bf1{0%,100%{transform:translate(0,0)}33%{transform:translate(40px,-30px)}66%{transform:translate(-25px,45px)}}
 @keyframes bf2{0%,100%{transform:translate(0,0)}40%{transform:translate(-35px,25px)}80%{transform:translate(30px,-40px)}}
 @keyframes bf3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(calc(-50% + 30px),calc(-50% + 20px))}}
- 
+
 /* TOPBAR */
 #topbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.75rem;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--div);background:rgba(238,238,245,.55)}
 [data-theme="dark"] #topbar{background:rgba(4,4,14,.7)}
 .tbtn{display:flex;align-items:center;gap:.35rem;font-size:.7rem;font-weight:700;color:var(--t3);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:.4rem .85rem;border-radius:50px;border:1px solid var(--div);background:var(--glass);backdrop-filter:blur(8px);transition:all .2s;user-select:none}
 .tbtn:hover{color:var(--t1);border-color:rgba(124,58,237,.5);box-shadow:0 0 0 3px rgba(124,58,237,.1)}
 .tright{display:flex;gap:.5rem}
- 
+
 /* GLASS */
 .glass{background:var(--glass);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid var(--glass-b);border-radius:36px;box-shadow:var(--shadow)}
- 
+
 /* SCREENS */
 .screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:6rem 1.5rem 3rem}
- 
+
 /* URL INPUT */
 .url-wrap{display:flex;gap:.5rem;margin-bottom:1rem}
 .url-input{flex:1;background:var(--card);border:1px solid var(--div);border-radius:16px;padding:.75rem 1rem;font-size:.82rem;color:var(--t1);font-family:'Inter',sans-serif;outline:none;transition:all .25s}
@@ -62,25 +62,25 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 .url-btn{background:linear-gradient(135deg,#7c3aed,#a855f7);color:white;border:none;border-radius:14px;padding:.75rem 1.1rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;box-shadow:0 4px 16px rgba(124,58,237,.3)}
 .url-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,.45)}
 .url-btn:active{transform:translateY(0)}
- 
+
 /* DIVIDER */
 .or-line{display:flex;align-items:center;gap:.75rem;margin:.85rem 0;color:var(--t3);font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
 .or-line::before,.or-line::after{content:'';flex:1;height:1px;background:var(--div)}
- 
+
 /* UPLOAD */
 .uzone{border:1.5px dashed rgba(124,58,237,.3);border-radius:28px;padding:2rem 1.5rem;text-align:center;cursor:pointer;transition:all .3s;background:rgba(124,58,237,.03)}
 .uzone:hover{border-color:#7c3aed;background:rgba(124,58,237,.07);transform:translateY(-2px);box-shadow:0 12px 32px rgba(124,58,237,.12)}
 .uico{width:48px;height:48px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto .85rem;box-shadow:0 6px 20px rgba(124,58,237,.3)}
 .uico svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
- 
+
 /* ALERT */
 #alert-box{display:none;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:14px;padding:.7rem 1rem;margin-top:.75rem}
 #alert-box p{font-size:.75rem;color:#b91c1c;font-weight:600;text-align:center}
 [data-theme="dark"] #alert-box p{color:#fca5a5}
- 
+
 /* SPINNER */
 .spin{width:52px;height:52px;border:3px solid rgba(124,58,237,.15);border-top-color:#7c3aed;border-radius:50%;animation:rot .85s linear infinite;margin:0 auto 1.5rem}
- 
+
 /* WAVEFORM ANIMÉE */
 .zh-wave{display:flex;align-items:center;justify-content:center;gap:4px;height:52px;margin:0 auto 1.5rem;width:fit-content}
 .zh-wave span{display:block;width:4px;border-radius:4px;background:linear-gradient(180deg,#7c3aed,#a855f7);animation:zhbar 1.3s ease-in-out infinite}
@@ -92,14 +92,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 .zh-wave span:nth-child(11){animation-delay:.00s}
 @keyframes zhbar{0%,100%{height:5px;opacity:.35}50%{height:44px;opacity:1}}
 @keyframes rot{to{transform:rotate(360deg)}}
- 
+
 /* METRICS */
 .mgrid{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;background:var(--card);border:1px solid var(--card-b);border-radius:26px;padding:1.6rem 1rem;margin:1.4rem 0}
 .mdiv{background:var(--div)}
 .mv{font-size:2.4rem;font-weight:900;letter-spacing:-2px;line-height:1;color:var(--t1)}
 .mv.a{color:#7c3aed}.mv.sm{font-size:1.25rem;letter-spacing:-.4px;padding-top:.35rem}
 .ml{font-size:.58rem;font-weight:700;color:var(--t3);letter-spacing:.2em;text-transform:uppercase;margin-top:.75rem}
- 
+
 /* SCIENCE BOX */
 .sbox{background:var(--sci);border:1px solid var(--sci-b);border-radius:22px;padding:1.1rem 1.3rem;margin-bottom:1rem}
 .wbar{display:flex;gap:4px;margin:.7rem 0 .2rem}
@@ -107,22 +107,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 .ws.on{opacity:1;transform:scaleY(1.6)}
 .wlbl{display:flex;justify-content:space-between;font-size:.58rem;color:var(--t3);font-weight:600;letter-spacing:.04em}
 .stitle{font-size:.62rem;font-weight:800;color:var(--t3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.8rem}
- 
+
 /* TYPEWRITER */
 .tw{font-size:.79rem;color:var(--t2);line-height:1.7;min-height:72px}
 .cur{display:inline-block;width:2px;height:.85em;background:#7c3aed;margin-left:1px;animation:blink .65s step-end infinite;vertical-align:-.1em}
 @keyframes blink{50%{opacity:0}}
- 
+
 /* TAGS */
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:.8rem}
 .tag{font-size:.68rem;font-weight:700;padding:.28rem .7rem;border-radius:50px;background:rgba(124,58,237,.1);color:#6d28d9;border:1px solid rgba(124,58,237,.2)}
 .tag.w{background:rgba(239,68,68,.08);color:#b91c1c;border-color:rgba(239,68,68,.2)}
 .tag.s{background:rgba(16,185,129,.08);color:#065f46;border-color:rgba(16,185,129,.2)}
- 
+
 /* FATIGUE */
 .fbar{height:4px;border-radius:2px;background:var(--div);margin-top:.8rem;overflow:hidden}
 .ffill{height:100%;border-radius:2px;transition:width 1.3s ease}
- 
+
 /* HORMONE PANEL */
 .hpanel{background:var(--glass);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid var(--glass-b);border-radius:32px;padding:1.5rem 1.6rem;box-shadow:var(--shadow)}
 .hitem{margin-bottom:1.1rem}.hitem:last-child{margin-bottom:0}
@@ -133,28 +133,28 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 .hlvl{font-size:.58rem;font-weight:500;color:var(--t3)}
 .hbg{height:5px;border-radius:3px;background:var(--div);overflow:hidden}
 .hfill{height:100%;border-radius:3px;width:0%;transition:width 1.5s cubic-bezier(.34,1.56,.64,1)}
- 
+
 /* DISC & BUTTONS */
 .disc{background:var(--dis);border-radius:14px;padding:.7rem 1rem}
 .disc p{font-size:.66rem;color:var(--dis-t);line-height:1.55;text-align:center}
 .logo{font-size:2.75rem;font-weight:900;letter-spacing:-2px;background:linear-gradient(135deg,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .backbtn{display:block;text-align:center;font-size:.68rem;font-weight:800;color:var(--t3);letter-spacing:.22em;text-transform:uppercase;cursor:pointer;padding:.55rem;transition:color .2s}
 .backbtn:hover{color:var(--t1)}
- 
+
 /* BOUTON PARTAGER */
 .sharebtn{display:flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:800;color:white;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:.55rem 1.2rem;border-radius:50px;background:linear-gradient(135deg,#7c3aed,#a855f7);transition:transform .2s,box-shadow .2s;box-shadow:0 4px 15px rgba(124,58,237,.3)}
 .sharebtn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,58,237,.45)}
- 
+
 /* HEARTBEAT */
 .hbring{width:60px;height:60px;border-radius:50%;border:2px solid rgba(124,58,237,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 1.1rem}
 .hbdot{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#a855f7)}
 @keyframes heartbeat{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(124,58,237,.45)}50%{transform:scale(1.22);box-shadow:0 0 0 10px rgba(124,58,237,0)}}
- 
+
 /* PROGRESS BAR FALLBACK */
 .pbar-wrap{width:100%;background:rgba(124,58,237,.1);border-radius:50px;height:5px;margin:1.4rem 0 .5rem;overflow:hidden}
 .pbar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,#7c3aed,#a855f7);width:0%;transition:width .8s ease}
 #pbar-msg{font-size:.67rem;color:var(--t3);font-style:italic;min-height:1em;transition:opacity .3s}
- 
+
 /* MODALES GLASSMORPHISM */
 .zh-modal-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:1.2rem;opacity:0;pointer-events:none;transition:opacity .25s ease}
 .zh-modal-overlay.open{opacity:1;pointer-events:all}
@@ -172,22 +172,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 .zh-list{list-style:none;padding:0;margin:.5rem 0;display:flex;flex-direction:column;gap:.45rem}
 .zh-list li{font-size:.76rem;color:var(--t2);line-height:1.6;display:flex;align-items:flex-start;gap:.55rem}
 .zh-badge{font-size:.6rem;font-weight:700;color:#fff;border-radius:6px;padding:.15rem .45rem;white-space:nowrap;margin-top:.1rem;flex-shrink:0}
- 
+
 /* LAYOUT */
 .result-page{min-height:100vh;padding:5.5rem 2rem 3rem;display:flex;justify-content:center;align-items:flex-start}
 #rwrap{width:100%;max-width:1080px;border-radius:36px;} /* Ajout border-radius pour la capture */
 @media(min-width:768px){#rwrap{display:grid;grid-template-columns:1.1fr 1fr;gap:1.5rem;align-items:start}}
 @media(max-width:767px){#rwrap{max-width:440px;margin:0 auto}#rright{margin-top:1rem}}
- 
+
 .fade{animation:fi .45s ease forwards}
 @keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .hidden{display:none}
 </style>
 </head>
 <body>
- 
+
 <div id="mesh"><div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div></div>
- 
+
 <div id="topbar">
   <button class="tbtn" id="home-btn" onclick="goHome()" style="display:none">
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
@@ -199,7 +199,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     <button class="tbtn" onclick="toggleTheme()" id="thbtn">🌙</button>
   </div>
 </div>
- 
+
 <div id="sc-ready" class="screen">
   <div class="glass fade" style="max-width:440px;width:100%;padding:2.5rem 2rem">
     <div style="text-align:center;margin-bottom:1.5rem">
@@ -208,16 +208,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
         Découvrez l'impact de votre musique sur votre <span style="color:#7c3aed;font-weight:600">système nerveux</span> et vos <span style="color:#a855f7;font-weight:600">ondes cérébrales</span>.
       </p>
     </div>
- 
+
     <div class="url-wrap">
       <input type="text" id="url-input" class="url-input" data-i-ph="urlph">
       <button class="url-btn" onclick="triggerAnalyzeLink()" data-i="urlbtn">→</button>
     </div>
- 
+
     <div id="alert-box"><p id="alert-msg"></p></div>
- 
+
     <div class="or-line"><span data-i="orLabel">ou</span></div>
- 
+
     <label style="cursor:pointer;display:block">
       <div class="uzone">
         <div class="uico">
@@ -228,20 +228,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
       </div>
       <input type="file" id="audio-input" style="display:none" accept="audio/*,video/mp4,video/quicktime,video/*">
     </label>
- 
+
     <div style="margin-top:1.4rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;text-align:center">
       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">⏱</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)">BPM</p></div>
       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">〰️</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)">Hz</p></div>
       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">🧠</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)" data-i="wlbl">Ondes</p></div>
     </div>
- 
+
     <div style="margin-top:1.5rem;display:flex;justify-content:center;gap:1.4rem">
       <button onclick="openModal('modal-science')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">🔬 Comment ça marche ?</button>
       <button onclick="openModal('modal-legal')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">⚖️ Mentions légales</button>
     </div>
   </div>
 </div>
- 
+
 <div id="sc-analyzing" class="screen hidden">
   <div class="glass fade" style="max-width:430px;width:100%;padding:3.5rem 2rem;text-align:center">
     <div id="zh-wave" class="zh-wave">
@@ -255,7 +255,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     <p id="pbar-msg"></p>
   </div>
 </div>
- 
+
 <div id="sc-result" class="result-page hidden fade">
   <div id="rwrap">
     <div class="glass" id="rleft" style="padding:2rem 1.75rem">
@@ -302,7 +302,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     </div>
   </div>
 </div>
- 
+
 <script>
 /* ══ TRANSLATIONS ══ */
 const TR = {
@@ -355,11 +355,11 @@ const TR = {
     conclus:{delta:'Reserve this sound for total recovery phases or use before sleep.',theta:'This profile is ideal for creative work or mental visualization sessions.',alpha:'The perfect balance for study sessions or calm focused work.',beta:'Channel this energy for physical training or motivation-driven tasks.',gamma:'Caution: this stimulation level should be reserved for short explosive efforts.'}
   }
 };
- 
+
 let lang='fr', theme='light', lastBpm=null, lastHz=null;
 const L = k => TR[lang][k] ?? TR.fr[k];
 const S = id => document.getElementById(id);
- 
+
 function applyLang(){
   document.documentElement.setAttribute('data-lang',lang);
   S('llbl').textContent=lang.toUpperCase();
@@ -371,7 +371,7 @@ function applyLang(){
   });
   if(lastBpm!==null) renderHormones(lastBpm,lastHz);
 }
- 
+
 function toggleLang(){ lang=lang==='fr'?'en':'fr'; applyLang(); }
 function toggleTheme(){
   theme=theme==='light'?'dark':'light';
@@ -379,10 +379,10 @@ function toggleTheme(){
   S('thbtn').textContent=theme==='dark'?'☀️':'🌙';
   document.getElementById('meta-theme-color').content=theme==='dark'?'#04040e':'#eeeef5';
 }
- 
+
 function showAlert(msg){ S('alert-box').style.display='block'; S('alert-msg').textContent=msg; }
 function hideAlert(){ S('alert-box').style.display='none'; }
- 
+
 function goHome(){
   lastBpm=null; lastHz=null;
   S('audio-input').value=''; S('url-input').value='';
@@ -400,7 +400,7 @@ function goHome(){
   const wave=document.getElementById('zh-wave');
   if(wave) wave.style.display='flex';
 }
- 
+
 /* ══ MOUSE MESH ══ */
 document.addEventListener('mousemove', e=>{
   const x=(e.clientX/window.innerWidth-.5)*70, y=(e.clientY/window.innerHeight-.5)*70;
@@ -408,7 +408,7 @@ document.addEventListener('mousemove', e=>{
   S('b2').style.transform=`translate(${-x*.55}px,${-y*.55}px)`;
   S('b3').style.transform=`translate(calc(-50% + ${x*.35}px),calc(-50% + ${y*.35}px))`;
 });
- 
+
 /* ══ WORD TYPEWRITER ══ */
 function typeWords(el,html,ms=75){
   const tmp=document.createElement('div'); tmp.innerHTML=html;
@@ -424,7 +424,7 @@ function typeWords(el,html,ms=75){
   }
   next();
 }
- 
+
 /* ══ BILINGUAL ANALYSIS ══ */
 const ANALYSIS={
   fr:{
@@ -552,9 +552,9 @@ const ANALYSIS={
     }
   }
 };
- 
+
 function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
- 
+
 function generateNeuroAnalysis(bpm,hertz,wt){
   const vB=bpm>0&&isFinite(bpm), vH=hertz>0&&isFinite(hertz);
   const D=ANALYSIS[lang]||ANALYSIS.fr;
@@ -565,7 +565,7 @@ function generateNeuroAnalysis(bpm,hertz,wt){
   const c=L('conclus')[wt]||'';
   return `${b} ${h}<br><br><strong style="color:#7c3aed">${L('conseil')} :</strong> ${c}`;
 }
- 
+
 function generateTags(bpm,hz,wt){
   const vB=bpm>0&&isFinite(bpm),vH=hz>0&&isFinite(hz);
   const T=L('tags'); const out=[];
@@ -580,11 +580,11 @@ function generateTags(bpm,hz,wt){
   if(vH&&hz<600)  out.push({k:'vibra',t:'s'});
   return out.slice(0,4).map(o=>`<span class="tag ${o.t}">${T[o.k]}</span>`).join('');
 }
- 
+
 function fatigueScore(bpm,hz){let s=0;if(bpm>140)s+=40;else if(bpm>110)s+=20;if(hz>3000)s+=40;else if(hz>1500)s+=20;return Math.min(s,100);}
- 
+
 const HCOL={dopamine:'linear-gradient(90deg,#7c3aed,#a855f7)',cortisol:'linear-gradient(90deg,#f59e0b,#ef4444)',serotonin:'linear-gradient(90deg,#10b981,#059669)',melatonin:'linear-gradient(90deg,#6366f1,#4338ca)',endorphins:'linear-gradient(90deg,#ec4899,#db2777)',noradr:'linear-gradient(90deg,#f59e0b,#d97706)'};
- 
+
 function calcHormones(bpm,hz){
   const b=bpm>0&&isFinite(bpm)?bpm:100,h=hz>0&&isFinite(hz)?hz:1200;
   let d=18;if(b>=95&&b<=145)d+=Math.min(52,(b-95)*1.05);else if(b>145)d+=Math.max(0,52-(b-145)*.8);if(h>=900&&h<=3800)d+=20;else if(h>3800)d+=8;
@@ -596,7 +596,7 @@ function calcHormones(bpm,hz){
   const cap=v=>Math.round(Math.min(95,v));
   return{dopamine:cap(d),cortisol:cap(c),serotonin:cap(s),melatonin:cap(m),endorphins:cap(e),noradr:cap(n)};
 }
- 
+
 function renderHormones(bpm,hz){
   const vals=calcHormones(bpm,hz);const hl=L('h');const lvls=L('hlvl');
   S('hgauges').innerHTML=Object.entries(vals).map(([k,v])=>{
@@ -606,9 +606,9 @@ function renderHormones(bpm,hz){
   }).join('');
   setTimeout(()=>S('hgauges').querySelectorAll('.hfill').forEach(el=>el.style.width=el.dataset.w+'%'),60);
 }
- 
+
 function getWave(bpm){if(!bpm||!isFinite(bpm)||bpm<60)return'delta';if(bpm<80)return'theta';if(bpm<115)return'alpha';if(bpm<155)return'beta';return'gamma';}
- 
+
 /* ══ SHOW RESULTS ══ */
 function showResults(bpm,hz,label){
   const wt=getWave(bpm);
@@ -651,20 +651,20 @@ function showResults(bpm,hz,label){
     }catch{}
   },3500);
 }
- 
+
 /* ══════════════════════════════════
    AUDIO ENGINE — NE PAS MODIFIER
 ══════════════════════════════════ */
- 
+
 /* ── iOS/Safari : AudioContext partagé ── */
 let sharedAudioCtx=null;
 function getAudioCtx(){
-  if(!sharedAudioCtx||sharedAudioCtx.state==='closed'){
+  if(!sharedAudioCtx||sharedAudioCtx.state==='closed'||sharedAudioCtx.state==='interrupted'){
     sharedAudioCtx=new(window.AudioContext||window.webkitAudioContext)();
   }
   return sharedAudioCtx;
 }
- 
+
 /* ── Unlock silencieux sur premier geste utilisateur (iOS Safari bloque les AudioContext) ── */
 ['click','touchstart'].forEach(evt=>{
   document.addEventListener(evt,()=>{
@@ -672,19 +672,19 @@ function getAudioCtx(){
     if(ctx.state==='suspended') ctx.resume();
   },{once:true,passive:true});
 });
- 
+
 /* ── decodeAudioData universel : callback-style supporté par tous (Safari inclus) ── */
 function decodeAudioDataUniversal(ctx,ab){
   return new Promise((resolve,reject)=>{
     ctx.decodeAudioData(ab,resolve,reject);
   });
 }
- 
+
 /* ── Analyse BPM + Hz partagée (utilisée par tous les chemins d'analyse) ── */
 function analyzeRawSamples(data,sr,dur,label){
   const scan=Math.min(data.length,sr*60);
   let maxV=0;for(let i=0;i<scan;i++)if(Math.abs(data[i])>maxV)maxV=Math.abs(data[i]);
- 
+
   function getBPM(tm){
     let peaks=[],thr=maxV*tm;
     let sampleCheck=data.slice(0,sr),sum=0;
@@ -708,10 +708,10 @@ function analyzeRawSamples(data,sr,dur,label){
     if(result>210) result=Math.round(result/2);
     return result;
   }
- 
+
   let bpm=getBPM(0.80);
   if(!bpm||bpm<40) bpm=getBPM(0.50);
- 
+
   // ── HZ — ZCR robuste ──
   let zc=0,pos=data[0]>0;
   for(let i=1;i<data.length;i++){
@@ -721,7 +721,7 @@ function analyzeRawSamples(data,sr,dur,label){
   const hz=Math.round(zc/dur);
   setTimeout(()=>showResults(bpm,hz,label),800);
 }
- 
+
 async function processArrayBuffer(ab,label){
   const ctx=getAudioCtx();
   if(ctx.state==='suspended') await ctx.resume();
@@ -731,8 +731,8 @@ async function processArrayBuffer(ab,label){
   const data=rawData.subarray(0,Math.min(rawData.length,Math.floor(90*sr)));
   analyzeRawSamples(data,sr,Math.min(durFull,90),label);
 }
- 
-/* ── Fallback iOS : AnalyserNode (sans MediaRecorder, pour Safari iOS) ── */
+
+/* ── Fallback iOS : ScriptProcessorNode (capture continue sans trou, déterministe) ── */
 function processViaAnalyserSampling(file,label){
   return new Promise((resolve,reject)=>{
     const url=URL.createObjectURL(file);
@@ -740,72 +740,88 @@ function processViaAnalyserSampling(file,label){
     video.src=url;
     video.playsInline=true;
     video.preload='auto';
-    // muted=true : bypass autoplay restriction iOS — l'AnalyserNode capte quand même
-    // l'audio via Web Audio API (muted n'affecte que les haut-parleurs, pas le graph)
-    video.muted=true;
+    video.muted=true; // bypass autoplay iOS — ScriptProcessorNode capte quand même tout
     video.style.cssText='position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none';
     document.body.appendChild(video);
- 
+
     const cleanup=()=>{
       try{video.pause();}catch{}
       URL.revokeObjectURL(url);
       try{document.body.removeChild(video);}catch{}
     };
- 
-    // ── Mise en place du graph audio en synchrone (proche du geste utilisateur) ──
+
+    // Graph audio monté en synchrone (proche du geste utilisateur iOS)
     const ctx=getAudioCtx();
     ctx.resume().catch(()=>{});
-    let mediaSrc,analyser;
+
+    let mediaSrc,scriptProc;
     try{
       mediaSrc=ctx.createMediaElementSource(video);
-      analyser=ctx.createAnalyser();
-      analyser.fftSize=2048;
-      mediaSrc.connect(analyser);
-      mediaSrc.connect(ctx.destination); // iOS : obligatoire même si muted
+      // ScriptProcessorNode : capture CHAQUE sample, zéro trou, résultat déterministe
+      // Contrairement à setInterval/AnalyserNode qui ont des gaps entre les ticks
+      scriptProc=ctx.createScriptProcessor(4096,1,1);
     }catch(e){cleanup();reject(e);return;}
- 
-    const frameSize=analyser.frequencyBinCount;
-    const allSamples=[];
-    let sampleInterval=null,progress=null,finished=false;
- 
+
+    const chunks=[];
+    let totalSamples=0;
+    const maxSamples=ctx.sampleRate*90;
+    let progress=null,finished=false;
+
+    scriptProc.onaudioprocess=(evt)=>{
+      if(finished)return;
+      const input=evt.inputBuffer.getChannelData(0);
+      const copy=new Float32Array(input.length);
+      copy.set(input); // copie obligatoire — le buffer est recyclé après le callback
+      chunks.push(copy);
+      totalSamples+=input.length;
+      if(totalSamples>=maxSamples) finish();
+    };
+
+    mediaSrc.connect(scriptProc);
+    scriptProc.connect(ctx.destination); // obligatoire pour que onaudioprocess fire sur iOS
+
     const finish=()=>{
       if(finished)return;finished=true;
-      clearInterval(sampleInterval);
+      try{scriptProc.disconnect();mediaSrc.disconnect();}catch{}
       if(progress)progress.stop();
-      try{mediaSrc.disconnect();}catch{}
       cleanup();
-      if(allSamples.length<500){reject(new Error('no_samples'));return;}
-      const durSec=Math.max(1,allSamples.length/ctx.sampleRate);
-      analyzeRawSamples(new Float32Array(allSamples),ctx.sampleRate,durSec,label);
+      if(totalSamples<1000){reject(new Error('no_samples'));return;}
+      // Reconstruction du buffer complet sans trou
+      const fullData=new Float32Array(totalSamples);
+      let offset=0;
+      for(const chunk of chunks){fullData.set(chunk,offset);offset+=chunk.length;}
+      const durSec=Math.max(1,totalSamples/ctx.sampleRate);
+      analyzeRawSamples(fullData,ctx.sampleRate,durSec,label);
       resolve();
     };
- 
+
     video.addEventListener('error',()=>{
-      clearInterval(sampleInterval);cleanup();reject(new Error('video_error'));
+      try{scriptProc.disconnect();mediaSrc.disconnect();}catch{}
+      cleanup();reject(new Error('video_error'));
     });
- 
-    // Démarrage de l'échantillonnage dès que la vidéo joue réellement
+
     video.addEventListener('playing',()=>{
       const durSec=Math.min(isFinite(video.duration)?video.duration:60,90);
       if(durSec>10) progress=startProgressBar(durSec);
-      sampleInterval=setInterval(()=>{
-        const buf=new Float32Array(frameSize);
-        analyser.getFloatTimeDomainData(buf);
-        for(let v of buf) allSamples.push(v);
-        if(allSamples.length>ctx.sampleRate*90){clearInterval(sampleInterval);finish();}
-      },50);
       video.addEventListener('ended',finish,{once:true});
       setTimeout(finish,(durSec+3)*1000);
     },{once:true});
- 
-    // Safety : si le playing event ne fire jamais en 12s
-    setTimeout(()=>{if(!finished&&allSamples.length===0){cleanup();reject(new Error('play_timeout'));}},12000);
- 
-    // Lance la lecture immédiatement (toujours proche du geste utilisateur)
-    video.play().catch(()=>{cleanup();reject(new Error('play_rejected'));});
+
+    // Safety : playing jamais déclenché
+    setTimeout(()=>{
+      if(!finished&&totalSamples===0){
+        try{scriptProc.disconnect();mediaSrc.disconnect();}catch{}
+        cleanup();reject(new Error('play_timeout'));
+      }
+    },12000);
+
+    video.play().catch(()=>{
+      try{scriptProc.disconnect();mediaSrc.disconnect();}catch{}
+      cleanup();reject(new Error('play_rejected'));
+    });
   });
 }
- 
+
 /* ══ FILE UPLOAD (audio + video) ══ */
 S('audio-input').addEventListener('change',async e=>{
   const file=e.target.files[0];if(!file)return;
@@ -821,27 +837,27 @@ S('audio-input').addEventListener('change',async e=>{
       l=lang==='en'?'Audio Analysis':'Analyse audio';
     return l;
   })();
- 
+
   // Fichier vidéo détecté → chemin direct avec barre de progression (pas de decodeAudioData)
   const isVideo=file.type.startsWith('video/')||/\.(mp4|mov|avi|mkv|webm|m4v|3gp)$/i.test(file.name);
- 
+
   if(!isVideo){
     // Chemin audio (MP3/WAV/AAC/FLAC) : decodeAudioData direct, rapide
     try{const ab=await file.arrayBuffer();await processArrayBuffer(ab,label);return;}
     catch(err){/* audio non reconnu → tente chemin vidéo */}
   }
- 
+
   // Chemin vidéo — MediaRecorder (PC Chrome/Firefox) avec barre de progression
   if(typeof MediaRecorder!=='undefined'){
     try{await processViaVideoElement(file,label);return;}
     catch(err2){console.warn('[MediaRecorder]',err2);}
   }
- 
+
   // Chemin vidéo iOS — AnalyserNode (Safari, pas de MediaRecorder)
   try{await processViaAnalyserSampling(file,label);}
   catch(err3){goHome();}
 });
- 
+
 // Textes ondes cérébrales affichés pendant le fallback vidéo
 const WAVE_MSGS = {
   fr:[
@@ -869,7 +885,7 @@ const WAVE_MSGS = {
     'Cortical resonance computing…',
   ]
 };
- 
+
 function startProgressBar(durationSec){
   const wrap=document.getElementById('pbar-wrap');
   const fill=document.getElementById('pbar-fill');
@@ -881,7 +897,7 @@ function startProgressBar(durationSec){
   wrap.classList.remove('hidden');
   fill.style.width='0%';
   msg.textContent=msgs[0];
- 
+
   let elapsed=0, msgIdx=0;
   const interval=setInterval(()=>{
     elapsed+=1;
@@ -894,7 +910,7 @@ function startProgressBar(durationSec){
       setTimeout(()=>{msg.textContent=msgs[msgIdx];msg.style.opacity='1';},300);
     }
   },1000);
- 
+
   return {
     stop(){
       clearInterval(interval);
@@ -907,7 +923,7 @@ function startProgressBar(durationSec){
     }
   };
 }
- 
+
 // Fallback : capture audio via MediaElementSource sur un <video> invisible
 function processViaVideoElement(file, label){
   return new Promise((resolve,reject)=>{
@@ -919,27 +935,27 @@ function processViaVideoElement(file, label){
     video.playsInline=true;
     video.style.cssText='position:fixed;top:-9999px;left:-9999px;width:1px;height:1px';
     document.body.appendChild(video);
- 
+
     video.addEventListener('error',()=>{
       URL.revokeObjectURL(url);
       try{document.body.removeChild(video);}catch{}
       reject(new Error('video_load_error'));
     });
- 
+
     let started=false;
     const startCapture=async()=>{
       if(started) return; started=true;
       try{
         const durSec=Math.min(video.duration||90, 90);
         const progress = durSec > 10 ? startProgressBar(durSec) : null;
- 
+
         const AC=window.AudioContext||window.webkitAudioContext;
         const liveCtx=new AC();
         video.muted=false;
         const liveSrc=liveCtx.createMediaElementSource(video);
         const dest=liveCtx.createMediaStreamDestination();
         liveSrc.connect(dest);
- 
+
         const chunks=[];
         const recorder=new MediaRecorder(dest.stream);
         recorder.ondataavailable=ev=>{if(ev.data.size>0)chunks.push(ev.data);};
@@ -954,40 +970,40 @@ function processViaVideoElement(file, label){
           try{await processArrayBuffer(ab,label);resolve();}
           catch(e){reject(e);}
         };
- 
+
         recorder.start(1000); // collecte un chunk toutes les 1s (évite le blocage final)
         video.currentTime=0;
         await video.play();
- 
+
         // Timeout de fin + sécurité si recorder reste bloqué
         const stopTimer=setTimeout(()=>{
           video.pause();
           if(recorder.state!=='inactive') recorder.stop();
         }, durSec*1000);
- 
+
         video.addEventListener('ended',()=>{
           clearTimeout(stopTimer);
           if(recorder.state!=='inactive') recorder.stop();
         },{once:true});
- 
+
       }catch(e){
         URL.revokeObjectURL(url);
         try{document.body.removeChild(video);}catch{}
         reject(e);
       }
     };
- 
+
     // canplaythrough ou loadeddata en fallback (certains codecs longs ne triggent pas canplaythrough)
     video.addEventListener('canplaythrough', startCapture, {once:true});
     video.addEventListener('loadeddata', ()=>{
       // Si canplaythrough n'a pas encore lancé startCapture, on le fait ici
       if(video.readyState >= 2) startCapture();
     }, {once:true});
- 
+
     video.load();
   });
 }
- 
+
 /* ══ URL ANALYSIS ══ */
 function triggerAnalyzeLink(){
   const url=S('url-input').value.trim();
@@ -995,23 +1011,23 @@ function triggerAnalyzeLink(){
   hideAlert();
   analyzeLink(url);
 }
- 
+
 S('url-input').addEventListener('keydown',e=>{if(e.key==='Enter')triggerAnalyzeLink();});
- 
+
 async function analyzeLink(url){
   S('sc-ready').classList.add('hidden');
   S('sc-analyzing').classList.remove('hidden');
   S('scan-title').textContent=L('extracting');
   S('scan-sub').textContent=L('extractsub');
   S('home-btn').style.display='flex';
- 
+
   // Instances Cobalt tentées en cascade
   const COBALT=[
     'https://cobalt-api.v0l.io/',
     'https://cobalt.api.timkodiert.de/',
     'https://api.cobalt.tools/',
   ];
- 
+
   let audioUrl=null;
   for(const inst of COBALT){
     try{
@@ -1027,7 +1043,7 @@ async function analyzeLink(url){
       if(u){audioUrl=u;break;}
     }catch(e){console.warn('[Cobalt]',inst,e.message);}
   }
- 
+
   if(!audioUrl){
     S('sc-analyzing').classList.add('hidden');
     S('sc-ready').classList.remove('hidden');
@@ -1035,17 +1051,17 @@ async function analyzeLink(url){
     showAlert(L('errLink'));
     return;
   }
- 
+
   S('scan-title').textContent=L('scanning');
   S('scan-sub').textContent=L('analyzinglbl');
- 
+
   // Fetch audio : direct puis proxies CORS
   const PROXIES=[
     u=>u,
     u=>'https://corsproxy.io/?'+encodeURIComponent(u),
     u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
   ];
- 
+
   let ab=null;
   for(const makeUrl of PROXIES){
     try{
@@ -1055,7 +1071,7 @@ async function analyzeLink(url){
       if(buf.byteLength>1000){ab=buf;break;}
     }catch(e){console.warn('[fetch]',e.message);}
   }
- 
+
   if(!ab){
     S('sc-analyzing').classList.add('hidden');
     S('sc-ready').classList.remove('hidden');
@@ -1063,23 +1079,23 @@ async function analyzeLink(url){
     showAlert(L('errLink'));
     return;
   }
- 
+
   let label='Audio';
   try{const u=new URL(url);label=u.hostname.replace('www.','')+' — '+u.pathname.split('/').filter(Boolean).pop();}catch{}
   await processArrayBuffer(ab,label);
 }
- 
+
 let cachedShareCanvas=null;
- 
+
 /* ══ CAPTURE BILAN (SHARE) ══ */
 async function captureBilan(){
   const btn=S('btn-share');
   const originalHTML=btn.innerHTML;
   btn.innerHTML=`📸 <span>${L('capturing')}</span>`;
- 
+
   try{
     let canvas=cachedShareCanvas;
- 
+
     // Si le canvas pré-généré est dispo → on l'utilise directement (share immédiat)
     // Sinon → on le génère maintenant (cas rare : clic très rapide)
     if(!canvas){
@@ -1092,12 +1108,12 @@ async function captureBilan(){
       });
       actionsDiv.style.display='flex';
     }
- 
+
     btn.innerHTML=originalHTML;
- 
+
     const zenScore=Math.max(0,100-fatigueScore(lastBpm,lastHz));
     const shareText=`Score Zen Hertz : ${zenScore} 🧠\nRythme : ${lastBpm} BPM 🥁\nFréquence : ${lastHz} Hz 🌊\n\nViens tester l'impact de ta musique sur ton cerveau : https://zenhertz.com`;
- 
+
     if(typeof navigator.share==='function'){
       // Essai 1 : image + texte + lien (WhatsApp, iMessage, etc.)
       try{
@@ -1109,7 +1125,7 @@ async function captureBilan(){
           return;
         }
       }catch(e){if(e.name==='AbortError'){btn.innerHTML=originalHTML;return;}}
- 
+
       // Essai 2 : texte + lien seul (Snap, navigateurs sans support fichier)
       try{
         await navigator.share({title:'ZenHertz',text:shareText});
@@ -1117,18 +1133,18 @@ async function captureBilan(){
         return;
       }catch(e){if(e.name==='AbortError'){btn.innerHTML=originalHTML;return;}}
     }
- 
+
     // Fallback desktop : copie du texte dans le presse-papier
     await navigator.clipboard.writeText(shareText);
     alert('Résultat copié dans le presse-papier !');
- 
+
   }catch(err){
     console.error(err);
     btn.innerHTML=originalHTML;
     alert('Erreur lors de la capture de l\'image.');
   }
 }
- 
+
 /* ══ COPIER TEXTE SEUL ══ */
 async function copierTexte(){
   const zenScore=Math.max(0,100-fatigueScore(lastBpm,lastHz));
@@ -1140,9 +1156,9 @@ async function copierTexte(){
     alert(txt);
   }
 }
- 
+
 applyLang();
- 
+
 const MODAL_CONTENT={
   science:{
     fr:{
@@ -1217,7 +1233,7 @@ const MODAL_CONTENT={
     }
   }
 };
- 
+
 function renderModalContent(modalId, type){
   const data=MODAL_CONTENT[type][lang]||MODAL_CONTENT[type].fr;
   let html=`<p class="zh-modal-logo">${data.logo}</p><h2 class="zh-modal-title">${data.title}</h2><p class="zh-modal-sub">${data.sub}</p>`;
@@ -1246,7 +1262,7 @@ function renderModalContent(modalId, type){
   if(data.copy) html+=`<p style="font-size:.68rem;color:var(--t3);text-align:center;margin-top:.5rem">${data.copy}</p>`;
   document.getElementById(modalId+'-content').innerHTML=html;
 }
- 
+
 function openModal(id){
   const type=id.replace('modal-','');
   renderModalContent(id,type);
@@ -1268,7 +1284,7 @@ function closeModalOutside(e,id){
     <div class="zh-modal-scroll" id="modal-science-content"></div>
   </div>
 </div>
- 
+
 <!-- ══ MODAL LÉGAL ══ -->
 <div id="modal-legal" class="zh-modal-overlay" onclick="closeModalOutside(event,'modal-legal')">
   <div class="zh-modal-box">
@@ -1276,7 +1292,6 @@ function closeModalOutside(e,id){
     <div class="zh-modal-scroll" id="modal-legal-content"></div>
   </div>
 </div>
- 
+
 </body>
 </html>
-
