@@ -693,24 +693,20 @@ async function processViaFFmpeg(file,label){
   const ext=(file.name.split('.').pop()||'mp4').toLowerCase();
   const inName=`input.${ext}`;
 
-  // Écrit le fichier dans le système de fichiers virtuel FFmpeg
   ff.FS('writeFile',inName,await fetchFile(file));
 
-  // Extrait l'audio : PCM float 32-bit, mono, 44100 Hz
-  // -vn = pas de vidéo  |  -f f32le = raw float little-endian
-  await ff.run('-i',inName,'-vn','-ar','44100','-ac','1','-f','f32le','out.raw');
+  // Extrait l'audio en WAV mono 44100Hz → même pipeline que processArrayBuffer (MP3/WAV)
+  await ff.run('-i',inName,'-vn','-ar','44100','-ac','1','-c:a','pcm_s16le','out.wav');
 
-  const raw=ff.FS('readFile','out.raw');
-
-  // Nettoyage du FS virtuel
+  const raw=ff.FS('readFile','out.wav');
   try{ff.FS('unlink',inName);}catch{}
-  try{ff.FS('unlink','out.raw');}catch{}
+  try{ff.FS('unlink','out.wav');}catch{}
 
-  const samples=new Float32Array(raw.buffer);
-  if(samples.length<1000) throw new Error('ffmpeg_empty');
+  if(raw.length<1000) throw new Error('ffmpeg_empty');
 
-  const sr=44100;
-  analyzeRawSamples(samples,sr,Math.max(1,samples.length/sr),label);
+  // Passe le WAV dans le même pipeline que les MP3/WAV natifs → valeurs identiques
+  const ab=raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength);
+  await processArrayBuffer(ab,label);
 }
 
 /* ══════════════════════════════════
@@ -960,17 +956,18 @@ function startProgressBar(durationSec){
   const msg=document.getElementById('pbar-msg');
   const wave=document.getElementById('zh-wave');
   const msgs=WAVE_MSGS[lang]||WAVE_MSGS.fr;
-  // Cache la wave, affiche la barre
   wave.style.display='none';
   wrap.classList.remove('hidden');
   fill.style.width='0%';
   msg.textContent=msgs[0];
 
-  let elapsed=0, msgIdx=0;
+  let elapsed=0,msgIdx=0,displayedPct=0;
   const interval=setInterval(()=>{
     elapsed+=1;
-    const pct=Math.min(96,Math.round((elapsed/durationSec)*100));
-    fill.style.width=pct+'%';
+    const raw=Math.round((elapsed/durationSec)*100);
+    // Ne jamais reculer — uniquement avancer
+    displayedPct=Math.max(displayedPct,Math.min(96,raw));
+    fill.style.width=displayedPct+'%';
     const newIdx=Math.min(msgs.length-1,Math.floor(elapsed/8));
     if(newIdx!==msgIdx){
       msgIdx=newIdx;
@@ -986,7 +983,7 @@ function startProgressBar(durationSec){
       msg.textContent='';
       setTimeout(()=>{
         wrap.classList.add('hidden');
-        wave.style.display='flex'; // remet la wave
+        wave.style.display='flex';
       },600);
     }
   };
