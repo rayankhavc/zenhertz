@@ -152,7 +152,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 
 /* PROGRESS BAR FALLBACK */
 .pbar-wrap{width:100%;background:rgba(124,58,237,.1);border-radius:50px;height:5px;margin:1.4rem 0 .5rem;overflow:hidden}
-.pbar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,#7c3aed,#a855f7);width:0%;transition:width .8s ease}
+.pbar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,#7c3aed,#a855f7);width:0%;transition:width .4s linear}
 #pbar-msg{font-size:.67rem;color:var(--t3);font-style:italic;min-height:1em;transition:opacity .3s}
 
 /* MODALES GLASSMORPHISM */
@@ -908,6 +908,9 @@ S('audio-input').addEventListener('change',async e=>{
   if(typeof MediaRecorder!=='undefined'){
     try{await processViaVideoElement(file,label);return;}
     catch(err2){console.warn('[MediaRecorder]',err2);}
+    // Chrome peut décoder l'audio MP4 directement — évite de charger FFmpeg inutilement
+    try{const ab=await file.arrayBuffer();await processArrayBuffer(ab,label);return;}
+    catch(err2b){console.warn('[ArrayBuffer fallback]',err2b);}
   }
 
   // Chemin vidéo iOS — FFmpeg.wasm (décode tous les codecs, déterministe)
@@ -1058,12 +1061,10 @@ function processViaVideoElement(file, label){
       }
     };
 
-    // canplaythrough ou loadeddata en fallback (certains codecs longs ne triggent pas canplaythrough)
-    video.addEventListener('canplaythrough', startCapture, {once:true});
-    video.addEventListener('loadeddata', ()=>{
-      // Si canplaythrough n'a pas encore lancé startCapture, on le fait ici
-      if(video.readyState >= 2) startCapture();
-    }, {once:true});
+    // Un seul déclenchement garanti — canplaythrough OU loadeddata (le premier qui arrive)
+    const onReady=()=>{ video.removeEventListener('canplaythrough',onReady); video.removeEventListener('loadeddata',onReady); startCapture(); };
+    video.addEventListener('canplaythrough',onReady,{once:true});
+    video.addEventListener('loadeddata',onReady,{once:true});
 
     video.load();
   });
