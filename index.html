@@ -179,17 +179,57 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 @media(min-width:768px){#rwrap{display:grid;grid-template-columns:1.1fr 1fr;gap:1.5rem;align-items:start}}
 @media(max-width:767px){#rwrap{max-width:440px;margin:0 auto}#rright{margin-top:1rem}}
 
-.fade{animation:fi .45s ease forwards}
-@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.hidden{display:none}
-</style>
+/* LANDING PAGE */
+.lp-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 1.5rem 4rem;text-align:center}
+.lp-logo-wrap{display:flex;align-items:center;justify-content:center;gap:.75rem;margin-bottom:2.5rem}
+.lp-logo-text{font-size:2.2rem;font-weight:900;letter-spacing:-1.5px;background:linear-gradient(135deg,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lp-badge{font-size:.55rem;font-weight:800;color:#7c3aed;border:1.5px solid rgba(124,58,237,.4);border-radius:6px;padding:.15rem .45rem;letter-spacing:.15em;text-transform:uppercase;-webkit-text-fill-color:#7c3aed}
+.lp-h1{font-size:clamp(2rem,6vw,3.8rem);font-weight:900;letter-spacing:-2px;line-height:1.08;color:var(--t1);max-width:780px;margin:0 auto .2rem}
+.lp-h1 span{background:linear-gradient(135deg,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lp-sub{font-size:clamp(.88rem,2vw,1.05rem);color:var(--t2);max-width:520px;margin:.9rem auto 0;line-height:1.7;font-weight:400}
+.lp-cta{display:inline-flex;align-items:center;gap:.6rem;margin-top:2.2rem;padding:.95rem 2.2rem;border-radius:50px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-size:.88rem;font-weight:800;letter-spacing:.04em;cursor:pointer;border:none;font-family:inherit;box-shadow:0 8px 30px rgba(124,58,237,.4);transition:transform .2s,box-shadow .2s}
+.lp-cta:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(124,58,237,.55)}
+.lp-cta-sub{font-size:.65rem;color:var(--t3);margin-top:.7rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.lp-stats{display:flex;gap:2.5rem;justify-content:center;margin-top:3rem;flex-wrap:wrap}
+.lp-stat p:first-child{font-size:1.6rem;font-weight:900;color:#7c3aed;letter-spacing:-1px}
+.lp-stat p:last-child{font-size:.62rem;color:var(--t3);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:.15rem}
+.lp-steps{padding:4rem 1.5rem;max-width:900px;margin:0 auto;width:100%}
+.lp-steps-title{font-size:1.5rem;font-weight:900;letter-spacing:-.8px;color:var(--t1);text-align:center;margin-bottom:2.5rem}
+.lp-steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem}
+.lp-step{background:var(--glass);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid var(--glass-b);border-radius:28px;padding:1.8rem 1.5rem;text-align:center;box-shadow:var(--shadow)}
+.lp-step-num{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-size:.88rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto .9rem}
+.lp-step h3{font-size:.92rem;font-weight:800;color:var(--t1);margin-bottom:.4rem;letter-spacing:-.2px}
+.lp-step p{font-size:.76rem;color:var(--t2);line-height:1.6}
+.lp-formats{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.7rem}
+.lp-fmt{font-size:.58rem;font-weight:700;padding:.2rem .5rem;border-radius:6px;background:rgba(124,58,237,.1);color:#7c3aed;letter-spacing:.08em}
+.lp-feats{padding:0 1.5rem 4rem;max-width:900px;margin:0 auto;width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.lp-feat{background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.12);border-radius:20px;padding:1.2rem 1.1rem;text-align:center}
+.lp-feat-icon{font-size:1.6rem;margin-bottom:.5rem}
+.lp-feat h4{font-size:.8rem;font-weight:800;color:var(--t1);margin-bottom:.25rem}
+.lp-feat p{font-size:.7rem;color:var(--t2);line-height:1.5}
+.lp-footer{border-top:1px solid var(--div);padding:2rem 1.5rem;text-align:center;display:flex;flex-direction:column;gap:.5rem;align-items:center}
+.lp-footer-links{display:flex;gap:1.2rem;justify-content:center}
+.lp-by{font-size:.62rem;color:var(--t3);font-weight:500;letter-spacing:.05em}
+.lp-by a{color:#7c3aed;font-weight:700;text-decoration:none}
+.lp-by a:hover{text-decoration:underline}
+.lp-preview{margin:0 auto 3rem;max-width:360px;width:100%;padding:0 1.5rem}
+.lp-preview-inner{background:var(--glass);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid var(--glass-b);border-radius:24px;padding:1.2rem;box-shadow:var(--shadow)}
+.lp-preview-bar{display:flex;align-items:center;gap:8px;margin-bottom:.8rem}
+.lp-preview-dot{width:8px;height:8px;border-radius:50%}
+.lp-preview-metric{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;text-align:center;gap:0}
+.lp-preview-val{font-size:1.4rem;font-weight:900;letter-spacing:-1px;color:var(--t1)}
+.lp-preview-val.v{color:#7c3aed}
+.lp-preview-lbl{font-size:.5rem;font-weight:700;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;margin-top:.3rem}
+.lp-preview-div{background:var(--div);width:1px}
+.beta-pill{display:inline-flex;align-items:center;gap:.3rem;font-size:.55rem;font-weight:800;color:#7c3aed;background:rgba(124,58,237,.1);border:1.5px solid rgba(124,58,237,.3);border-radius:50px;padding:.2rem .6rem;letter-spacing:.12em;text-transform:uppercase;vertical-align:middle;margin-left:.4rem}
+
 </head>
 <body>
 
 <div id="mesh"><div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div></div>
 
 <div id="topbar">
-  <button class="tbtn" id="home-btn" onclick="goHome()" style="display:none">
+  <button class="tbtn" id="home-btn" onclick="goLanding()" style="display:none">
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
     <span data-i="homeBtn">Accueil</span>
   </button>
@@ -200,7 +240,135 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
   </div>
 </div>
 
-<div id="sc-ready" class="screen">
+<!-- ═══════════════ LANDING PAGE ═══════════════ -->
+<div id="sc-landing">
+
+  <!-- HERO -->
+  <div class="lp-hero">
+
+    <!-- Logo SVG + Texte -->
+    <div class="lp-logo-wrap">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="zhg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7c3aed"/>
+            <stop offset="100%" stop-color="#a855f7"/>
+          </linearGradient>
+        </defs>
+        <rect x="2"  y="18" width="5" height="8"  rx="2.5" fill="url(#zhg)" opacity=".6"/>
+        <rect x="10" y="12" width="5" height="20" rx="2.5" fill="url(#zhg)" opacity=".75"/>
+        <rect x="18" y="4"  width="5" height="36" rx="2.5" fill="url(#zhg)"/>
+        <rect x="26" y="12" width="5" height="20" rx="2.5" fill="url(#zhg)" opacity=".75"/>
+        <rect x="34" y="18" width="5" height="8"  rx="2.5" fill="url(#zhg)" opacity=".6"/>
+      </svg>
+      <div>
+        <span class="lp-logo-text">ZenHertz</span>
+        <span class="lp-badge">Beta</span>
+      </div>
+    </div>
+
+    <h1 class="lp-h1" data-i="landH1fr">Ta musique impacte ton cerveau.<br><span data-i="landH1em">Découvrez comment.</span></h1>
+    <p class="lp-sub" data-i="landSub">ZenHertz analyse les fréquences de ta musique et révèle son impact sur tes ondes cérébrales, tes hormones et ton système nerveux — en quelques secondes.</p>
+
+    <button class="lp-cta" onclick="showTool()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <span data-i="landCta">Analyser ma musique</span>
+    </button>
+    <p class="lp-cta-sub" data-i="landCtaSub">Gratuit · Aucune inscription · Tous formats</p>
+
+    <!-- Preview card décorative -->
+    <div class="lp-preview" style="margin-top:2.5rem">
+      <div class="lp-preview-inner">
+        <div class="lp-preview-bar">
+          <div class="lp-preview-dot" style="background:#7c3aed"></div>
+          <div class="lp-preview-dot" style="background:#a855f7;opacity:.5"></div>
+          <div class="lp-preview-dot" style="background:#c084fc;opacity:.3"></div>
+          <span style="font-size:.6rem;color:var(--t3);margin-left:auto;font-weight:600">ZenHertz · Live</span>
+        </div>
+        <div class="lp-preview-metric">
+          <div><p class="lp-preview-val">128</p><p class="lp-preview-lbl">BPM</p></div>
+          <div class="lp-preview-div"></div>
+          <div><p class="lp-preview-val v">432</p><p class="lp-preview-lbl">Hertz</p></div>
+          <div class="lp-preview-div"></div>
+          <div><p class="lp-preview-val" style="font-size:.95rem;padding-top:.3rem">Alpha</p><p class="lp-preview-lbl" data-i="wlbl">Onde</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="lp-stats">
+      <div class="lp-stat"><p>6</p><p data-i="statFormats">Formats</p></div>
+      <div class="lp-stat"><p>5</p><p data-i="statWaves">Ondes cérébrales</p></div>
+      <div class="lp-stat"><p>6</p><p data-i="statHorm">Hormones</p></div>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div class="lp-steps">
+    <h2 class="lp-steps-title" data-i="landHow">Comment ça marche ?</h2>
+    <div class="lp-steps-grid">
+      <div class="lp-step">
+        <div class="lp-step-num">1</div>
+        <h3 data-i="step1T">Importe ton son</h3>
+        <p data-i="step1D">Dépose n'importe quel fichier audio ou vidéo directement depuis ta galerie ou ton ordinateur.</p>
+        <div class="lp-formats">
+          <span class="lp-fmt">MP3</span><span class="lp-fmt">WAV</span><span class="lp-fmt">AAC</span>
+          <span class="lp-fmt">MP4</span><span class="lp-fmt">MOV</span><span class="lp-fmt">FLAC</span>
+        </div>
+      </div>
+      <div class="lp-step">
+        <div class="lp-step-num">2</div>
+        <h3 data-i="step2T">Analyse instantanée</h3>
+        <p data-i="step2D">Notre moteur bioacoustique détecte le BPM, les Hz dominants et classe tes ondes cérébrales en temps réel.</p>
+      </div>
+      <div class="lp-step">
+        <div class="lp-step-num">3</div>
+        <h3 data-i="step3T">Ton profil neuro-acoustique</h3>
+        <p data-i="step3D">Découvre l'impact hormonal, l'état cérébral induit et si ton écoute prolongée est sûre ou stimulante.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="lp-feats">
+    <div class="lp-feat">
+      <div class="lp-feat-icon">📱</div>
+      <h4 data-i="feat1T">iOS · Android · PC</h4>
+      <p data-i="feat1D">Fonctionne sur tous les appareils, sans installation.</p>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">⚡</div>
+      <h4 data-i="feat2T">100% dans le navigateur</h4>
+      <p data-i="feat2D">Aucun upload vers un serveur. Tes fichiers restent sur ton appareil.</p>
+    </div>
+    <div class="lp-feat">
+      <div class="lp-feat-icon">🔬</div>
+      <h4 data-i="feat3T">Basé sur la science</h4>
+      <p data-i="feat3D">ZCR, détection de pics, classification des ondes cérébrales.</p>
+    </div>
+  </div>
+
+  <!-- CTA BOTTOM -->
+  <div style="text-align:center;padding:1rem 1.5rem 3rem">
+    <button class="lp-cta" onclick="showTool()">
+      <span data-i="landCta">Analyser ma musique</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="lp-footer">
+    <div class="lp-footer-links">
+      <button onclick="openModal('modal-science')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">🔬 <span data-i="sciLink">Comment ça marche ?</span></button>
+      <button onclick="openModal('modal-legal')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">⚖️ <span data-i="legalLink">Mentions légales</span></button>
+    </div>
+    <p class="lp-by">Made with 🔮 by <a href="https://raythanwebdesign.com" target="_blank">RaythanWebDesign</a></p>
+  </div>
+
+</div>
+<!-- ═══════════════ END LANDING ═══════════════ -->
+
+<div id="sc-ready" class="screen hidden">
   <div class="glass fade" style="max-width:440px;width:100%;padding:2.5rem 2rem">
     <div style="text-align:center;margin-bottom:1.5rem">
       <div class="logo">ZenHertz</div>
@@ -212,6 +380,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     <div class="url-wrap">
       <input type="text" id="url-input" class="url-input" data-i-ph="urlph">
       <button class="url-btn" onclick="triggerAnalyzeLink()" data-i="urlbtn">→</button>
+    </div>
+    <div style="text-align:center;margin-top:-.3rem;margin-bottom:.3rem">
+      <span class="beta-pill">🚧 <span data-i="betaLabel">Liens — Bientôt disponible</span></span>
     </div>
 
     <div id="alert-box"><p id="alert-msg"></p></div>
@@ -318,6 +489,18 @@ const TR = {
     neuroprofile:'Profil Neuro-acoustique', hormones:'Tableau Hormonal Estimé',
     disclaimer:'Analyse basée sur la périodicité du signal et la moyenne spectrale (ZCR). Visée informative — ne constitue pas un diagnostic médical.',
     back:'← Analyser un autre morceau', share:'Partager le bilan', capturing:'Capture...', copyBtn:'Copier',
+    landH1fr:'Ta musique impacte ton cerveau.', landH1em:'Découvrez comment.',
+    landSub:'ZenHertz analyse les fréquences de ta musique et révèle son impact sur tes ondes cérébrales, tes hormones et ton système nerveux — en quelques secondes.',
+    landCta:'Analyser ma musique', landCtaSub:'Gratuit · Aucune inscription · Tous formats',
+    landHow:'Comment ça marche ?',
+    step1T:'Importe ton son', step1D:'Dépose n\'importe quel fichier audio ou vidéo directement depuis ta galerie ou ton ordinateur.',
+    step2T:'Analyse instantanée', step2D:'Notre moteur bioacoustique détecte le BPM, les Hz dominants et classe tes ondes cérébrales en temps réel.',
+    step3T:'Ton profil neuro-acoustique', step3D:'Découvre l\'impact hormonal, l\'état cérébral induit et si ton écoute prolongée est sûre ou stimulante.',
+    feat1T:'iOS · Android · PC', feat1D:'Fonctionne sur tous les appareils, sans installation.',
+    feat2T:'100% dans le navigateur', feat2D:'Aucun upload vers un serveur. Tes fichiers restent sur ton appareil.',
+    feat3T:'Basé sur la science', feat3D:'ZCR, détection de pics, classification des ondes cérébrales.',
+    statFormats:'Formats', statWaves:'Ondes cérébrales', statHorm:'Hormones',
+    betaLabel:'Liens — Bientôt disponible', sciLink:'Comment ça marche ?', legalLink:'Mentions légales',
     fLow:'✓ Écoute prolongée : sûre et régénératrice',
     fMid:'→ Écoute prolongée : modérément stimulante',
     fHigh:'⚠ Écoute prolongée : risque de fatigue nerveuse',
@@ -342,6 +525,18 @@ const TR = {
     neuroprofile:'Neuro-acoustic Profile', hormones:'Estimated Hormonal Dashboard',
     disclaimer:'Analysis based on signal periodicity and spectral average (ZCR). For informational purposes only — not a medical diagnosis.',
     back:'← Analyze another track', share:'Share Results', capturing:'Capturing...', copyBtn:'Copy',
+    landH1fr:'Your music impacts your brain.', landH1em:'Find out how.',
+    landSub:'ZenHertz analyzes your music\'s frequencies and reveals its impact on your brain waves, hormones and nervous system — in seconds.',
+    landCta:'Analyze my music', landCtaSub:'Free · No sign-up · All formats',
+    landHow:'How does it work?',
+    step1T:'Import your track', step1D:'Drop any audio or video file directly from your gallery or computer.',
+    step2T:'Instant analysis', step2D:'Our bioacoustic engine detects BPM, dominant Hz and classifies your brain waves in real time.',
+    step3T:'Your neuro-acoustic profile', step3D:'Discover the hormonal impact, induced brain state and whether extended listening is safe or stimulating.',
+    feat1T:'iOS · Android · PC', feat1D:'Works on all devices, no installation needed.',
+    feat2T:'100% in-browser', feat2D:'No upload to any server. Your files stay on your device.',
+    feat3T:'Science-based', feat3D:'ZCR, peak detection, brain wave classification.',
+    statFormats:'Formats', statWaves:'Brain waves', statHorm:'Hormones',
+    betaLabel:'Links — Coming soon', sciLink:'How it works', legalLink:'Legal notices',
     fLow:'✓ Extended listening: safe & regenerative',
     fMid:'→ Extended listening: moderately stimulating',
     fHigh:'⚠ Extended listening: risk of neural fatigue',
@@ -383,6 +578,24 @@ function toggleTheme(){
 function showAlert(msg){ S('alert-box').style.display='block'; S('alert-msg').textContent=msg; }
 function hideAlert(){ S('alert-box').style.display='none'; }
 
+function goLanding(){
+  S('sc-result').classList.add('hidden');
+  S('sc-analyzing').classList.add('hidden');
+  S('sc-ready').classList.add('hidden');
+  S('sc-landing').classList.remove('hidden');
+  S('home-btn').style.display='none';
+  const wave=document.getElementById('zh-wave');
+  if(wave) wave.style.display='flex';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showTool(){
+  S('sc-landing').classList.add('hidden');
+  S('sc-ready').classList.remove('hidden');
+  S('home-btn').style.display='flex';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
 function goHome(){
   lastBpm=null; lastHz=null;
   S('audio-input').value=''; S('url-input').value='';
@@ -393,12 +606,13 @@ function goHome(){
   S('hbdot').style.animation='';
   ['wd','wt','wa','wb','wg'].forEach(id=>S(id).classList.remove('on'));
   S('sc-result').classList.add('hidden');
-  S('sc-analyzing').classList.add('hidden'); // Fix : remet analyzing hidden
+  S('sc-analyzing').classList.add('hidden');
   S('sc-ready').classList.remove('hidden');
-  S('home-btn').style.display='none';
-  // Remet la wave visible au cas où la barre l'aurait cachée
+  S('sc-landing').classList.add('hidden');
+  S('home-btn').style.display='flex';
   const wave=document.getElementById('zh-wave');
   if(wave) wave.style.display='flex';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 /* ══ MOUSE MESH ══ */
