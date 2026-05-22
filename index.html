@@ -4,16 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#eeeef5" id="meta-theme-color">
-<title>ZenHertz</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-
+<title>ZenHertz — Analyse bioacoustique</title>
+<!-- Plausible Analytics — RGPD, zéro cookie, zéro bannière consent -->
+<!-- Crée ton compte sur plausible.io et remplace "zenhertz.com" par ton domaine -->
+<script defer data-domain="zenhertz.com" src="https://plausible.io/js/script.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-/* Suppression du @import url ici */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#eeeef5;--glass:rgba(255,255,255,0.75);--glass-b:rgba(255,255,255,0.55);
@@ -35,15 +33,15 @@
 html{background:var(--bg)}
 body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transition:background .35s,color .35s;color:var(--t1)}
 
-/* MESH - FIX 2 : OPTIMISÉ GPU (Tailles réduites, blur réduit, translate3d, will-change) */
+/* MESH */
 #mesh{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;width:100%;height:100%}
-.blob{position:absolute;border-radius:50%;filter:blur(40px);will-change:transform;transition:transform 3s cubic-bezier(.25,.46,.45,.94)}
-#b1{width:max(500px,80vw);height:max(500px,80vw);background:radial-gradient(circle,var(--blob1),transparent 70%);top:-10%;left:-10%;animation:bf1 18s ease-in-out infinite}
-#b2{width:max(450px,70vw);height:max(450px,70vw);background:radial-gradient(circle,var(--blob2),transparent 70%);bottom:-10%;right:-10%;animation:bf2 22s ease-in-out infinite}
-#b3{width:max(400px,60vw);height:max(400px,60vw);background:radial-gradient(circle,var(--blob3),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:bf3 16s ease-in-out infinite}
-@keyframes bf1{0%,100%{transform:translate3d(0,0,0)}33%{transform:translate3d(40px,-30px,0)}66%{transform:translate3d(-25px,45px,0)}}
-@keyframes bf2{0%,100%{transform:translate3d(0,0,0)}40%{transform:translate3d(-35px,25px,0)}80%{transform:translate3d(30px,-40px,0)}}
-@keyframes bf3{0%,100%{transform:translate3d(-50%,-50%,0)}50%{transform:translate3d(calc(-50% + 30px),calc(-50% + 20px),0)}}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);transition:transform 3s cubic-bezier(.25,.46,.45,.94)}
+#b1{width:max(800px,120vw);height:max(800px,120vw);background:radial-gradient(circle,var(--blob1),transparent 70%);top:-20%;left:-20%;animation:bf1 18s ease-in-out infinite}
+#b2{width:max(700px,110vw);height:max(700px,110vw);background:radial-gradient(circle,var(--blob2),transparent 70%);bottom:-20%;right:-20%;animation:bf2 22s ease-in-out infinite}
+#b3{width:max(600px,100vw);height:max(600px,100vw);background:radial-gradient(circle,var(--blob3),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:bf3 16s ease-in-out infinite}
+@keyframes bf1{0%,100%{transform:translate(0,0)}33%{transform:translate(40px,-30px)}66%{transform:translate(-25px,45px)}}
+@keyframes bf2{0%,100%{transform:translate(0,0)}40%{transform:translate(-35px,25px)}80%{transform:translate(30px,-40px)}}
+@keyframes bf3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(calc(-50% + 30px),calc(-50% + 20px))}}
 
 /* TOPBAR */
 #topbar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.75rem;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--div);background:rgba(238,238,245,.55)}
@@ -180,11 +178,25 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 
 /* LAYOUT */
 .result-page{min-height:100vh;padding:5.5rem 2rem 3rem;display:flex;justify-content:center;align-items:flex-start}
-#rwrap{width:100%;max-width:1080px;border-radius:36px;}
+#rwrap{width:100%;max-width:1080px;border-radius:36px;} /* Ajout border-radius pour la capture */
 @media(min-width:768px){#rwrap{display:grid;grid-template-columns:1.1fr 1fr;gap:1.5rem;align-items:start}}
 @media(max-width:767px){#rwrap{max-width:440px;margin:0 auto}#rright{margin-top:1rem}}
 
-/* LANDING PAGE */
+/* EMAIL CAPTURE */
+.ec-wrap{padding:2rem 1.5rem;max-width:520px;margin:0 auto;width:100%}
+.ec-box{background:var(--glass);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid var(--glass-b);border-radius:28px;padding:1.8rem 1.6rem;box-shadow:var(--shadow);text-align:center}
+.ec-input{flex:1;background:var(--card);border:1px solid var(--div);border-radius:14px;padding:.7rem 1rem;font-size:.82rem;color:var(--t1);font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;min-width:0}
+.ec-input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.ec-input::placeholder{color:var(--t3)}
+.ec-btn{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;border-radius:14px;padding:.7rem 1.2rem;font-size:.78rem;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 16px rgba(124,58,237,.3)}
+.ec-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,.45)}
+/* FEEDBACK BUTTON */
+#feedback-fab{position:fixed;bottom:1.5rem;right:1.5rem;z-index:500;display:flex;align-items:center;gap:.35rem;font-size:.65rem;font-weight:800;color:var(--t2);background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--div);border-radius:50px;padding:.5rem 1rem;cursor:pointer;box-shadow:var(--shadow);transition:all .2s;font-family:'Inter',sans-serif;letter-spacing:.06em}
+#feedback-fab:hover{color:#7c3aed;border-color:rgba(124,58,237,.4);box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+/* FEEDBACK TEXTAREA */
+.fb-textarea{width:100%;background:var(--card);border:1px solid var(--div);border-radius:14px;padding:.85rem 1rem;font-size:.82rem;color:var(--t1);font-family:'Inter',sans-serif;outline:none;resize:vertical;min-height:120px;transition:border-color .2s;margin-top:.8rem}
+.fb-textarea:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.fb-textarea::placeholder{color:var(--t3)}
 .lp-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 1.5rem 4rem;text-align:center}
 .lp-logo-wrap{display:flex;align-items:center;justify-content:center;gap:.75rem;margin-bottom:2.5rem}
 .lp-logo-text{font-size:2.2rem;font-weight:900;letter-spacing:-1.5px;background:linear-gradient(135deg,#7c3aed,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -228,7 +240,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
 .lp-preview-div{background:var(--div);width:1px}
 .beta-pill{display:inline-flex;align-items:center;gap:.3rem;font-size:.55rem;font-weight:800;color:#7c3aed;background:rgba(124,58,237,.1);border:1.5px solid rgba(124,58,237,.3);border-radius:50px;padding:.2rem .6rem;letter-spacing:.12em;text-transform:uppercase;vertical-align:middle;margin-left:.4rem}
 
-</style>
 </head>
 <body>
 
@@ -246,10 +257,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
   </div>
 </div>
 
+<!-- ═══════════════ LANDING PAGE ═══════════════ -->
 <div id="sc-landing">
 
+  <!-- HERO -->
   <div class="lp-hero">
 
+    <!-- Logo SVG + Texte -->
     <div class="lp-logo-wrap">
       <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -271,7 +285,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     </div>
 
     <h1 class="lp-h1" data-i="landH1fr">Ta musique impacte ton cerveau.<br><span data-i="landH1em">Découvrez comment.</span></h1>
-    <p class="lp-sub" data-i="landSub">ZenHertz analyse ta musique et révèle son impact sur tes ondes cérébrales, tes hormones et ton système nerveux en quelques secondes.</p>
+    <p class="lp-sub" data-i="landSub">ZenHertz analyse les fréquences de ta musique et révèle son impact sur tes ondes cérébrales, tes hormones et ton système nerveux — en quelques secondes.</p>
 
     <button class="lp-cta" onclick="showTool()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -279,6 +293,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     </button>
     <p class="lp-cta-sub" data-i="landCtaSub">Gratuit · Aucune inscription · Tous formats</p>
 
+    <!-- Preview card décorative -->
     <div class="lp-preview" style="margin-top:2.5rem">
       <div class="lp-preview-inner">
         <div class="lp-preview-bar">
@@ -297,6 +312,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
       </div>
     </div>
 
+    <!-- Stats -->
     <div class="lp-stats">
       <div class="lp-stat"><p>6</p><p data-i="statFormats">Formats</p></div>
       <div class="lp-stat"><p>5</p><p data-i="statWaves">Ondes cérébrales</p></div>
@@ -304,6 +320,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     </div>
   </div>
 
+  <!-- STEPS -->
   <div class="lp-steps">
     <h2 class="lp-steps-title" data-i="landHow">Comment ça marche ?</h2>
     <div class="lp-steps-grid">
@@ -329,6 +346,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     </div>
   </div>
 
+  <!-- FEATURES -->
   <div class="lp-feats">
     <div class="lp-feat">
       <div class="lp-feat-icon">📱</div>
@@ -347,6 +365,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     </div>
   </div>
 
+  <!-- CTA BOTTOM -->
   <div style="text-align:center;padding:1rem 1.5rem 3rem">
     <button class="lp-cta" onclick="showTool()">
       <span data-i="landCta">Analyser ma musique</span>
@@ -354,15 +373,32 @@ body{font-family:'Inter',sans-serif;background:var(--bg);min-height:100vh;transi
     </button>
   </div>
 
+  <!-- EMAIL CAPTURE -->
+  <div class="ec-wrap">
+    <div class="ec-box">
+      <p style="font-size:1.05rem;font-weight:900;color:var(--t1);letter-spacing:-.3px;margin-bottom:.3rem">🚀 <span data-i="ecTitle">ZenHertz arrive officiellement</span></p>
+      <p style="font-size:.76rem;color:var(--t2);line-height:1.6;margin-bottom:1.2rem" data-i="ecSub">Soyez informés de la sortie officielle — zéro spam, juste une notification.</p>
+      <form name="email-capture" method="POST" data-netlify="true" style="display:flex;gap:.5rem" onsubmit="handleEmailSubmit(event,this)">
+        <input type="hidden" name="form-name" value="email-capture">
+        <input type="email" name="email" class="ec-input" data-i-ph="ecPh" placeholder="votre@email.com" required>
+        <button type="submit" class="ec-btn" data-i="ecBtn">M'avertir</button>
+      </form>
+      <p id="ec-confirm" style="display:none;font-size:.72rem;color:#7c3aed;font-weight:700;margin-top:.7rem" data-i="ecConfirm">✓ Vous serez notifié à la sortie !</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
   <div class="lp-footer">
     <div class="lp-footer-links">
       <button onclick="openModal('modal-science')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">🔬 <span data-i="sciLink">Comment ça marche ?</span></button>
       <button onclick="openModal('modal-legal')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">⚖️ <span data-i="legalLink">Mentions légales</span></button>
     </div>
-    <p class="lp-by">Made by <a href="https://raythanwebdesign.com" target="_blank">RaythanWebDesign</a></p>
+    <p class="lp-by">Made with 🔮 by <a href="mailto:raythanwebdesign@gmail.com">RaythanWebDesign</a></p>
   </div>
 
 </div>
+<!-- ═══════════════ END LANDING ═══════════════ -->
+
 <div id="sc-ready" class="screen hidden">
   <div class="glass fade" style="max-width:440px;width:100%;padding:2.5rem 2rem">
     <div style="text-align:center;margin-bottom:1.5rem">
@@ -496,6 +532,11 @@ const TR = {
     feat3T:'Basé sur la science', feat3D:'ZCR, détection de pics, classification des ondes cérébrales.',
     statFormats:'Formats', statWaves:'Ondes cérébrales', statHorm:'Hormones',
     betaLabel:'Liens — Bientôt disponible', sciLink:'Comment ça marche ?', legalLink:'Mentions légales',
+    ecTitle:'ZenHertz arrive officiellement', ecSub:'Soyez informés de la sortie officielle — zéro spam, juste une notification.',
+    ecPh:'votre@email.com', ecBtn:"M'avertir", ecConfirm:'✓ Vous serez notifié à la sortie !',
+    feedbackBtn:'Feedback', fbTitle:'Votre avis compte', fbSub:'Bug, idée, suggestion — on lit tout',
+    fbPh:'Décrivez votre expérience, un bug, une idée...', fbEmailPh:'Votre email (optionnel)',
+    fbSend:'Envoyer', fbConfirm:'✓ Merci ! On a bien reçu votre message.',
     fLow:'✓ Écoute prolongée : sûre et régénératrice',
     fMid:'→ Écoute prolongée : modérément stimulante',
     fHigh:'⚠ Écoute prolongée : risque de fatigue nerveuse',
@@ -532,6 +573,11 @@ const TR = {
     feat3T:'Science-based', feat3D:'ZCR, peak detection, brain wave classification.',
     statFormats:'Formats', statWaves:'Brain waves', statHorm:'Hormones',
     betaLabel:'Links — Coming soon', sciLink:'How it works', legalLink:'Legal notices',
+    ecTitle:'ZenHertz launching officially', ecSub:'Get notified at official launch — zero spam, just one notification.',
+    ecPh:'your@email.com', ecBtn:'Notify me', ecConfirm:'✓ You will be notified at launch!',
+    feedbackBtn:'Feedback', fbTitle:'Your feedback matters', fbSub:'Bug, idea, suggestion — we read everything',
+    fbPh:'Describe your experience, a bug, an idea...', fbEmailPh:'Your email (optional)',
+    fbSend:'Send', fbConfirm:'✓ Thanks! We received your message.',
     fLow:'✓ Extended listening: safe & regenerative',
     fMid:'→ Extended listening: moderately stimulating',
     fHigh:'⚠ Extended listening: risk of neural fatigue',
@@ -613,9 +659,9 @@ function goHome(){
 /* ══ MOUSE MESH ══ */
 document.addEventListener('mousemove', e=>{
   const x=(e.clientX/window.innerWidth-.5)*70, y=(e.clientY/window.innerHeight-.5)*70;
-  S('b1').style.transform=`translate3d(${x*.7}px,${y*.7}px,0)`;
-  S('b2').style.transform=`translate3d(${-x*.55}px,${-y*.55}px,0)`;
-  S('b3').style.transform=`translate3d(calc(-50% + ${x*.35}px),calc(-50% + ${y*.35}px),0)`;
+  S('b1').style.transform=`translate(${x*.7}px,${y*.7}px)`;
+  S('b2').style.transform=`translate(${-x*.55}px,${-y*.55}px)`;
+  S('b3').style.transform=`translate(calc(-50% + ${x*.35}px),calc(-50% + ${y*.35}px))`;
 });
 
 /* ══ WORD TYPEWRITER ══ */
@@ -840,12 +886,14 @@ function showResults(bpm,hz,label){
   S('sc-analyzing').classList.add('hidden');
   S('sc-result').classList.remove('hidden');
   window.scrollTo({top:0,behavior:'smooth'});
+  // Pré-génère le canvas après la fin de l'animation typeWords (~3s max)
   cachedShareCanvas=null;
   setTimeout(async()=>{
     try{
       const target=S('rleft');
       const actionsDiv=target.querySelector('.backbtn').parentElement;
       actionsDiv.style.display='none';
+      // Force le texte animé à son état final avant capture
       const rdesc=S('rdesc');
       const cur=rdesc.querySelector('.cur');
       if(cur) cur.style.display='none';
@@ -861,6 +909,9 @@ function showResults(bpm,hz,label){
 
 /* ══════════════════════════════════
    FFMPEG.WASM — Décodeur universel
+   Single-thread (core-st) : aucun
+   header COEP requis, fonctionne
+   sur tout navigateur / iOS / Android
 ══════════════════════════════════ */
 let _ffmpegInst=null;
 let _ffmpegLoadPromise=null;
@@ -869,6 +920,7 @@ function loadFFmpeg(){
   if(_ffmpegInst) return Promise.resolve(_ffmpegInst);
   if(_ffmpegLoadPromise) return _ffmpegLoadPromise;
   _ffmpegLoadPromise=(async()=>{
+    // Charge le script FFmpeg.wasm 0.11 (UMD, ~8 Ko)
     if(!window.FFmpeg){
       await new Promise((res,rej)=>{
         const s=document.createElement('script');
@@ -877,12 +929,13 @@ function loadFFmpeg(){
         document.head.appendChild(s);
       });
     }
+    // core-st = single-thread, pas besoin de SharedArrayBuffer ni de headers COEP
     const {createFFmpeg}=FFmpeg;
     const ff=createFFmpeg({
       log:false,
       corePath:'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js'
     });
-    await ff.load(); 
+    await ff.load(); // télécharge le WASM (~10 Mo, mis en cache ensuite)
     _ffmpegInst=ff;
     return ff;
   })();
@@ -896,6 +949,8 @@ async function processViaFFmpeg(file,label){
   const inName=`input.${ext}`;
 
   ff.FS('writeFile',inName,await fetchFile(file));
+
+  // Extrait l'audio en WAV mono 44100Hz → même pipeline que processArrayBuffer (MP3/WAV)
   await ff.run('-i',inName,'-vn','-ar','44100','-ac','1','-c:a','pcm_s16le','out.wav');
 
   const raw=ff.FS('readFile','out.wav');
@@ -904,13 +959,16 @@ async function processViaFFmpeg(file,label){
 
   if(raw.length<1000) throw new Error('ffmpeg_empty');
 
+  // Passe le WAV dans le même pipeline que les MP3/WAV natifs → valeurs identiques
   const ab=raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength);
   await processArrayBuffer(ab,label);
 }
 
 /* ══════════════════════════════════
-   AUDIO ENGINE
+   AUDIO ENGINE — NE PAS MODIFIER
 ══════════════════════════════════ */
+
+/* ── iOS/Safari : AudioContext partagé ── */
 let sharedAudioCtx=null;
 function getAudioCtx(){
   if(!sharedAudioCtx||sharedAudioCtx.state==='closed'||sharedAudioCtx.state==='interrupted'){
@@ -919,6 +977,7 @@ function getAudioCtx(){
   return sharedAudioCtx;
 }
 
+/* ── Unlock silencieux sur premier geste utilisateur (iOS Safari bloque les AudioContext) ── */
 ['click','touchstart'].forEach(evt=>{
   document.addEventListener(evt,()=>{
     const ctx=getAudioCtx();
@@ -926,12 +985,14 @@ function getAudioCtx(){
   },{once:true,passive:true});
 });
 
+/* ── decodeAudioData universel : callback-style supporté par tous (Safari inclus) ── */
 function decodeAudioDataUniversal(ctx,ab){
   return new Promise((resolve,reject)=>{
     ctx.decodeAudioData(ab,resolve,reject);
   });
 }
 
+/* ── Analyse BPM + Hz partagée (utilisée par tous les chemins d'analyse) ── */
 function analyzeRawSamples(data,sr,dur,label){
   const scan=Math.min(data.length,sr*60);
   let maxV=0;for(let i=0;i<scan;i++)if(Math.abs(data[i])>maxV)maxV=Math.abs(data[i]);
@@ -963,6 +1024,7 @@ function analyzeRawSamples(data,sr,dur,label){
   let bpm=getBPM(0.80);
   if(!bpm||bpm<40) bpm=getBPM(0.50);
 
+  // ── HZ — ZCR robuste ──
   let zc=0,pos=data[0]>0;
   for(let i=1;i<data.length;i++){
     if(pos&&data[i]<-0.005) pos=false;
@@ -982,6 +1044,7 @@ async function processArrayBuffer(ab,label){
   analyzeRawSamples(data,sr,Math.min(durFull,90),label);
 }
 
+/* ── Fallback iOS : ScriptProcessorNode (capture continue sans trou, déterministe) ── */
 function processViaAnalyserSampling(file,label){
   return new Promise((resolve,reject)=>{
     const url=URL.createObjectURL(file);
@@ -989,7 +1052,7 @@ function processViaAnalyserSampling(file,label){
     video.src=url;
     video.playsInline=true;
     video.preload='auto';
-    video.muted=true; 
+    video.muted=true; // bypass autoplay iOS — ScriptProcessorNode capte quand même tout
     video.style.cssText='position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none';
     document.body.appendChild(video);
 
@@ -999,12 +1062,15 @@ function processViaAnalyserSampling(file,label){
       try{document.body.removeChild(video);}catch{}
     };
 
+    // Graph audio monté en synchrone (proche du geste utilisateur iOS)
     const ctx=getAudioCtx();
     ctx.resume().catch(()=>{});
 
     let mediaSrc,scriptProc;
     try{
       mediaSrc=ctx.createMediaElementSource(video);
+      // ScriptProcessorNode : capture CHAQUE sample, zéro trou, résultat déterministe
+      // Contrairement à setInterval/AnalyserNode qui ont des gaps entre les ticks
       scriptProc=ctx.createScriptProcessor(4096,1,1);
     }catch(e){cleanup();reject(e);return;}
 
@@ -1017,14 +1083,14 @@ function processViaAnalyserSampling(file,label){
       if(finished)return;
       const input=evt.inputBuffer.getChannelData(0);
       const copy=new Float32Array(input.length);
-      copy.set(input); 
+      copy.set(input); // copie obligatoire — le buffer est recyclé après le callback
       chunks.push(copy);
       totalSamples+=input.length;
       if(totalSamples>=maxSamples) finish();
     };
 
     mediaSrc.connect(scriptProc);
-    scriptProc.connect(ctx.destination); 
+    scriptProc.connect(ctx.destination); // obligatoire pour que onaudioprocess fire sur iOS
 
     const finish=()=>{
       if(finished)return;finished=true;
@@ -1032,6 +1098,7 @@ function processViaAnalyserSampling(file,label){
       if(progress)progress.stop();
       cleanup();
       if(totalSamples<1000){reject(new Error('no_samples'));return;}
+      // Reconstruction du buffer complet sans trou
       const fullData=new Float32Array(totalSamples);
       let offset=0;
       for(const chunk of chunks){fullData.set(chunk,offset);offset+=chunk.length;}
@@ -1052,6 +1119,7 @@ function processViaAnalyserSampling(file,label){
       setTimeout(finish,(durSec+3)*1000);
     },{once:true});
 
+    // Safety : playing jamais déclenché
     setTimeout(()=>{
       if(!finished&&totalSamples===0){
         try{scriptProc.disconnect();mediaSrc.disconnect();}catch{}
@@ -1066,7 +1134,7 @@ function processViaAnalyserSampling(file,label){
   });
 }
 
-/* ══ FILE UPLOAD ══ */
+/* ══ FILE UPLOAD (audio + video) ══ */
 S('audio-input').addEventListener('change',async e=>{
   const file=e.target.files[0];if(!file)return;
   hideAlert();
@@ -1082,30 +1150,37 @@ S('audio-input').addEventListener('change',async e=>{
     return l;
   })();
 
+  // Fichier vidéo détecté → chemin direct avec barre de progression (pas de decodeAudioData)
   const isVideo=file.type.startsWith('video/')||/\.(mp4|mov|avi|mkv|webm|m4v|3gp)$/i.test(file.name);
 
   if(!isVideo){
+    // Chemin audio (MP3/WAV/AAC/FLAC) : decodeAudioData direct, rapide
     try{const ab=await file.arrayBuffer();await processArrayBuffer(ab,label);return;}
-    catch(err){}
+    catch(err){/* audio non reconnu → tente chemin vidéo */}
   }
 
+  // Chemin vidéo — MediaRecorder (PC Chrome/Firefox) avec barre de progression
   if(typeof MediaRecorder!=='undefined'){
     try{await processViaVideoElement(file,label);return;}
     catch(err2){console.warn('[MediaRecorder]',err2);}
+    // Chrome peut décoder l'audio MP4 directement — évite de charger FFmpeg inutilement
     try{const ab=await file.arrayBuffer();await processArrayBuffer(ab,label);return;}
     catch(err2b){console.warn('[ArrayBuffer fallback]',err2b);}
   }
 
+  // Chemin vidéo iOS — FFmpeg.wasm (décode tous les codecs, déterministe)
   try{
     S('scan-sub').textContent=lang==='en'?'Loading decoder…':'Chargement du décodeur…';
     await processViaFFmpeg(file,label);
     return;
   }catch(err3){console.warn('[FFmpeg]',err3);}
 
+  // Chemin vidéo iOS — ScriptProcessorNode (last resort si FFmpeg échoue)
   try{await processViaAnalyserSampling(file,label);}
   catch(err4){goHome();}
 });
 
+// Textes ondes cérébrales affichés pendant le fallback vidéo
 const WAVE_MSGS = {
   fr:[
     'Synchronisation des ondes delta…',
@@ -1148,6 +1223,7 @@ function startProgressBar(durationSec){
   const interval=setInterval(()=>{
     elapsed+=1;
     const raw=Math.round((elapsed/durationSec)*100);
+    // Ne jamais reculer — uniquement avancer
     displayedPct=Math.max(displayedPct,Math.min(96,raw));
     fill.style.width=displayedPct+'%';
     const newIdx=Math.min(msgs.length-1,Math.floor(elapsed/8));
@@ -1171,6 +1247,7 @@ function startProgressBar(durationSec){
   };
 }
 
+// Fallback : capture audio via MediaElementSource sur un <video> invisible
 function processViaVideoElement(file, label){
   return new Promise((resolve,reject)=>{
     const url=URL.createObjectURL(file);
@@ -1217,10 +1294,11 @@ function processViaVideoElement(file, label){
           catch(e){reject(e);}
         };
 
-        recorder.start(1000);
+        recorder.start(1000); // collecte un chunk toutes les 1s (évite le blocage final)
         video.currentTime=0;
         await video.play();
 
+        // Timeout de fin + sécurité si recorder reste bloqué
         const stopTimer=setTimeout(()=>{
           video.pause();
           if(recorder.state!=='inactive') recorder.stop();
@@ -1238,6 +1316,7 @@ function processViaVideoElement(file, label){
       }
     };
 
+    // Un seul déclenchement garanti — canplaythrough OU loadeddata (le premier qui arrive)
     const onReady=()=>{ video.removeEventListener('canplaythrough',onReady); video.removeEventListener('loadeddata',onReady); startCapture(); };
     video.addEventListener('canplaythrough',onReady,{once:true});
     video.addEventListener('loadeddata',onReady,{once:true});
@@ -1263,6 +1342,7 @@ async function analyzeLink(url){
   S('scan-sub').textContent=L('extractsub');
   S('home-btn').style.display='flex';
 
+  // Instances Cobalt tentées en cascade
   const COBALT=[
     'https://cobalt-api.v0l.io/',
     'https://cobalt.api.timkodiert.de/',
@@ -1296,6 +1376,7 @@ async function analyzeLink(url){
   S('scan-title').textContent=L('scanning');
   S('scan-sub').textContent=L('analyzinglbl');
 
+  // Fetch audio : direct puis proxies CORS
   const PROXIES=[
     u=>u,
     u=>'https://corsproxy.io/?'+encodeURIComponent(u),
@@ -1336,6 +1417,8 @@ async function captureBilan(){
   try{
     let canvas=cachedShareCanvas;
 
+    // Si le canvas pré-généré est dispo → on l'utilise directement (share immédiat)
+    // Sinon → on le génère maintenant (cas rare : clic très rapide)
     if(!canvas){
       const target=S('rleft');
       const actionsDiv=target.querySelector('.backbtn').parentElement;
@@ -1353,6 +1436,7 @@ async function captureBilan(){
     const shareText=`Score Zen Hertz : ${zenScore} 🧠\nRythme : ${lastBpm} BPM 🥁\nFréquence : ${lastHz} Hz 🌊\n\nViens tester l'impact de ta musique sur ton cerveau : https://zenhertz.com`;
 
     if(typeof navigator.share==='function'){
+      // Essai 1 : image + texte + lien (WhatsApp, iMessage, etc.)
       try{
         const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
         const file=new File([blob],`ZenHertz_${lastBpm}BPM.png`,{type:'image/png'});
@@ -1363,6 +1447,7 @@ async function captureBilan(){
         }
       }catch(e){if(e.name==='AbortError'){btn.innerHTML=originalHTML;return;}}
 
+      // Essai 2 : texte + lien seul (Snap, navigateurs sans support fichier)
       try{
         await navigator.share({title:'ZenHertz',text:shareText});
         btn.innerHTML=originalHTML;
@@ -1370,6 +1455,7 @@ async function captureBilan(){
       }catch(e){if(e.name==='AbortError'){btn.innerHTML=originalHTML;return;}}
     }
 
+    // Fallback desktop : copie du texte dans le presse-papier
     await navigator.clipboard.writeText(shareText);
     alert('Résultat copié dans le presse-papier !');
 
@@ -1390,6 +1476,22 @@ async function copierTexte(){
   }catch(e){
     alert(txt);
   }
+}
+
+/* ══ NETLIFY FORMS HANDLERS ══ */
+function handleEmailSubmit(e,form){
+  e.preventDefault();
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams(new FormData(form)).toString()})
+    .then(()=>{form.style.display='none';document.getElementById('ec-confirm').style.display='block';})
+    .catch(()=>{form.submit();});
+}
+function handleFeedbackSubmit(e,form){
+  e.preventDefault();
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams(new FormData(form)).toString()})
+    .then(()=>{form.style.display='none';document.getElementById('fb-confirm').style.display='block';})
+    .catch(()=>{form.submit();});
 }
 
 applyLang();
@@ -1512,6 +1614,7 @@ function closeModalOutside(e,id){
   if(e.target===document.getElementById(id)) closeModal(id);
 }
 </script>
+<!-- ══ MODAL SCIENCE ══ -->
 <div id="modal-science" class="zh-modal-overlay" onclick="closeModalOutside(event,'modal-science')">
   <div class="zh-modal-box">
     <button class="zh-modal-close" onclick="closeModal('modal-science')">✕</button>
@@ -1519,10 +1622,33 @@ function closeModalOutside(e,id){
   </div>
 </div>
 
+<!-- ══ MODAL LÉGAL ══ -->
 <div id="modal-legal" class="zh-modal-overlay" onclick="closeModalOutside(event,'modal-legal')">
   <div class="zh-modal-box">
     <button class="zh-modal-close" onclick="closeModal('modal-legal')">✕</button>
     <div class="zh-modal-scroll" id="modal-legal-content"></div>
+  </div>
+</div>
+
+<!-- FEEDBACK FLOATING BUTTON -->
+<button id="feedback-fab" onclick="openModal('modal-feedback')">💬 <span data-i="feedbackBtn">Feedback</span></button>
+
+<!-- FEEDBACK MODAL -->
+<div id="modal-feedback" class="zh-modal-overlay" onclick="if(event.target===this)closeModal('modal-feedback')">
+  <div class="zh-modal-box">
+    <button class="zh-modal-close" onclick="closeModal('modal-feedback')">✕</button>
+    <div class="zh-modal-scroll">
+      <div class="zh-modal-logo">💬</div>
+      <div class="zh-modal-title" data-i="fbTitle">Votre avis compte</div>
+      <div class="zh-modal-sub" data-i="fbSub">Bug, idée, suggestion — on lit tout</div>
+      <form name="feedback" method="POST" data-netlify="true" onsubmit="handleFeedbackSubmit(event,this)">
+        <input type="hidden" name="form-name" value="feedback">
+        <textarea name="message" class="fb-textarea" data-i-ph="fbPh" placeholder="Décrivez votre expérience, un bug, une idée..." required></textarea>
+        <input type="email" name="email" class="ec-input" style="width:100%;margin-top:.6rem" data-i-ph="fbEmailPh" placeholder="Votre email (optionnel)">
+        <button type="submit" class="lp-cta" style="width:100%;margin-top:1rem;justify-content:center" data-i="fbSend">Envoyer</button>
+      </form>
+      <p id="fb-confirm" style="display:none;text-align:center;font-size:.78rem;color:#7c3aed;font-weight:700;margin-top:.8rem" data-i="fbConfirm">✓ Merci ! On a bien reçu votre message.</p>
+    </div>
   </div>
 </div>
 
