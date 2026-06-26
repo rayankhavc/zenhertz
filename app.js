@@ -530,57 +530,70 @@ function decodeAudioDataUniversal(ctx,ab){
 /* ══ Pro Peak-Detection BPM Algorithm (native DSP) ══ */
 function calculateBpmFromPeaks(data, sampleRate) {
     let peaks = [];
-    const step = Math.floor(sampleRate / 4); // Minimum 250ms between beats (max 240 BPM)
+    const minIndex = Math.floor(sampleRate * 0.2); // Minimum 200ms between kicks (max 300 BPM physical limit)
     
-    // Find the maximum amplitude to set a dynamic threshold
-    let maxAmplitude = 0;
-    for (let i = 0; i < data.length; i++) {
-        if (Math.abs(data[i]) > maxAmplitude) maxAmplitude = Math.abs(data[i]);
-    }
-    
-    // Threshold set at 75% of max volume to catch distinct kicks
-    const threshold = maxAmplitude * 0.75;
-    
-    for (let i = 0; i < data.length; i++) {
-        if (data[i] > threshold) {
-            peaks.push(i);
-            i += step; // Skip window to avoid double counting the same kick
+    // 1. Dynamic Thresholding (Chunk Analysis)
+    // Analyze block by block to detect kicks even in quiet sections/intros
+    const blockSize = sampleRate; // 1-second blocks
+    for (let i = 0; i < data.length; i += blockSize) {
+        let block = data.subarray(i, i + blockSize);
+        let maxInBlock = 0;
+        
+        for (let j = 0; j < block.length; j++) {
+            if (Math.abs(block[j]) > maxInBlock) maxInBlock = Math.abs(block[j]);
+        }
+        
+        // Lower threshold for more sensitivity inside the block
+        let threshold = maxInBlock * 0.80; 
+        
+        for (let j = 0; j < block.length; j++) {
+            if (block[j] > threshold) {
+                let absoluteIndex = i + j;
+                // Avoid double-counting the same peak
+                if (peaks.length === 0 || absoluteIndex - peaks[peaks.length - 1] > minIndex) {
+                    peaks.push(absoluteIndex);
+                }
+            }
         }
     }
     
     if (peaks.length < 2) return 0;
     
-    // Count intervals between peaks
-    let intervals = [];
+    // 2. Interval Calculation and Octave Correction
+    let bpmCounts = [];
     for (let i = 1; i < peaks.length; i++) {
-        intervals.push(peaks[i] - peaks[i - 1]);
+        let interval = peaks[i] - peaks[i - 1];
+        let bpm = (60 * sampleRate) / interval;
+        
+        // Force BPM into standard DJ range [75 - 150 BPM] to fix octave errors
+        while (bpm < 75) bpm *= 2;
+        while (bpm >= 150) bpm /= 2;
+        
+        bpmCounts.push(Math.round(bpm));
     }
     
-    // Group intervals to find the most frequent cadence
+    // 3. Cluster Voting System
+    // Find the most frequent BPM with a +/- 1 BPM tolerance
     let counts = {};
-    intervals.forEach(interval => {
-        const rounded = Math.round(interval / 100) * 100; // Group close values
-        counts[rounded] = (counts[rounded] || 0) + 1;
+    bpmCounts.forEach(bpm => {
+        counts[bpm] = (counts[bpm] || 0) + 1;
     });
     
+    let bestBpm = 0;
     let maxCount = 0;
-    let bestInterval = 0;
-    for (let interval in counts) {
-        if (counts[interval] > maxCount) {
-            maxCount = counts[interval];
-            bestInterval = parseInt(interval);
+    
+    for (let bpmStr in counts) {
+        let bpm = parseInt(bpmStr);
+        // Add adjacent BPM counts to smooth out micro-variations
+        let clusterScore = (counts[bpm] || 0) + (counts[bpm - 1] || 0) + (counts[bpm + 1] || 0);
+        
+        if (clusterScore > maxCount) {
+            maxCount = clusterScore;
+            bestBpm = bpm;
         }
     }
     
-    if (!bestInterval) return 0;
-    
-    let rawBpm = (60 * sampleRate) / bestInterval;
-    
-    // Normalize BPM to standard 60-180 range
-    while (rawBpm < 60) rawBpm *= 2;
-    while (rawBpm > 180) rawBpm /= 2;
-    
-    return rawBpm;
+    return bestBpm;
 }
 
 /* ══ Main BPM detection function — Native DSP via OfflineAudioContext ══ */
