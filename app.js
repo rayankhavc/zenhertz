@@ -37,7 +37,7 @@ const TR = {
     errEmpty:'Veuillez coller un lien valide.',
     wnames:{delta:'Delta',theta:'Thêta',alpha:'Alpha',beta:'Bêta',gamma:'Gamma'},
     tags:{sleep:'💤 Sommeil profond',meditate:'🧘 Méditation',create:'✨ Créativité',focus:'🧠 Focus doux',cardiac:'🫀 Cohérence cardiaque',active:'⚡ Éveil actif',perf:'💪 Performance',hstim:'🔥 Haute stimulation',cogn:'⚡ Cognition intense',vagus:'🫀 Nerf vague stimulé',sport:'🏃 Sport / Effort',fatigue:'⚠ Fatigue si prolongé',vibra:'🌊 Vibration profonde'},
-    h:{dopamine:['Dopamine','Motivation & Récompense'],cortisol:['Cortisol','Stress & Vigilance'],serotonin:['Sérotonine','Humeur & Bien-être'],melatonin:['Mélatonine','Sommeil & Récupération'],endorphins:['Endorphines','Euphorie & Analgésie'],noradr:['Adrénaline','Éveil & Réactivité']},
+    h:{dopamine:['Dopamine','Motivation & Récompense'],cortisol:['Cortisol','Stress & Vigilance'],serotonin:['Sérotonine','Humeur & Bien-être'],melatonin:['Mélatonine','Sommeil & Récupération'],endorphins:['Endorphines','Euphorie & Analgésie'],adr:['Adrénaline','Éveil & Réactivité']},
     hlvl:['Faible','Modéré','Élevé'],
     conclus:{delta:'Privilégiez ce son pour une phase de récupération totale ou avant le sommeil.',theta:'Ce profil est parfait pour les phases de création ou de visualisation mentale.',alpha:'L\'équilibre idéal pour une session d\'étude ou de travail calme.',beta:'Utilisez cette énergie pour vos entraînements physiques ou vos besoins de motivation.',gamma:'Attention : ce niveau de stimulation est à réserver aux efforts explosifs de courte durée.'}
   },
@@ -78,7 +78,7 @@ const TR = {
     errEmpty:'Please paste a valid link.',
     wnames:{delta:'Delta',theta:'Theta',alpha:'Alpha',beta:'Beta',gamma:'Gamma'},
     tags:{sleep:'💤 Deep sleep',meditate:'🧘 Meditation',create:'✨ Creativity',focus:'🧠 Soft focus',cardiac:'🫀 Cardiac coherence',active:'⚡ Active wakefulness',perf:'💪 Performance',hstim:'🔥 High stimulation',cogn:'⚡ Intense cognition',vagus:'🫀 Vagus nerve stimulated',sport:'🏃 Sport / Effort',fatigue:'⚠ Fatigue risk',vibra:'🌊 Deep vibration'},
-    h:{dopamine:['Dopamine','Motivation & Reward'],cortisol:['Cortisol','Stress & Alertness'],serotonin:['Serotonin','Mood & Wellbeing'],melatonin:['Melatonin','Sleep & Recovery'],endorphins:['Endorphins','Euphoria & Pain Relief'],noradr:['Noradrenaline','Arousal & Reflexes']},
+    h:{dopamine:['Dopamine','Motivation & Reward'],cortisol:['Cortisol','Stress & Alertness'],serotonin:['Serotonin','Mood & Wellbeing'],melatonin:['Melatonin','Sleep & Recovery'],endorphins:['Endorphins','Euphoria & Pain Relief'],adr:['adrenaline','Arousal & Reflexes']},
     hlvl:['Low','Moderate','High'],
     conclus:{delta:'Reserve this sound for total recovery phases or use before sleep.',theta:'This profile is ideal for creative work or mental visualization sessions.',alpha:'The perfect balance for study sessions or calm focused work.',beta:'Channel this energy for physical training or motivation-driven tasks.',gamma:'Caution: this stimulation level should be reserved for short explosive efforts.'}
   }
@@ -198,7 +198,7 @@ const ANALYSIS={
         `À %B% BPM, le circuit dopaminergique de récompense est stimulé sans surcharger le système cardiovasculaire.`
       ],
       fast:[
-        `Ce tempo de %B% BPM déclenche une cascade orthosympathique, libérant adrénaline et noradrénaline.`,
+        `Ce tempo de %B% BPM déclenche une cascade orthosympathique, libérant adrénaline et adrénaline.`,
         `À %B% BPM, le corps se mobilise : le débit sanguin s'accélère et la vigilance devient maximale.`,
         `Le signal à %B% BPM simule un eustress, un stress positif boostant la réactivité musculaire.`,
         `Avec %B% BPM, l'entraînement rythmique force une accélération métabolique préparant à l'effort intense.`,
@@ -260,7 +260,7 @@ const ANALYSIS={
         `At %B% BPM, the dopaminergic reward circuit is stimulated without overloading the cardiovascular system.`
       ],
       fast:[
-        `This %B% BPM tempo triggers an orthosympathetic cascade, releasing adrenaline and noradrenaline.`,
+        `This %B% BPM tempo triggers an orthosympathetic cascade, releasing adrenaline and adrenaline.`,
         `At %B% BPM, the body mobilizes: blood flow accelerates and vigilance reaches its peak.`,
         `The %B% BPM signal simulates eustress positive stress boosting muscular reactivity.`,
         `With %B% BPM, rhythmic entrainment forces a metabolic acceleration priming the body for intense effort.`,
@@ -335,7 +335,7 @@ function generateTags(bpm,hz,wt){
 
 function fatigueScore(bpm,hz){let s=0;if(bpm>140)s+=40;else if(bpm>110)s+=20;if(hz>3000)s+=40;else if(hz>1500)s+=20;return Math.min(s,100);}
 
-const HCOL={dopamine:'linear-gradient(90deg,#7c3aed,#a855f7)',cortisol:'linear-gradient(90deg,#f59e0b,#ef4444)',serotonin:'linear-gradient(90deg,#10b981,#059669)',melatonin:'linear-gradient(90deg,#6366f1,#4338ca)',endorphins:'linear-gradient(90deg,#ec4899,#db2777)',noradr:'linear-gradient(90deg,#f59e0b,#d97706)'};
+const HCOL={dopamine:'linear-gradient(90deg,#7c3aed,#a855f7)',cortisol:'linear-gradient(90deg,#f59e0b,#ef4444)',serotonin:'linear-gradient(90deg,#10b981,#059669)',melatonin:'linear-gradient(90deg,#6366f1,#4338ca)',endorphins:'linear-gradient(90deg,#ec4899,#db2777)',adr:'linear-gradient(90deg,#f59e0b,#d97706)'};
 
 function calcHormones(bpm,hz,rms,signalVariance){
   const b=bpm>0&&isFinite(bpm)?bpm:100;
@@ -390,7 +390,7 @@ function calcHormones(bpm,hz,rms,signalVariance){
   if(b<90&&v<0.08) n=Math.max(8,n-15);
 
   const cap=val=>Math.round(Math.min(95,Math.max(4,val)));
-  return{dopamine:cap(d),cortisol:cap(c),serotonin:cap(s),melatonin:cap(m),endorphins:cap(e),noradr:cap(n)};
+  return{dopamine:cap(d),cortisol:cap(c),serotonin:cap(s),melatonin:cap(m),endorphins:cap(e),adr:cap(n)};
 }
 
 function renderHormones(bpm,hz,rms,signalVariance){
@@ -447,7 +447,7 @@ function showResults(bpm,hz,label,rms=0.15,signalVariance=0.1){
 }
 
 /* ══════════════════════════════════
-   FFMPEG.WASM — Décodeur universel
+   FFMPEG.WASM  Décodeur universel
    Single-thread (core-st) : aucun
    header COEP requis, fonctionne
    sur tout navigateur / iOS / Android
@@ -842,7 +842,7 @@ S('audio-input').addEventListener('change',async e=>{
     catch(err){/* audio non reconnu → tente chemin vidéo */}
   }
 
-  // Chemin vidéo — MediaRecorder (PC Chrome/Firefox)
+  // Chemin vidéo  MediaRecorder (PC Chrome/Firefox)
   if(typeof MediaRecorder!=='undefined'){
     try{await processViaVideoElement(file,labelFromFile(file));return;}
     catch(err2){console.warn('[MediaRecorder]',err2);}
@@ -851,14 +851,14 @@ S('audio-input').addEventListener('change',async e=>{
     catch(err2b){console.warn('[ArrayBuffer fallback]',err2b);}
   }
 
-  // Chemin vidéo — FFmpeg.wasm
+  // Chemin vidéo  FFmpeg.wasm
   try{
     S('scan-sub').textContent=lang==='en'?'Loading decoder…':'Chargement du décodeur…';
     await processViaFFmpeg(file,labelFromFile(file));
     return;
   }catch(err3){console.warn('[FFmpeg]',err3);}
 
-  // Chemin vidéo iOS — ScriptProcessorNode (last resort)
+  // Chemin vidéo iOS ScriptProcessorNode (last resort)
   try{await processViaAnalyserSampling(file,labelFromFile(file));}
   catch(err4){goHome();}
 });
@@ -1087,7 +1087,7 @@ async function analyzeLink(url){
   }
 
   let label='Audio';
-  try{const u=new URL(url);label=u.hostname.replace('www.','')+' — '+u.pathname.split('/').filter(Boolean).pop();}catch{}
+  try{const u=new URL(url);label=u.hostname.replace('www.','')+' '+u.pathname.split('/').filter(Boolean).pop();}catch{}
   await processArrayBuffer(ab,label);
 }
 
@@ -1195,37 +1195,37 @@ const MODAL_CONTENT={
       sections:[
         {h:'BPM & synchronisation cardiaque',p:`Le tempo d'une musique (mesuré en battements par minute, BPM) influence directement le rythme cardiaque par un phénomène appelé <strong>entraînement cardiovasculaire</strong>. Des études publiées dans le <em>Journal of Music Therapy</em> montrent qu'une musique entre 60 et 80 BPM favorise la cohérence cardiaque, activant le système nerveux parasympathique  celui du calme et de la récupération.<br><br>À l'inverse, des tempos supérieurs à 130–140 BPM stimulent le système sympathique, augmentant la fréquence cardiaque et la production d'adrénaline d'où leur usage dans les playlists de sport.`},
         {h:'Fréquences Hz & ondes cérébrales',p:`Les fréquences sonores interagissent avec le cerveau via la <strong>résonance neuronale</strong>. Chaque bande d'onde cérébrale correspond à un état mental :`,list:[
-          ['#818cf8','δ Delta','0,5–4 Hz — sommeil profond, régénération cellulaire, pic de mélatonine'],
-          ['#a78bfa','θ Thêta','4–8 Hz — créativité, mémoire à long terme, pics de dopamine'],
-          ['#7c3aed','α Alpha','8–13 Hz — relaxation vigilante, état de flow, sérotonine élevée'],
-          ['#c084fc','β Bêta','13–30 Hz — concentration active, résolution de problèmes, cortisol modéré'],
-          ['#e879f9','γ Gamma','30–100 Hz — cognition intense, conscience élargie, noradrénaline haute'],
+          ['#818cf8','δ Delta','0,5–4 Hz sommeil profond, régénération cellulaire, pic de mélatonine'],
+          ['#a78bfa','θ Thêta','4–8 Hz créativité, mémoire à long terme, pics de dopamine'],
+          ['#7c3aed','α Alpha','8–13 Hz relaxation vigilante, état de flow, sérotonine élevée'],
+          ['#c084fc','β Bêta','13–30 Hz concentration active, résolution de problèmes, cortisol modéré'],
+          ['#e879f9','γ Gamma','30–100 Hz cognition intense, conscience élargie, adrénaline + haute'],
         ],p2:`Des chercheurs de Stanford ont démontré que les oscillations à 40 Hz (onde Gamma) stimulent le cortex préfrontal, améliorant l'attention et la mémoire de travail en quelques minutes d'exposition.`},
-        {h:'Dopamine & circuit de la récompense',p:`La musique est l'un des seuls stimuli non-chimiques capables d'activer le <strong>noyau accumbens</strong> — le centre du plaisir du cerveau. Une étude de Salimpoor et al. (2011, <em>Nature Neuroscience</em>) a mesuré des pics de dopamine allant jusqu'à +65% lors de l'écoute de musique émotionnellement intense. ZenHertz analyse ces patterns pour estimer l'impact probable sur votre circuit de récompense.`},
-        {h:'Cortisol & stress acoustique',p:`Des tempos très rapides (>160 BPM) peuvent déclencher une réponse de stress, augmentant le cortisol via l'axe HHS. En revanche, les fréquences graves (40–100 Hz) stimulent le nerf vague, réduisant le cortisol et favorisant la récupération — principe utilisé en musicothérapie clinique.`},
+        {h:'Dopamine & circuit de la récompense',p:`La musique est l'un des seuls stimuli non-chimiques capables d'activer le <strong>noyau accumbens</strong> le centre du plaisir du cerveau. Une étude de Salimpoor et al. (2011, <em>Nature Neuroscience</em>) a mesuré des pics de dopamine allant jusqu'à +65% lors de l'écoute de musique émotionnellement intense. ZenHertz analyse ces patterns pour estimer l'impact probable sur votre circuit de récompense.`},
+        {h:'Cortisol & stress acoustique',p:`Des tempos très rapides (>160 BPM) peuvent déclencher une réponse de stress, augmentant le cortisol via l'axe HHS. En revanche, les fréquences graves (40–100 Hz) stimulent le nerf vague, réduisant le cortisol et favorisant la récupération principe utilisé en musicothérapie clinique.`},
         {h:'Comment ZenHertz calcule-t-il ?',p:`L'algorithme analyse le fichier audio en deux temps :`,list2:[
           ['Détection de pics d\'amplitude','calcul du BPM par intervalles inter-battements'],
           ['FFT (Transformée de Fourier rapide)','isolation de la fréquence dominante réelle en Hz'],
-        ],p2:`Ces valeurs sont croisées avec des modèles neuroacoustiques pour estimer l'impact hormonal probable. Tout le traitement s'effectue <strong>localement dans votre navigateur</strong> — aucune donnée ne quitte votre appareil.`},
+        ],p2:`Ces valeurs sont croisées avec des modèles neuroacoustiques pour estimer l'impact hormonal probable. Tout le traitement s'effectue <strong>localement dans votre navigateur</strong> aucune donnée ne quitte votre appareil.`},
       ]
     },
     en:{
-      logo:'🔬',title:'The science behind ZenHertz',sub:'Bioacoustics & neuroscience — simply explained',
+      logo:'🔬',title:'The science behind ZenHertz',sub:'Bioacoustics & neuroscience simply explained',
       sections:[
-        {h:'BPM & cardiac synchronization',p:`A song's tempo (measured in beats per minute, BPM) directly influences heart rate through a phenomenon called <strong>cardiovascular entrainment</strong>. Studies published in the <em>Journal of Music Therapy</em> show that music between 60 and 80 BPM promotes cardiac coherence, activating the parasympathetic nervous system the body's rest and recovery mode.<br><br>Conversely, tempos above 130–140 BPM stimulate the sympathetic system, increasing heart rate and noradrenaline production — which is why they're used in workout playlists.`},
+        {h:'BPM & cardiac synchronization',p:`A song's tempo (measured in beats per minute, BPM) directly influences heart rate through a phenomenon called <strong>cardiovascular entrainment</strong>. Studies published in the <em>Journal of Music Therapy</em> show that music between 60 and 80 BPM promotes cardiac coherence, activating the parasympathetic nervous system the body's rest and recovery mode.<br><br>Conversely, tempos above 130–140 BPM stimulate the sympathetic system, increasing heart rate and adrenaline production , which is why they're used in workout playlists.`},
         {h:'Hz frequencies & brainwaves',p:`Sound frequencies interact with the brain through <strong>neural resonance</strong>. Each brainwave band corresponds to a distinct mental state:`,list:[
-          ['#818cf8','δ Delta','0.5–4 Hz — deep sleep, cellular regeneration, melatonin peak'],
-          ['#a78bfa','θ Theta','4–8 Hz — creativity, long-term memory, dopamine peaks'],
-          ['#7c3aed','α Alpha','8–13 Hz — alert relaxation, flow state, elevated serotonin'],
-          ['#c084fc','β Beta','13–30 Hz — active focus, problem-solving, moderate cortisol'],
-          ['#e879f9','γ Gamma','30–100 Hz — intense cognition, expanded awareness, high noradrenaline'],
+          ['#818cf8','δ Delta','0.5–4 Hz deep sleep, cellular regeneration, melatonin peak'],
+          ['#a78bfa','θ Theta','4–8 Hz creativity, long-term memory, dopamine peaks'],
+          ['#7c3aed','α Alpha','8–13 Hz alert relaxation, flow state, elevated serotonin'],
+          ['#c084fc','β Beta','13–30 Hz active focus, problem-solving, moderate cortisol'],
+          ['#e879f9','γ Gamma','30–100 Hz intense cognition, expanded awareness, high adrenaline'],
         ],p2:`Stanford researchers demonstrated that 40 Hz oscillations (Gamma wave) stimulate the prefrontal cortex, improving attention and working memory within minutes of exposure.`},
-        {h:'Dopamine & the reward circuit',p:`Music is one of the only non-chemical stimuli capable of activating the <strong>nucleus accumbens</strong> — the brain's pleasure center. A study by Salimpoor et al. (2011, <em>Nature Neuroscience</em>) measured dopamine peaks of up to +65% during emotionally intense music listening. ZenHertz analyzes these patterns to estimate the likely impact on your reward circuit.`},
-        {h:'Cortisol & acoustic stress',p:`Very fast tempos (>160 BPM) can trigger a stress response, increasing cortisol through the HPA axis. Conversely, bass frequencies (40–100 Hz) stimulate the vagus nerve, reducing cortisol and promoting recovery — the same principle used in clinical music therapy.`},
+        {h:'Dopamine & the reward circuit',p:`Music is one of the only non-chemical stimuli capable of activating the <strong>nucleus accumbens</strong> the brain's pleasure center. A study by Salimpoor et al. (2011, <em>Nature Neuroscience</em>) measured dopamine peaks of up to +65% during emotionally intense music listening. ZenHertz analyzes these patterns to estimate the likely impact on your reward circuit.`},
+        {h:'Cortisol & acoustic stress',p:`Very fast tempos (>160 BPM) can trigger a stress response, increasing cortisol through the HPA axis. Conversely, bass frequencies (40–100 Hz) stimulate the vagus nerve, reducing cortisol and promoting recovery the same principle used in clinical music therapy.`},
         {h:'How does ZenHertz calculate?',p:`The algorithm analyzes the audio file in two steps:`,list2:[
           ['Amplitude peak detection','BPM calculation via inter-beat intervals'],
           ['FFT (Fast Fourier Transform)','isolation of the real dominant frequency in Hz'],
-        ],p2:`These values are cross-referenced with neuroacoustic models to estimate the probable hormonal impact. All processing happens <strong>locally in your browser</strong> — no data ever leaves your device.`},
+        ],p2:`These values are cross-referenced with neuroacoustic models to estimate the probable hormonal impact. All processing happens <strong>locally in your browser</strong> no data ever leaves your device.`},
       ]
     }
   },
@@ -1243,7 +1243,7 @@ const MODAL_CONTENT={
         ],p2:`ZenHertz ne collecte, ne vend et ne partage aucune donnée utilisateur.`},
         {h:'Propriété intellectuelle',p:`ZenHertz et son algorithme d'analyse bioacoustique sont la propriété de leurs créateurs. Toute reproduction ou distribution sans autorisation explicite est interdite.`},
       ],
-      copy:'© 2025 ZenHertz — Tous droits réservés'
+      copy:'© 2026 ZenHertz  Tous droits réservés'
     },
     en:{
       logo:'⚖️',title:'Legal Notice',sub:'Transparency & privacy',
@@ -1258,7 +1258,7 @@ const MODAL_CONTENT={
         ],p2:`ZenHertz does not collect, sell or share any user data.`},
         {h:'Intellectual property',p:`ZenHertz and its bioacoustic analysis algorithm are the property of their creators. Any reproduction or distribution without explicit authorization is prohibited.`},
       ],
-      copy:'© 2025 ZenHertz — All rights reserved'
+      copy:'© 2026 ZenHertz  All rights reserved'
     }
   }
 };
@@ -1281,7 +1281,7 @@ function renderModalContent(modalId, type){
     if(s.list2){
       html+=`<ul class="zh-list">`;
       s.list2.forEach(([strong,desc])=>{
-        html+=`<li>✅ <strong>${strong}</strong> — ${desc}</li>`;
+        html+=`<li>✅ <strong>${strong}</strong>  ${desc}</li>`;
       });
       html+=`</ul>`;
     }
