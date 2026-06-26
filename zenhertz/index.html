@@ -1,0 +1,301 @@
+1| <!DOCTYPE html>
+2| <html lang="fr" data-theme="light" data-lang="fr">
+3| <head>
+4| <meta charset="UTF-8">
+5| <meta name="viewport" content="width=device-width, initial-scale=1.0">
+6| <meta name="theme-color" content="#eeeef5" id="meta-theme-color">
+7| <title>ZenHertz — Analyse bioacoustique</title>
+8| 
+9| <link rel="stylesheet" href="style.css">
+10| 
+11| <script defer data-domain="zenhertz.com" src="https://plausible.io/js/script.js"></script>
+12| </head>
+13| <body>
+14| 
+15| <div id="mesh"><div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div></div>
+16| 
+17| <div id="topbar">
+18|   <button class="tbtn" id="home-btn" onclick="goLanding()" style="display:none">
+19|     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+20|     <span data-i="homeBtn">Accueil</span>
+21|   </button>
+22|   <div style="flex:1"></div>
+23|   <div class="tright">
+24|     <button class="tbtn" onclick="toggleLang()"><span id="llbl">FR</span></button>
+25|     <button class="tbtn" onclick="toggleTheme()" id="thbtn">🌙</button>
+26|   </div>
+27| </div>
+28| 
+29| <div id="sc-landing">
+30| 
+31|   <div class="lp-hero">
+32| 
+33|     <div class="lp-logo-wrap">
+34|       <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+35|         <defs>
+36|           <linearGradient id="zhg" x1="0" y1="0" x2="0" y2="1">
+37|             <stop offset="0%" stop-color="#7c3aed"/>
+38|             <stop offset="100%" stop-color="#a855f7"/>
+39|           </linearGradient>
+40|         </defs>
+41|         <rect x="2"  y="18" width="5" height="8"  rx="2.5" fill="url(#zhg)" opacity=".6"/>
+42|         <rect x="10" y="12" width="5" height="20" rx="2.5" fill="url(#zhg)" opacity=".75"/>
+43|         <rect x="18" y="4"  width="5" height="36" rx="2.5" fill="url(#zhg)"/>
+44|         <rect x="26" y="12" width="5" height="20" rx="2.5" fill="url(#zhg)" opacity=".75"/>
+45|         <rect x="34" y="18" width="5" height="8"  rx="2.5" fill="url(#zhg)" opacity=".6"/>
+46|       </svg>
+47|       <div>
+48|         <span class="lp-logo-text">ZenHertz</span>
+49|         <span class="lp-badge">Beta</span>
+50|       </div>
+51|     </div>
+52| 
+53|     <h1 class="lp-h1" data-i="landH1fr">Ta musique impacte ton cerveau.<br><span data-i="landH1em">Découvrez comment.</span></h1>
+54|     <p class="lp-sub" data-i="landSub">ZenHertz analyse les fréquences de ta musique et révèle son impact sur tes ondes cérébrales, tes hormones et ton système nerveux en quelques secondes.</p>
+55| 
+56|     <button class="lp-cta" onclick="showTool()">
+57|       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+58|       <span data-i="landCta">Analyser ma musique</span>
+59|     </button>
+60|     <p class="lp-cta-sub" data-i="landCtaSub">Gratuit · Aucune inscription · Tous formats</p>
+61| 
+62|     <div class="lp-preview" style="margin-top:2.5rem">
+63|       <div class="lp-preview-inner">
+64|         <div class="lp-preview-bar">
+65|           <div class="lp-preview-dot" style="background:#7c3aed"></div>
+66|           <div class="lp-preview-dot" style="background:#a855f7;opacity:.5"></div>
+67|           <div class="lp-preview-dot" style="background:#c084fc;opacity:.3"></div>
+68|           <span style="font-size:.6rem;color:var(--t3);margin-left:auto;font-weight:600">ZenHertz · Live</span>
+69|         </div>
+70|         <div class="lp-preview-metric">
+71|           <div><p class="lp-preview-val">128</p><p class="lp-preview-lbl">BPM</p></div>
+72|           <div class="lp-preview-div"></div>
+73|           <div><p class="lp-preview-val v">432</p><p class="lp-preview-lbl">Hertz</p></div>
+74|           <div class="lp-preview-div"></div>
+75|           <div><p class="lp-preview-val" style="font-size:.95rem;padding-top:.3rem">Alpha</p><p class="lp-preview-lbl" data-i="wlbl">Onde</p></div>
+76|         </div>
+77|       </div>
+78|     </div>
+79| 
+80|     <div class="lp-stats">
+81|       <div class="lp-stat"><p>6</p><p data-i="statFormats">Formats</p></div>
+82|       <div class="lp-stat"><p>5</p><p data-i="statWaves">Ondes cérébrales</p></div>
+83|       <div class="lp-stat"><p>6</p><p data-i="statHorm">Hormones</p></div>
+84|     </div>
+85|   </div>
+86| 
+87|   <div class="lp-steps">
+88|     <h2 class="lp-steps-title" data-i="landHow">Comment ça marche ?</h2>
+89|     <div class="lp-steps-grid">
+90|       <div class="lp-step">
+91|         <div class="lp-step-num">1</div>
+92|         <h3 data-i="step1T">Importe ton son</h3>
+93|         <p data-i="step1D">Dépose n'importe quel fichier audio ou vidéo directement depuis ta galerie ou ton ordinateur.</p>
+94|         <div class="lp-formats">
+95|           <span class="lp-fmt">MP3</span><span class="lp-fmt">WAV</span><span class="lp-fmt">AAC</span>
+96|           <span class="lp-fmt">MP4</span><span class="lp-fmt">MOV</span><span class="lp-fmt">FLAC</span>
+97|         </div>
+98|       </div>
+99|       <div class="lp-step">
+100|         <div class="lp-step-num">2</div>
+101|         <h3 data-i="step2T">Analyse instantanée</h3>
+102|         <p data-i="step2D">Notre moteur bioacoustique détecte le BPM, les Hz dominants et classe tes ondes cérébrales en temps réel.</p>
+103|       </div>
+104|       <div class="lp-step">
+105|         <div class="lp-step-num">3</div>
+106|         <h3 data-i="step3T">Ton profil neuro-acoustique</h3>
+107|         <p data-i="step3D">Découvre l'impact hormonal, l'état cérébral induit et si ton écoute prolongée est sûre ou stimulante.</p>
+108|       </div>
+109|     </div>
+110|   </div>
+111| 
+112|   <div class="lp-feats">
+113|     <div class="lp-feat">
+114|       <div class="lp-feat-icon">📱</div>
+115|       <h4 data-i="feat1T">iOS · Android · PC</h4>
+116|       <p data-i="feat1D">Fonctionne sur tous les appareils, sans installation.</p>
+117|     </div>
+118|     <div class="lp-feat">
+119|       <div class="lp-feat-icon">⚡</div>
+120|       <h4 data-i="feat2T">100% dans le navigateur</h4>
+121|       <p data-i="feat2D">Aucun upload vers un serveur. Tes fichiers restent sur ton appareil.</p>
+122|     </div>
+123|     <div class="lp-feat">
+124|       <div class="lp-feat-icon">🔬</div>
+125|       <h4 data-i="feat3T">Basé sur la science</h4>
+126|       <p data-i="feat3D">ZCR, détection de pics, classification des ondes cérébrales.</p>
+127|     </div>
+128|   </div>
+129| 
+130|   <div style="text-align:center;padding:1rem 1.5rem 3rem">
+131|     <button class="lp-cta" onclick="showTool()">
+132|       <span data-i="landCta">Analyser ma musique</span>
+133|       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+134|     </button>
+135|   </div>
+136| 
+137|   <div class="ec-wrap">
+138|     <div class="ec-box">
+139|       <p style="font-size:1.05rem;font-weight:900;color:var(--t1);letter-spacing:-.3px;margin-bottom:.3rem">🚀 <span data-i="ecTitle">ZenHertz arrive officiellement</span></p>
+140|       <p style="font-size:.76rem;color:var(--t2);line-height:1.6;margin-bottom:1.2rem" data-i="ecSub">Soyez informés de la sortie officielle — zéro spam, juste une notification.</p>
+141|       <form name="email-capture" method="POST" data-netlify="true" style="display:flex;gap:.5rem" onsubmit="handleEmailSubmit(event,this)">
+142|         <input type="hidden" name="form-name" value="email-capture">
+143|         <input type="email" name="email" class="ec-input" data-i-ph="ecPh" placeholder="votre@email.com" required>
+144|         <button type="submit" class="ec-btn" data-i="ecBtn">M'avertir</button>
+145|       </form>
+146|       <p id="ec-confirm" style="display:none;font-size:.72rem;color:#7c3aed;font-weight:700;margin-top:.7rem" data-i="ecConfirm">✓ Vous serez notifié à la sortie !</p>
+147|     </div>
+148|   </div>
+149| 
+150|   <div class="lp-footer">
+151|     <div class="lp-footer-links">
+152|       <button onclick="openModal('modal-science')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white" data-i="sciLink">Comment ça marche ?</button>
+153|       <button onclick="openModal('modal-legal')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white" data-i="legalLink">Mentions légales</button>
+154|     </div>
+155|     <p class="lp-by">Made by <a href="mailto:raythanwebdesign@gmail.com">RaythanWebDesign</a></p>
+156|   </div>
+157| 
+158| </div>
+159| <div id="sc-ready" class="screen hidden">
+160|   <div class="glass fade" style="max-width:440px;width:100%;padding:2.5rem 2rem">
+161|     <div style="text-align:center;margin-bottom:1.5rem">
+162|       <div class="logo">ZenHertz</div>
+163|       <p style="color:var(--t2);font-size:.84rem;line-height:1.65;margin-top:.4rem" data-i="tagline">
+164|         Découvrez l'impact de votre musique sur votre <span style="color:#7c3aed;font-weight:600">système nerveux</span> et vos <span style="color:#a855f7;font-weight:600">ondes cérébrales</span>.
+165|       </p>
+166|     </div>
+167| 
+168|     <div class="url-wrap">
+169|       <input type="text" id="url-input" class="url-input" data-i-ph="urlph">
+170|       <button class="url-btn" onclick="triggerAnalyzeLink()" data-i="urlbtn">→</button>
+171|     </div>
+172| 
+173|     <div id="alert-box"><p id="alert-msg"></p></div>
+174| 
+175|     <div class="or-line"><span data-i="orLabel">ou</span></div>
+176| 
+177|     <label style="cursor:pointer;display:block">
+178|       <div class="uzone">
+179|         <div class="uico">
+180|           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+181|         </div>
+182|         <p style="font-size:.92rem;font-weight:600;color:var(--t1)" data-i="uplbl">Analyser un fichier</p>
+183|         <p style="font-size:.65rem;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;margin-top:.4rem;font-weight:500">MP3 · WAV · AAC · FLAC · MP4 · MOV</p>
+184|       </div>
+185|       <input type="file" id="audio-input" style="display:none" accept="audio/*,video/mp4,video/quicktime,video/*">
+186|     </label>
+187| 
+188|     <div style="margin-top:1.4rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;text-align:center">
+189|       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">⏱</p><p style="font-size:.62rem;font-weight:600;color:var(--t2)">Secondes</p></div>
+190|       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">〰️</p><p style="font-size:.62rem;font-weight:600;color:var(--t2)">Fréquence</p></div>
+191|       <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">🧠</p><p style="font-size:.62rem;font-weight:600;color:var(--t2)">Profil</p></div>
+192|     </div>
+193| 
+194|     <div style="margin-top:1.5rem;display:flex;justify-content:center;gap:1.4rem">
+195|       <button onclick="openModal('modal-science')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white" data-i="sciLink">Comment ça marche ?</button>
+196|       <button onclick="openModal('modal-legal')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white" data-i="legalLink">Mentions légales</button>
+197|     </div>
+   </div>
+198| </div>
+199| 
+200| <div id="sc-analyzing" class="screen hidden">
+201|   <div class="glass fade" style="max-width:430px;width:100%;padding:3.5rem 2rem;text-align:center">
+202|     <div id="zh-wave" class="zh-wave">
+203|       <span></span><span></span><span></span><span></span><span></span>
+204|       <span></span><span></span><span></span><span></span><span></span>
+205|       <span></span>
+206|     </div>
+207|     <p id="scan-title" style="font-size:1.1rem;font-weight:700;color:var(--t1);letter-spacing:-.4px"></p>
+208|     <p id="scan-sub" style="font-size:.68rem;color:var(--t3);letter-spacing:.25em;text-transform:uppercase;margin-top:.7rem;font-weight:600"></p>
+209|     <div class="pbar-wrap hidden" id="pbar-wrap"><div class="pbar-fill" id="pbar-fill"></div></div>
+210|     <p id="pbar-msg"></p>
+211|   </div>
+212| </div>
+213| 
+214| <div id="sc-result" class="result-page hidden fade">
+215|   <div id="rwrap">
+216|     <div class="glass" id="rleft" style="padding:2rem 1.75rem">
+216|       <div class="hbring"><div class="hbdot" id="hbdot"></div></div>
+217|       <div style="text-align:center;margin-bottom:1.2rem">
+218|         <p id="rname" style="font-size:1rem;font-weight:700;color:var(--t1);letter-spacing:-.3px;word-break:break-word;line-height:1.35"></p>
+219|         <div style="height:3px;width:44px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:2px;margin:.55rem auto 0"></div>
+220|       </div>
+221|       <div class="mgrid">
+222|         <div style="text-align:center"><p id="rbpm" class="mv">—</p><p class="ml">BPM</p></div>
+223|         <div class="mdiv"></div>
+223|         <div style="text-align:center"><p id="rhz" class="mv a">—</p><p class="ml">Hertz</p></div>
+224|         <div class="mdiv"></div>
+225|         <div style="text-align:center"><p id="rwave" class="mv sm">—</p><p class="ml" data-i="wlbl">Onde</p></div>
+226|       </div>
+227|       <div class="sbox">
+228|         <p class="stitle" data-i="neuroprofile">Profil Neuro-acoustique</p>
+229|         <div class="wbar">
+230|           <div id="wd" class="ws" style="background:#818cf8"></div>
+231|           <div id="wt" class="ws" style="background:#a78bfa"></div>
+232|           <div id="wa" class="ws" style="background:#7c3aed"></div>
+233|           <div id="wb" class="ws" style="background:#c084fc"></div>
+234|           <div id="wg" class="ws" style="background:#e879f9"></div>
+235|         </div>
+236|         <div class="wlbl"><span>Delta</span><span>Thêta</span><span>Alpha</span><span>Bêta</span><span>Gamma</span></div>
+237|         <div id="rdesc" class="tw" style="margin-top:.8rem"></div>
+238|         <div class="tags" id="rtags"></div>
+239|         <div class="fbar"><div class="ffill" id="ffill"></div></div>
+240|         <p id="flbl" style="font-size:.67rem;margin-top:.38rem;font-weight:600"></p>
+241|       </div>
+242|       <div class="disc" style="margin-bottom:1.2rem"><p data-i="disclaimer"></p></div>
+243|       
+244|       <div style="display:flex; gap:1rem; align-items:center; justify-content:center; flex-wrap:wrap;">
+245|         <span class="backbtn" onclick="goHome()" data-i="back">← Analyser un autre morceau</span>
+246|         <div class="sharebtn" id="btn-share" onclick="captureBilan()">📸 <span data-i="share">Partager</span></div>
+247|         <div class="sharebtn" onclick="copierTexte()" style="background:var(--card);border:1px solid var(--div);color:var(--t2);box-shadow:none">📋 <span data-i="copyBtn">Copier</span></div>
+248|       </div>
+249|     </div>
+250|     <div id="rright" style="display:flex;flex-direction:column;gap:1.2rem">
+251|       <div class="hpanel">
+252|         <p class="stitle" data-i="hormones">Tableau Hormonal Estimé</p>
+253|         <div id="hgauges"></div>
+254|       </div>
+255|     </div>
+256|   </div>
+257| </div>
+258| 
+259| <div id="modal-science" class="zh-modal-overlay" onclick="closeModalOutside(event,'modal-science')">
+260|   <div class="zh-modal-box">
+261|     <button class="zh-modal-close" onclick="closeModal('modal-science')">✕</button>
+262|     <div class="zh-modal-scroll" id="modal-science-content"></div>
+263|   </div>
+264| </div>
+265| 
+266| <div id="modal-legal" class="zh-modal-overlay" onclick="closeModalOutside(event,'modal-legal')">
+267|   <div class="zh-modal-box">
+268|     <button class="zh-modal-close" onclick="closeModal('modal-legal')">✕</button>
+269|     <div class="zh-modal-scroll" id="modal-legal-content"></div>
+270|   </div>
+271| </div>
+272| 
+273| <button id="feedback-fab" onclick="openFeedbackModal()">💬 <span data-i="feedbackBtn">Feedback</span></button>
+274| 
+275| <div id="modal-feedback" class="zh-modal-overlay" onclick="if(event.target===this)closeFeedbackModal()">
+276|   <div class="zh-modal-box">
+277|     <button class="zh-modal-close" onclick="closeFeedbackModal()">✕</button>
+278|     <div class="zh-modal-scroll">
+279|       <div class="zh-modal-logo">💬</div>
+280|       <div class="zh-modal-title" data-i="fbTitle">Votre avis compte</div>
+281|       <div class="zh-modal-sub" data-i="fbSub">Bug, idée, suggestion — on lit tout</div>
+282|       <form name="feedback" method="POST" data-netlify="true" onsubmit="handleFeedbackSubmit(event,this)">
+283|         <input type="hidden" name="form-name" value="feedback">
+284|         <textarea name="message" class="fb-textarea" data-i-ph="fbPh" placeholder="Décrivez votre expérience, un bug, une idée..." required></textarea>
+285|         <input type="email" name="email" class="ec-input" style="width:100%;margin-top:.6rem" data-i-ph="fbEmailPh" placeholder="Votre email (optionnel)">
+286|         <button type="submit" class="lp-cta" style="width:100%;margin-top:1rem;justify-content:center" data-i="fbSend">Envoyer</button>
+287|       </form>
+288|       <p id="fb-confirm" style="display:none;text-align:center;font-size:.78rem;color:#7c3aed;font-weight:700;margin-top:.8rem" data-i="fbConfirm">✓ Merci ! On a bien reçu votre message.</p>
+289|     </div>
+290|   </div>
+291| </div>
+292| 
+293| <script src="https://cdn.tailwindcss.com"></script>
+294| <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+294| 
+295| <script src="app.js"></script>
+296| </body>
+297| </html>
