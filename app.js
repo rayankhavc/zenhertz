@@ -6,18 +6,18 @@ const TR = {
     uplbl:'Analyser un fichier', wlbl:'Onde',
     scanning:'Scan bioacoustique…', analyzinglbl:'Analyse en cours',
     neuroprofile:'Profil Neuro-acoustique', hormones:'Tableau Hormonal Estimé',
-    disclaimer:'Analyse basée sur l\'autocorrélation du rythme et l\'analyse spectrale (FFT) du signal. Visée informative ne constitue pas un diagnostic médical.',
+    disclaimer:'BPM détecté par autocorrélation multi-bande (kick + snare) ; fréquences par détection de pics spectraux (FFT). Résultats à visée informative — ne constituent pas un diagnostic médical.',
     back:'← Analyser un autre morceau', share:'Partager le bilan', capturing:'Capture...', copyBtn:'Copier',
     landH1fr:'Ta musique impacte ton cerveau.', landH1em:'Découvrez comment.',
     landSub:'ZenHertz analyse les fréquences de ta musique et révèle son impact sur tes ondes cérébrales, tes hormones et ton système nerveux en quelques secondes.',
     landCta:'Analyser ma musique', landCtaSub:'Gratuit · Aucune inscription · Tous formats',
     landHow:'Comment ça marche ?',
     step1T:'Importe ton son', step1D:'Dépose n\'importe quel fichier audio ou vidéo directement depuis ta galerie ou ton ordinateur.',
-    step2T:'Analyse instantanée', step2D:'Notre moteur bioacoustique détecte le BPM, les Hz dominants et classe tes ondes cérébrales en temps réel.',
+    step2T:'Analyse instantanée', step2D:'Notre moteur bioacoustique analyse le kick et la caisse claire séparément, détecte les pics Hz réels et classe tes ondes cérébrales.',
     step3T:'Ton profil neuro-acoustique', step3D:'Découvre l\'impact hormonal, l\'état cérébral induit et si ton écoute prolongée est sûre ou stimulante.',
     feat1T:'iOS · Android · PC', feat1D:'Fonctionne sur tous les appareils, sans installation.',
     feat2T:'100% dans le navigateur', feat2D:'Aucun upload vers un serveur. Tes fichiers restent sur ton appareil.',
-    feat3T:'Basé sur la science', feat3D:'Autocorrélation, FFT, classification des ondes cérébrales.',
+    feat3T:'Basé sur la science', feat3D:'Autocorrélation multi-bande, FFT 32k points, scoring harmonique — moteur inspiré d\'Essentia.',
     statFormats:'Formats', statWaves:'Ondes cérébrales', statHorm:'Hormones',
     sciLink:'Comment ça marche ?', legalLink:'Mentions légales',
     ecTitle:'ZenHertz arrive officiellement', ecSub:'Soyez informés de la sortie officielle  zéro spam, juste une notification.',
@@ -43,18 +43,18 @@ const TR = {
     uplbl:'Analyze a file', wlbl:'Wave',
     scanning:'Bioacoustic scan…', analyzinglbl:'Analysis in progress',
     neuroprofile:'Neuro-acoustic Profile', hormones:'Estimated Hormonal Dashboard',
-    disclaimer:'Analysis based on rhythmic autocorrelation and spectral (FFT) analysis of the signal. For informational purposes only  not a medical diagnosis.',
+    disclaimer:'BPM detected via multi-band onset autocorrelation (kick + snare); frequencies via spectral peak detection (FFT). For informational purposes only — not a medical diagnosis.',
     back:'← Analyze another track', share:'Share Results', capturing:'Capturing...', copyBtn:'Copy',
     landH1fr:'Your music impacts your brain.', landH1em:'Find out how.',
     landSub:'ZenHertz analyzes your music\'s frequencies and reveals its impact on your brain waves, hormones and nervous system in seconds.',
     landCta:'Analyze my music', landCtaSub:'Free · No sign-up · All formats',
     landHow:'How does it work?',
     step1T:'Import your track', step1D:'Drop any audio or video file directly from your gallery or computer.',
-    step2T:'Instant analysis', step2D:'Our bioacoustic engine detects BPM, dominant Hz and classifies your brain waves in real time.',
+    step2T:'Instant analysis', step2D:'Our bioacoustic engine analyses kick and snare separately, detects real spectral Hz peaks and classifies your brain waves.',
     step3T:'Your neuro-acoustic profile', step3D:'Discover the hormonal impact, induced brain state and whether extended listening is safe or stimulating.',
     feat1T:'iOS · Android · PC', feat1D:'Works on all devices, no installation needed.',
     feat2T:'100% in-browser', feat2D:'No upload to any server. Your files stay on your device.',
-    feat3T:'Science-based', feat3D:'Autocorrelation, FFT, brain wave classification.',
+    feat3T:'Science-based', feat3D:'Multi-band autocorrelation, 32k-point FFT, harmonic scoring — engine inspired by Essentia.',
     statFormats:'Formats', statWaves:'Brain waves', statHorm:'Hormones',
     sciLink:'How it works', legalLink:'Legal notices',
     ecTitle:'ZenHertz launching officially', ecSub:'Get notified at official launch zero spam, just one notification.',
@@ -1394,10 +1394,11 @@ const MODAL_CONTENT={
         ],p2:`Des chercheurs de Stanford ont démontré que les oscillations à 40 Hz (onde Gamma) stimulent le cortex préfrontal, améliorant l'attention et la mémoire de travail en quelques minutes d'exposition.`},
         {h:'Dopamine & circuit de la récompense',p:`La musique est l'un des seuls stimuli non-chimiques capables d'activer le <strong>noyau accumbens</strong> le centre du plaisir du cerveau. Une étude de Salimpoor et al. (2011, <em>Nature Neuroscience</em>) a mesuré des pics de dopamine allant jusqu'à +65% lors de l'écoute de musique émotionnellement intense. ZenHertz analyse ces patterns pour estimer l'impact probable sur votre circuit de récompense.`},
         {h:'Cortisol & stress acoustique',p:`Des tempos très rapides (>160 BPM) peuvent déclencher une réponse de stress, augmentant le cortisol via l'axe HHS. En revanche, les fréquences graves (40–100 Hz) stimulent le nerf vague, réduisant le cortisol et favorisant la récupération principe utilisé en musicothérapie clinique.`},
-        {h:'Comment ZenHertz calcule-t-il ?',p:`L'algorithme analyse le fichier audio en deux temps :`,list2:[
-          ['Autocorrélation de l\'enveloppe d\'attaque','BPM via la périodicité du kick isolé (filtre passe-bas)'],
-          ['FFT (Transformée de Fourier rapide)','isolation de la fréquence dominante réelle en Hz'],
-        ],p2:`Ces valeurs sont croisées avec des modèles neuroacoustiques pour estimer l'impact hormonal probable. Tout le traitement s'effectue <strong>localement dans votre navigateur</strong> aucune donnée ne quitte votre appareil.`},
+        {h:'Comment ZenHertz calcule-t-il ?',p:`L'algorithme analyse le fichier en trois étapes simultanées, directement dans le navigateur :`,list2:[
+          ['Filtrage multi-bande en parallèle','kick/basse (25–200 Hz) et caisse claire/clap (150–600 Hz) sont isolés par deux OfflineAudioContext lancés en même temps — chaque bande capture des informations rythmiques que l\'autre ne voit pas.'],
+          ['ACF normalisée + scoring harmonique','autocorrélation divisée par l\'énergie zéro-lag (valeurs comparables entre fichiers). Chaque lag candidat est renforcé par ses super-harmoniques (τ×2..5) et ses sous-harmoniques (τ÷2, τ÷3), plus un prior gaussien centré sur 115 BPM. Corrections d\'octave dans les deux sens.'],
+          ['FFT 32 768 points (fenêtre de Hann)','détection des 3 pics spectraux dominants avec suppression des harmoniques et espacement proportionnel à la fréquence → affichage « 87 · 340 · 2.1k ».'],
+        ],p2:`Ces valeurs sont croisées avec des modèles neuroacoustiques pour estimer l'impact hormonal probable. Tout le traitement s'effectue <strong>localement dans votre navigateur</strong> — aucune donnée ne quitte votre appareil.`},
       ]
     },
     en:{
@@ -1413,10 +1414,11 @@ const MODAL_CONTENT={
         ],p2:`Stanford researchers demonstrated that 40 Hz oscillations (Gamma wave) stimulate the prefrontal cortex, improving attention and working memory within minutes of exposure.`},
         {h:'Dopamine & the reward circuit',p:`Music is one of the only non-chemical stimuli capable of activating the <strong>nucleus accumbens</strong> the brain's pleasure center. A study by Salimpoor et al. (2011, <em>Nature Neuroscience</em>) measured dopamine peaks of up to +65% during emotionally intense music listening. ZenHertz analyzes these patterns to estimate the likely impact on your reward circuit.`},
         {h:'Cortisol & acoustic stress',p:`Very fast tempos (>160 BPM) can trigger a stress response, increasing cortisol through the HPA axis. Conversely, bass frequencies (40–100 Hz) stimulate the vagus nerve, reducing cortisol and promoting recovery the same principle used in clinical music therapy.`},
-        {h:'How does ZenHertz calculate?',p:`The algorithm analyzes the audio file in two steps:`,list2:[
-          ['Onset-envelope autocorrelation','BPM from the isolated kick periodicity (low-pass filtered)'],
-          ['FFT (Fast Fourier Transform)','isolation of the real dominant frequency in Hz'],
-        ],p2:`These values are cross-referenced with neuroacoustic models to estimate the probable hormonal impact. All processing happens <strong>locally in your browser</strong> no data ever leaves your device.`},
+        {h:'How does ZenHertz calculate?',p:`The algorithm runs three steps in parallel, entirely in your browser:`,list2:[
+          ['Multi-band parallel filtering','kick/bass (25–200 Hz) and snare/clap (150–600 Hz) are isolated by two OfflineAudioContext instances running simultaneously — each band captures rhythmic information the other misses.'],
+          ['Normalised ACF + harmonic scoring','autocorrelation divided by zero-lag energy (values are comparable across files). Each lag candidate is reinforced by its super-harmonics (τ×2..5) and sub-harmonics (τ÷2, τ÷3), plus a Gaussian prior centred at 115 BPM. Octave corrections in both directions.'],
+          ['32 768-point FFT (Hann window)','detection of the 3 dominant spectral peaks with harmonic suppression and frequency-proportional spacing → displayed as "87 · 340 · 2.1k".'],
+        ],p2:`These values are cross-referenced with neuroacoustic models to estimate the probable hormonal impact. All processing happens <strong>locally in your browser</strong> — no data ever leaves your device.`},
       ]
     }
   },
@@ -1425,7 +1427,7 @@ const MODAL_CONTENT={
       logo:'⚖️',title:'Mentions légales',sub:'Transparence & confidentialité',
       sections:[
         {h:'Disclaimer médical',p:`ZenHertz est un outil de <strong>divertissement et d'exploration personnelle</strong>. Les scores BPM, Hz, les estimations hormonales et les profils neuroacoustiques générés sont des <strong>approximations algorithmiques</strong> basées sur l'analyse du signal audio.<br><br>Ces résultats ne constituent en aucun cas un diagnostic médical, psychiatrique ou neurologique. Ils ne remplacent pas l'avis d'un professionnel de santé. En cas de troubles du sommeil, d'anxiété ou de tout autre symptôme, consultez un médecin qualifié.`},
-        {h:"Limites de l'algorithme",p:`L'analyse repose sur l'autocorrélation de l'enveloppe rythmique (BPM) et une FFT pour la fréquence dominante (Hz). Elle fonctionne de manière optimale sur des morceaux avec une structure rythmique claire. Les résultats peuvent varier selon la qualité du fichier audio, le genre musical ou la complexité harmonique du morceau.`},
+        {h:"Limites de l'algorithme",p:`L'analyse repose sur une autocorrélation multi-bande (kick 25–200 Hz + snare 150–600 Hz) pour le BPM, et une FFT 32 768 points pour les pics spectraux dominants. Elle fonctionne de manière optimale sur des morceaux avec une structure rythmique claire. Les résultats peuvent varier sur de la musique très expérimentale, du son ambiant sans rythme, ou des fichiers de très faible qualité.`},
         {h:'🔒 Confidentialité & données',p:`ZenHertz respecte intégralement votre vie privée :`,list2:[
           ['Tout traitement est 100 % local','votre fichier audio est analysé directement dans votre navigateur'],
           ['Aucun fichier n\'est envoyé sur un serveur','vos musiques restent sur votre appareil'],
@@ -1440,7 +1442,7 @@ const MODAL_CONTENT={
       logo:'⚖️',title:'Legal Notice',sub:'Transparency & privacy',
       sections:[
         {h:'Medical disclaimer',p:`ZenHertz is a <strong>entertainment and personal exploration tool</strong>. BPM scores, Hz values, hormonal estimates and neuroacoustic profiles are <strong>algorithmic approximations</strong> based on audio signal analysis.<br><br>These results do not constitute a medical, psychiatric or neurological diagnosis. They do not replace the advice of a healthcare professional. If you experience sleep disorders, anxiety or any other symptoms, please consult a qualified physician.`},
-        {h:'Algorithm limitations',p:`The analysis uses rhythmic-envelope autocorrelation (BPM) and an FFT for the dominant frequency (Hz). It works best on tracks with a clear rhythmic structure. Results may vary depending on audio file quality, music genre, or harmonic complexity.`},
+        {h:'Algorithm limitations',p:`The analysis uses multi-band onset autocorrelation (kick 25–200 Hz + snare 150–600 Hz) for BPM, and a 32 768-point FFT for dominant spectral peaks. It works best on tracks with a clear rhythmic structure. Results may vary on highly experimental music, ambient sound without rhythm, or very low-quality files.`},
         {h:'🔒 Privacy & data',p:`ZenHertz fully respects your privacy:`,list2:[
           ['All processing is 100% local','your audio file is analyzed directly in your browser'],
           ['No file is sent to a server','your music stays on your device'],
