@@ -77,7 +77,7 @@ const TR = {
 };
 
 let lang='fr', theme='light', lastBpm=null, lastHz=null;
-let lastBands=null, lastRms=0.15, lastVar=0.1, lastEffects=[];
+let lastBands=null, lastRms=0.15, lastVar=0.1, lastEffects=[], lastPeaks=null;
 const L = k => TR[lang][k] ?? TR.fr[k];
 const S = id => document.getElementById(id);
 
@@ -125,7 +125,7 @@ function showTool(){
 }
 
 function goHome(){
-  lastBpm=null; lastHz=null; lastBands=null; lastEffects=[];
+  lastBpm=null; lastHz=null; lastBands=null; lastEffects=[]; lastPeaks=null;
   S('audio-input').value='';
   hideAlert();
   S('rbpm').innerText='—'; S('rhz').innerText='—'; S('rwave').innerText='—';
@@ -303,7 +303,15 @@ function effectKeyForBpm(bpm){
   return 'intense';
 }
 
-function dominantBand(bands){
+function dominantBand(bands, peaks){
+  // Strongest spectral peak gives the most precise characterisation
+  if (peaks && peaks.length > 0){
+    const f = peaks[0];
+    if (f < 60)   return 'sub';
+    if (f < 250)  return 'bass';
+    if (f >= 2000) return 'bright';
+    return 'balanced';
+  }
   if (!bands) return 'balanced';
   const sub = bands.sub || 0, bass = bands.bass || 0, bright = bands.bright || 0;
   if (sub >= 0.18) return 'sub';
@@ -313,10 +321,10 @@ function dominantBand(bands){
 }
 
 /* Returns an array of 3–5 { fr, en } effects for the given BPM + band profile. */
-function generateEffects(bpm, bands){
+function generateEffects(bpm, bands, peaks){
   const b  = Math.round(bpm > 0 && isFinite(bpm) ? bpm : 0);
   const bk = effectKeyForBpm(b);
-  const fk = dominantBand(bands);
+  const fk = dominantBand(bands, peaks);
   const fill = s => s.replaceAll('%B%', b || '—');
 
   const tempo   = pick(EFFECTS.tempo[bk]);
@@ -437,18 +445,18 @@ function renderEffects(effects){
   ).join('');
 }
 
-function showResults(bpm, hz, label, rms = 0.15, signalVariance = 0.1, bands = null){
+function showResults(bpm, hz, label, rms = 0.15, signalVariance = 0.1, bands = null, peaks = null){
   const wt = getWave(bpm);
   const wn = L('wnames');
   S('rname').innerText = (label && label.length > 42) ? label.substring(0, 40) + '…' : (label || '');
   S('rbpm').innerText  = (bpm > 0 && isFinite(bpm)) ? bpm : '—';
-  S('rhz').innerText   = (hz > 0) ? hz.toLocaleString() : '—';
+  S('rhz').innerText   = formatHzDisplay(peaks, hz);
   S('rwave').innerText = wn[wt];
   ['wd','wt','wa','wb','wg'].forEach(id => S(id).classList.remove('on'));
   S({delta:'wd',theta:'wt',alpha:'wa',beta:'wb',gamma:'wg'}[wt]).classList.add('on');
 
-  lastBpm = bpm; lastHz = hz; lastBands = bands; lastRms = rms; lastVar = signalVariance;
-  lastEffects = generateEffects(bpm, bands);
+  lastBpm = bpm; lastHz = hz; lastBands = bands; lastRms = rms; lastVar = signalVariance; lastPeaks = peaks;
+  lastEffects = generateEffects(bpm, bands, peaks);
 
   typeWords(S('rdesc'), summaryFromEffects(lastEffects), 64);
   S('rtags').innerHTML = generateTags(bpm, hz, wt);
@@ -643,10 +651,17 @@ function onsetEnvelope(x, sr){
   return osf;
 }
 
-/* Autocorrelation tempo estimate from a ~100 Hz onset-strength function. */
+/* Autocorrelation tempo estimate from a ~100 Hz onset-strength function.
+   Improvements over naive best-lag:
+   - Sub-harmonic scoring: multiples of each lag (2τ, 3τ, 4τ) reinforce the
+     hypothesis, giving robustness against off-beat / hi-hat energy.
+   - Stricter downward fold (threshold 0.55 instead of 0.40, BPM floor 145):
+     avoids halving genuine tech-house / techno at 130–145 BPM.
+   - Upward fold: if detected BPM < 85, check whether the double-tempo is
+     supported — catches ghost-beat patterns in slow or pitched-down tracks. */
 function bpmFromOnset(osf){
   const fps = ENV_FPS;
-  const segLen = Math.min(osf.length, 20 * fps);   // 20 s centre segment
+  const segLen = Math.min(osf.length, 20 * fps);
   if (segLen < fps) return 0;
   const from = Math.floor((osf.length - segLen) / 2);
   const seg = osf.subarray(from, from + segLen);
@@ -655,27 +670,66 @@ function bpmFromOnset(osf){
   for (let i = 0; i < segLen; i++) mean += seg[i];
   mean /= segLen;
   const s = new Float32Array(segLen);
-  for (let i = 0; i < segLen; i++) s[i] = seg[i] - mean;   // remove DC mean
+  for (let i = 0; i < segLen; i++) s[i] = seg[i] - mean;
 
   const lagMin = Math.max(2, Math.floor(60 * fps / BPM_MAX));
   const lagMax = Math.min(segLen - 1, Math.ceil(60 * fps / BPM_MIN));
   if (lagMax <= lagMin) return 0;
 
+  // Raw ACF
   const acf = new Float32Array(lagMax + 1);
-  let best = 0, bestLag = 0;
+  let rawBest = 0;
   for (let lag = lagMin; lag <= lagMax; lag++){
     let sum = 0;
-    for (let i = 0, n = segLen - lag; i < n; i++) sum += s[i] * s[i + lag];
+    const n = segLen - lag;
+    for (let i = 0; i < n; i++) sum += s[i] * s[i + lag];
     acf[lag] = sum;
-    if (sum > best){ best = sum; bestLag = lag; }
+    if (sum > rawBest) rawBest = sum;
   }
-  if (bestLag === 0 || best <= 0) return 0;
+  if (rawBest <= 0) return 0;
+
+  // Sub-harmonic weighted score: beats at τ create energy at 2τ, 3τ, 4τ too;
+  // summing those in gives the lag that represents the true beat period an edge
+  // over lags that only peak by accident.
+  const score = new Float32Array(lagMax + 1);
+  for (let lag = lagMin; lag <= lagMax; lag++){
+    let sc = acf[lag];
+    for (const mul of [2, 3, 4]){
+      const h = Math.round(lag * mul);
+      if (h <= lagMax) sc += acf[h] * (0.3 / mul);
+    }
+    score[lag] = sc;
+  }
+
+  let best = 0, bestLag = 0;
+  for (let lag = lagMin; lag <= lagMax; lag++){
+    if (score[lag] > best){ best = score[lag]; bestLag = lag; }
+  }
+  if (bestLag === 0) return 0;
 
   let bpm = 60 * fps / bestLag;
-  if (bpm > 140){                       // octave correction (trap doubling)
+
+  // Downward octave correction (trap hi-hat doubling):
+  // Only fold if > 145 BPM AND ACF at double lag ≥ 55 % of bestLag ACF.
+  // The 55 % bar (vs old 40 %) prevents wrongly halving genuine 140+ BPM techno.
+  if (bpm > 145){
     const dbl = bestLag * 2;
-    if (dbl <= lagMax && acf[dbl] >= 0.40 * best) bpm = 60 * fps / dbl;
+    if (dbl <= lagMax && acf[dbl] >= 0.55 * acf[bestLag]){
+      bpm = 60 * fps / dbl;
+    }
   }
+
+  // Upward octave correction (ghost-beat / half-tempo detection):
+  // If result is suspiciously slow (< 85 BPM), check whether the half-lag
+  // — i.e. double tempo — has at least 65 % of the ACF energy.
+  if (bpm < 85){
+    const half = Math.round(bestLag / 2);
+    if (half >= lagMin){
+      const candidate = 60 * fps / half;
+      if (candidate <= BPM_MAX && acf[half] >= 0.65 * acf[bestLag]) bpm = candidate;
+    }
+  }
+
   return Math.round(bpm);
 }
 
@@ -764,11 +818,45 @@ function analyzeSpectrum(audioBuffer){
     else               bright += mag;
   }
   const eAll = sub + bass + lowMid + bright || 1;
+
+  // Top-3 spectral peaks (local maxima with min 60 Hz spacing, 30–14000 Hz range)
+  const SMOOTH = 4;
+  const pkCandidates = [];
+  for (let k = SMOOTH + 1; k < half - SMOOTH; k++){
+    const f = k * binHz;
+    if (f < 30 || f > 14000) continue;
+    const mag = Math.hypot(re[k], im[k]);
+    let isPeak = true;
+    for (let d = 1; d <= SMOOTH; d++){
+      if (Math.hypot(re[k-d], im[k-d]) >= mag || Math.hypot(re[k+d], im[k+d]) >= mag){
+        isPeak = false; break;
+      }
+    }
+    if (isPeak) pkCandidates.push({ f: Math.round(f), mag });
+  }
+  pkCandidates.sort((a, b) => b.mag - a.mag);
+  const peaks = [];
+  for (const p of pkCandidates){
+    if (peaks.every(q => Math.abs(q - p.f) > 60)){
+      peaks.push(p.f);
+      if (peaks.length >= 3) break;
+    }
+  }
+
   return {
     hz: mTotal > 0 ? Math.round(mWeighted / mTotal) : 0,
+    peaks,
     rms, variance,
     bands: { sub: sub / eAll, bass: bass / eAll, lowMid: lowMid / eAll, bright: bright / eAll }
   };
+}
+
+/* Format Hz peaks for display: "87 · 340 · 2.1k"  (centroid fallback). */
+function formatHzDisplay(peaks, centroid){
+  if (peaks && peaks.length){
+    return peaks.map(f => f >= 1000 ? `${(f / 1000).toFixed(1).replace(/\.0$/, '')}k` : `${f}`).join(' · ');
+  }
+  return centroid > 0 ? centroid.toLocaleString() : '—';
 }
 
 /* Single analysis entry-point shared by every decode path. */
@@ -776,7 +864,7 @@ async function analyzeBuffer(audioBuffer, label){
   if (!audioBuffer || !audioBuffer.length) throw new Error('empty_buffer');
   const bpm  = await analyzeRhythm(audioBuffer);
   const spec = analyzeSpectrum(audioBuffer);
-  showResults(bpm, spec.hz, label, spec.rms, spec.variance, spec.bands);
+  showResults(bpm, spec.hz, label, spec.rms, spec.variance, spec.bands, spec.peaks);
 }
 
 /* ══ Main BPM detection — native DSP. Signature unchanged: detectBpm(file) ══ */
@@ -1091,7 +1179,7 @@ let cachedShareCanvas=null;
 function buildShareText(){
   const zen = Math.max(0, 100 - fatigueScore(lastBpm, lastHz));
   const bpm = (lastBpm > 0 && isFinite(lastBpm)) ? lastBpm : '—';
-  const hz  = (lastHz > 0) ? lastHz.toLocaleString() : '—';
+  const hz  = formatHzDisplay(lastPeaks, lastHz);
   const eff = (lastEffects && lastEffects.length) ? (lang === 'en' ? lastEffects[0].en : lastEffects[0].fr) : '';
   if(lang === 'en'){
     return `ZenHertz score: ${zen} 🧠\nTempo: ${bpm} BPM 🥁\nFrequency: ${hz} Hz 🌊${eff ? '\n\n' + eff : ''}\n\nSee how your music affects your brain: https://zenhertz.com`;
