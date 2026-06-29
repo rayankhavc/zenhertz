@@ -1267,9 +1267,9 @@ function buildShareText(){
   const hz  = formatHzDisplay(lastPeaks, lastHz);
   const eff = (lastEffects && lastEffects.length) ? (lang === 'en' ? lastEffects[0].en : lastEffects[0].fr) : '';
   if(lang === 'en'){
-    return `ZenHertz score: ${zen} 🧠\nTempo: ${bpm} BPM 🥁\nFrequency: ${hz} Hz 🌊${eff ? '\n\n' + eff : ''}\n\nSee how your music affects your brain: https://zenhertz.com`;
+    return `ZenHertz score: ${zen} 🧠\nTempo: ${bpm} BPM 🥁\nFrequency: ${hz} Hz 🌊${eff ? '\n\n' + eff : ''}\n\nSee how your music affects your brain: https://zen-hertz.vercel.app`;
   }
-  return `Score ZenHertz : ${zen} 🧠\nRythme : ${bpm} BPM 🥁\nFréquence : ${hz} Hz 🌊${eff ? '\n\n' + eff : ''}\n\nTeste l'impact de ta musique sur ton cerveau : https://zenhertz.com`;
+  return `Score ZenHertz : ${zen} 🧠\nRythme : ${bpm} BPM 🥁\nFréquence : ${hz} Hz 🌊${eff ? '\n\n' + eff : ''}\n\nTeste l'impact de ta musique sur ton cerveau : https://zen-hertz.vercel.app`;
 }
 
 /* Clipboard copy with a legacy execCommand fallback. Never throws. */
