@@ -4,13 +4,9 @@ const TR = {
     homeBtn:'Accueil',
     tagline:'Découvrez l\'impact de votre musique sur votre <span style="color:#7c3aed;font-weight:600">système nerveux</span> et vos <span style="color:#a855f7;font-weight:600">ondes cérébrales</span>.',
     uplbl:'Analyser un fichier', wlbl:'Onde',
-    urlph:'Coller un lien (YouTube, TikTok, SoundCloud…)',
-    urlbtn:'Analyser →',
-    orLabel:'ou',
     scanning:'Scan bioacoustique…', analyzinglbl:'Analyse en cours',
-    extracting:'Extraction du flux audio…', extractsub:'Récupération de la source',
     neuroprofile:'Profil Neuro-acoustique', hormones:'Tableau Hormonal Estimé',
-    disclaimer:'Analyse basée sur la périodicité du signal et la moyenne spectrale (ZCR). Visée informative ne constitue pas un diagnostic médical.',
+    disclaimer:'Analyse basée sur l\'autocorrélation du rythme et l\'analyse spectrale (FFT) du signal. Visée informative ne constitue pas un diagnostic médical.',
     back:'← Analyser un autre morceau', share:'Partager le bilan', capturing:'Capture...', copyBtn:'Copier',
     landH1fr:'Ta musique impacte ton cerveau.', landH1em:'Découvrez comment.',
     landSub:'ZenHertz analyse les fréquences de ta musique et révèle son impact sur tes ondes cérébrales, tes hormones et ton système nerveux en quelques secondes.',
@@ -21,9 +17,9 @@ const TR = {
     step3T:'Ton profil neuro-acoustique', step3D:'Découvre l\'impact hormonal, l\'état cérébral induit et si ton écoute prolongée est sûre ou stimulante.',
     feat1T:'iOS · Android · PC', feat1D:'Fonctionne sur tous les appareils, sans installation.',
     feat2T:'100% dans le navigateur', feat2D:'Aucun upload vers un serveur. Tes fichiers restent sur ton appareil.',
-    feat3T:'Basé sur la science', feat3D:'ZCR, détection de pics, classification des ondes cérébrales.',
+    feat3T:'Basé sur la science', feat3D:'Autocorrélation, FFT, classification des ondes cérébrales.',
     statFormats:'Formats', statWaves:'Ondes cérébrales', statHorm:'Hormones',
-    betaLabel:'Liens : Bientôt disponible', sciLink:'Comment ça marche ?', legalLink:'Mentions légales',
+    sciLink:'Comment ça marche ?', legalLink:'Mentions légales',
     ecTitle:'ZenHertz arrive officiellement', ecSub:'Soyez informés de la sortie officielle  zéro spam, juste une notification.',
     ecPh:'votre@email.com', ecBtn:"M'avertir", ecConfirm:'✓ Vous serez notifié à la sortie !',
     feedbackBtn:'Feedback', fbTitle:'Votre avis compte', fbSub:'Bug, idée, suggestion? On lit tout',
@@ -33,8 +29,8 @@ const TR = {
     fMid:'→ Écoute prolongée : modérément stimulante',
     fHigh:'⚠ Écoute prolongée : risque de fatigue nerveuse',
     conseil:'Conseil',
-    errLink:'Lien non supporté ou protégé. Essayez un fichier audio directement.',
-    errEmpty:'Veuillez coller un lien valide.',
+    errFile:'Fichier audio illisible ou non supporté. Essayez un autre fichier (MP3, WAV, MP4…).',
+    effectsTitle:'Effets ressentis estimés',
     wnames:{delta:'Delta',theta:'Thêta',alpha:'Alpha',beta:'Bêta',gamma:'Gamma'},
     tags:{sleep:'💤 Sommeil profond',meditate:'🧘 Méditation',create:'✨ Créativité',focus:'🧠 Focus doux',cardiac:'🫀 Cohérence cardiaque',active:'⚡ Éveil actif',perf:'💪 Performance',hstim:'🔥 Haute stimulation',cogn:'⚡ Cognition intense',vagus:'🫀 Nerf vague stimulé',sport:'🏃 Sport / Effort',fatigue:'⚠ Fatigue si prolongé',vibra:'🌊 Vibration profonde'},
     h:{dopamine:['Dopamine','Motivation & Récompense'],cortisol:['Cortisol','Stress & Vigilance'],serotonin:['Sérotonine','Humeur & Bien-être'],melatonin:['Mélatonine','Sommeil & Récupération'],endorphins:['Endorphines','Euphorie & Analgésie'],adr:['Adrénaline','Éveil & Réactivité']},
@@ -45,13 +41,9 @@ const TR = {
     homeBtn:'Home',
     tagline:'Discover the impact of your music on your <span style="color:#7c3aed;font-weight:600">nervous system</span> and your <span style="color:#a855f7;font-weight:600">brainwaves</span>.',
     uplbl:'Analyze a file', wlbl:'Wave',
-    urlph:'Paste a link (YouTube, TikTok, SoundCloud…)',
-    urlbtn:'Analyze →',
-    orLabel:'or',
     scanning:'Bioacoustic scan…', analyzinglbl:'Analysis in progress',
-    extracting:'Extracting audio stream…', extractsub:'Retrieving source',
     neuroprofile:'Neuro-acoustic Profile', hormones:'Estimated Hormonal Dashboard',
-    disclaimer:'Analysis based on signal periodicity and spectral average (ZCR). For informational purposes only  not a medical diagnosis.',
+    disclaimer:'Analysis based on rhythmic autocorrelation and spectral (FFT) analysis of the signal. For informational purposes only  not a medical diagnosis.',
     back:'← Analyze another track', share:'Share Results', capturing:'Capturing...', copyBtn:'Copy',
     landH1fr:'Your music impacts your brain.', landH1em:'Find out how.',
     landSub:'ZenHertz analyzes your music\'s frequencies and reveals its impact on your brain waves, hormones and nervous system in seconds.',
@@ -62,9 +54,9 @@ const TR = {
     step3T:'Your neuro-acoustic profile', step3D:'Discover the hormonal impact, induced brain state and whether extended listening is safe or stimulating.',
     feat1T:'iOS · Android · PC', feat1D:'Works on all devices, no installation needed.',
     feat2T:'100% in-browser', feat2D:'No upload to any server. Your files stay on your device.',
-    feat3T:'Science-based', feat3D:'ZCR, peak detection, brain wave classification.',
+    feat3T:'Science-based', feat3D:'Autocorrelation, FFT, brain wave classification.',
     statFormats:'Formats', statWaves:'Brain waves', statHorm:'Hormones',
-    betaLabel:'Links Coming soon', sciLink:'How it works', legalLink:'Legal notices',
+    sciLink:'How it works', legalLink:'Legal notices',
     ecTitle:'ZenHertz launching officially', ecSub:'Get notified at official launch zero spam, just one notification.',
     ecPh:'your@email.com', ecBtn:'Notify me', ecConfirm:'✓ You will be notified at launch!',
     feedbackBtn:'Feedback', fbTitle:'Your feedback matters', fbSub:'Bug, idea, suggestion we read everything',
@@ -74,8 +66,8 @@ const TR = {
     fMid:'→ Extended listening: moderately stimulating',
     fHigh:'⚠ Extended listening: risk of neural fatigue',
     conseil:'Insight',
-    errLink:'Unsupported or protected link. Try uploading an audio file directly.',
-    errEmpty:'Please paste a valid link.',
+    errFile:'Could not read this audio file. Try another file (MP3, WAV, MP4…).',
+    effectsTitle:'Estimated felt effects',
     wnames:{delta:'Delta',theta:'Theta',alpha:'Alpha',beta:'Beta',gamma:'Gamma'},
     tags:{sleep:'💤 Deep sleep',meditate:'🧘 Meditation',create:'✨ Creativity',focus:'🧠 Soft focus',cardiac:'🫀 Cardiac coherence',active:'⚡ Active wakefulness',perf:'💪 Performance',hstim:'🔥 High stimulation',cogn:'⚡ Intense cognition',vagus:'🫀 Vagus nerve stimulated',sport:'🏃 Sport / Effort',fatigue:'⚠ Fatigue risk',vibra:'🌊 Deep vibration'},
     h:{dopamine:['Dopamine','Motivation & Reward'],cortisol:['Cortisol','Stress & Alertness'],serotonin:['Serotonin','Mood & Wellbeing'],melatonin:['Melatonin','Sleep & Recovery'],endorphins:['Endorphins','Euphoria & Pain Relief'],adr:['adrenaline','Arousal & Reflexes']},
@@ -85,6 +77,7 @@ const TR = {
 };
 
 let lang='fr', theme='light', lastBpm=null, lastHz=null;
+let lastBands=null, lastRms=0.15, lastVar=0.1, lastEffects=[];
 const L = k => TR[lang][k] ?? TR.fr[k];
 const S = id => document.getElementById(id);
 
@@ -97,7 +90,10 @@ function applyLang(){
   document.querySelectorAll('[data-i-ph]').forEach(el=>{
     const v=L(el.dataset.iPh); if(v) el.placeholder=v;
   });
-  if(lastBpm!==null) renderHormones(lastBpm,lastHz);
+  if(lastBpm!==null){
+    renderHormones(lastBpm,lastHz,lastRms,lastVar);
+    if(lastEffects.length){ const d=S('rdesc'); if(d) d.innerHTML=summaryFromEffects(lastEffects); }
+  }
 }
 
 function toggleLang(){ lang=lang==='fr'?'en':'fr'; applyLang(); }
@@ -129,11 +125,12 @@ function showTool(){
 }
 
 function goHome(){
-  lastBpm=null; lastHz=null;
-  S('audio-input').value=''; S('url-input').value='';
+  lastBpm=null; lastHz=null; lastBands=null; lastEffects=[];
+  S('audio-input').value='';
   hideAlert();
   S('rbpm').innerText='—'; S('rhz').innerText='—'; S('rwave').innerText='—';
   S('rname').innerText=''; S('rdesc').innerHTML=''; S('rtags').innerHTML='';
+  const re=S('reffects'); if(re) re.innerHTML='';
   S('hgauges').innerHTML=''; S('ffill').style.width='0%'; S('flbl').innerText='';
   S('hbdot').style.animation='';
   ['wd','wt','wa','wb','wg'].forEach(id=>S(id).classList.remove('on'));
@@ -160,162 +157,188 @@ function typeWords(el,html,ms=75){
   if(!el||!el.parentNode) return;
   const tmp=document.createElement('div'); tmp.innerHTML=html;
   const words=tmp.textContent.split(' ');
-  let i=0,cur=null;
+  let i=0;
   el.innerHTML='';
-  if(words.length>0){
-    cur=document.createElement('span'); cur.className='cur';
-    el.appendChild(cur);
-  }
+  // One growing text node + a trailing cursor (no per-tick node accumulation).
+  const textNode=document.createTextNode('');
+  const cur=document.createElement('span'); cur.className='cur';
+  el.appendChild(textNode); el.appendChild(cur);
   function next(){
-    if(!el||!el.parentNode) return;
-    if(i<words.length&&cur){
-      const tn=document.createTextNode(words.slice(0,i+1).join(' ')+' ');
-      el.insertBefore(tn,cur);
+    // Stop silently if this typewriter was superseded (rdesc re-rendered by a
+    // new analysis or a language toggle removed the cursor node).
+    if(!el||!el.parentNode||cur.parentNode!==el) return;
+    if(i<words.length){
+      textNode.textContent=words.slice(0,i+1).join(' ')+' ';
       i++; setTimeout(next,ms+Math.random()*28);
-    } else if(el) { el.innerHTML=html; }
+    } else { el.innerHTML=html; }
   }
   next();
 }
 
-/* ══ BILINGUAL ANALYSIS ══ */
-const ANALYSIS={
-  fr:{
-    bpm:{
-      slow:[
-        `À %B% BPM, la périodicité du signal active le système nerveux parasympathique, pilier de la récupération.`,
-        `Ce rythme de %B% BPM stimule directement le nerf vague, induisant une baisse du cortisol circulant.`,
-        `La pulsation à %B% BPM favorise la cohérence cardiaque, synchronisant cycles respiratoires et cardiaques.`,
-        `Avec %B% BPM, le corps entre en phase de neuro-régénération et de repos cellulaire profond.`,
-        `Ce profil de %B% BPM mime les rythmes biologiques du sommeil profond, apaisant la tension artérielle.`,
-        `L'absence de stress acoustique à %B% BPM permet la libération d'acétylcholine, médiateur du calme.`
-      ],
-      medium:[
-        `Le tempo de %B% BPM maintient une homéostasie neuro-végétative parfaite, ni stressante ni sédative.`,
-        `À %B% BPM, le signal entretient une vigilance neutre, idéale pour des tâches cognitives prolongées.`,
-        `Ce rythme modéré (%B% BPM) préserve vos ressources nerveuses tout en évitant la somnolence.`,
-        `L'équilibre sympathique/parasympathique est optimal à ce tempo de %B% BPM.`,
-        `La dynamique à %B% BPM soutient un état d'éveil stable, compatible avec l'attention soutenue.`,
-        `À %B% BPM, le circuit dopaminergique de récompense est stimulé sans surcharger le système cardiovasculaire.`
-      ],
-      fast:[
-        `Ce tempo de %B% BPM déclenche une cascade orthosympathique, libérant adrénaline et adrénaline.`,
-        `À %B% BPM, le corps se mobilise : le débit sanguin s'accélère et la vigilance devient maximale.`,
-        `Le signal à %B% BPM simule un eustress, un stress positif boostant la réactivité musculaire.`,
-        `Avec %B% BPM, l'entraînement rythmique force une accélération métabolique préparant à l'effort intense.`,
-        `La dominance orthosympathique à %B% BPM favorise la glycolyse et la disponibilité énergétique immédiate.`,
-        `À %B% BPM, le cerveau bascule en mode haute performance, optimisant réflexes et motricité fine.`
-      ]
-    },
-    hz:{
-      veryLow:[
-        `Les fréquences infra-basses (%H% Hz) créent une résonance limbique favorisant la sécrétion d'endorphines.`,
-        `Le spectre à %H% Hz stimule les récepteurs mécanosensibles, renforçant l'ancrage corporel profond.`,
-        `À %H% Hz, l'énergie acoustique agit comme un anxiolytique naturel sur l'amygdale cérébrale.`,
-        `Cette dominante de %H% Hz privilégie la relaxation des tissus et la décharge sensorielle.`,
-        `Les ondes à %H% Hz favorisent une déconnexion du cortex préfrontal, propice au lâcher-prise.`,
-        `Le centroïde spectral bas (%H% Hz) réduit la pollution mentale et l'hyper-vigilance auditive.`
-      ],
-      low:[
-        `Le registre médiums-graves (%H% Hz) est perçu comme sécurisant par le cortex auditif droit.`,
-        `Les fréquences à %H% Hz imitent les timbres vocaux naturels, stabilisant la réponse émotionnelle.`,
-        `À %H% Hz, le signal enveloppe le système nerveux sans provoquer de fatigue corticale.`,
-        `Ce profil spectral à %H% Hz est idéal pour maintenir un confort acoustique en longue durée.`,
-        `La richesse harmonique à %H% Hz favorise la production de sérotonine, l'hormone de l'humeur.`,
-        `À %H% Hz, le traitement neuronal reste fluide, évitant toute saturation des voies ascendantes.`
-      ],
-      mid:[
-        `La présence de médiums-aigus (%H% Hz) stimule l'attention sélective et la clarté mentale.`,
-        `À %H% Hz, le cerveau traite le signal comme prioritaire, boostant la concentration active.`,
-        `Ce niveau fréquentiel (%H% Hz) active les circuits de mémorisation à court terme.`,
-        `L'énergie spectrale à %H% Hz favorise un éveil cognitif net, utile pour l'apprentissage.`,
-        `À %H% Hz, le cortex primaire est sollicité pour une analyse précise des textures sonores.`,
-        `Le signal à %H% Hz agit comme un catalyseur pour les tâches demandant précision et focus.`
-      ],
-      high:[
-        `La densité d'aigus à %H% Hz provoque une hyperexcitabilité neuronale temporaire.`,
-        `À %H% Hz, le système auditif central est en hyper-alerte, augmentant la tension nerveuse.`,
-        `Ces fréquences élevées (%H% Hz) peuvent saturer les neurotransmetteurs en écoute prolongée.`,
-        `Le spectre à %H% Hz est un puissant stimulant, mais peut altérer la qualité du sommeil futur.`,
-        `À %H% Hz, l'activité électrique corticale est intense typique des phases de sport ou de stress.`,
-        `La dominance haute fréquence (%H% Hz) accélère la fatigue sensorielle globale.`
-      ]
-    }
+/* ══ DYNAMIC BILINGUAL EFFECTS ══
+   3–5 short, realistic, bilingual (FR + EN) effects generated from the actual
+   BPM range and the detected frequency-band character. Small randomisation
+   keeps repeats of similar tracks feeling slightly different. */
+const EFFECTS = {
+  tempo: {
+    calm: [
+      {fr:`À %B% BPM, votre cœur ralentit doucement pour suivre le rythme : le corps glisse en mode repos.`,
+       en:`At %B% BPM, your heart slows to follow the beat as your body slips into rest mode.`},
+      {fr:`Ce tempo lent de %B% BPM laisse la respiration et le pouls s'apaiser ensemble.`,
+       en:`This slow %B% BPM tempo lets your breathing and pulse settle together.`},
+      {fr:`À %B% BPM, le rythme cardiaque tend à se caler sur la musique et redescend naturellement.`,
+       en:`At %B% BPM, your heart rate tends to sync with the music and naturally winds down.`}
+    ],
+    baseline: [
+      {fr:`À %B% BPM, votre fréquence cardiaque reste proche de son rythme de repos, ni poussée ni freinée.`,
+       en:`At %B% BPM, your heart rate stays near its resting pace, neither pushed nor slowed.`},
+      {fr:`Ce tempo de %B% BPM accompagne le pouls sans le bousculer : un équilibre confortable.`,
+       en:`This %B% BPM tempo rides along with your pulse without rushing it — a comfortable balance.`},
+      {fr:`À %B% BPM, le corps trouve un rythme naturel, proche d'une marche tranquille.`,
+       en:`At %B% BPM, your body settles into a natural rhythm, close to an easy walking pace.`}
+    ],
+    focus: [
+      {fr:`À %B% BPM, le pouls s'élève légèrement pour suivre la cadence : une vigilance douce s'installe.`,
+       en:`At %B% BPM, your pulse lifts slightly to match the pace, easing you into light alertness.`},
+      {fr:`Ce tempo de %B% BPM pousse gentiment le rythme cardiaque vers le haut, propice à la concentration.`,
+       en:`This %B% BPM tempo nudges your heart rate up just enough to favour focus.`},
+      {fr:`À %B% BPM, la musique entraîne le corps vers un éveil actif mais maîtrisé.`,
+       en:`At %B% BPM, the music draws your body toward active but controlled wakefulness.`}
+    ],
+    energy: [
+      {fr:`À %B% BPM, le rythme cardiaque grimpe pour suivre le beat : le corps passe en mode action.`,
+       en:`At %B% BPM, your heart rate climbs to keep up with the beat as your body shifts into action mode.`},
+      {fr:`Ce tempo soutenu de %B% BPM accélère le pouls et prépare l'organisme à l'effort.`,
+       en:`This driving %B% BPM tempo speeds up your pulse and primes the body for effort.`},
+      {fr:`À %B% BPM, la cadence tire la fréquence cardiaque vers le haut, idéale pour bouger.`,
+       en:`At %B% BPM, the pace pulls your heart rate upward — great for moving.`}
+    ],
+    intense: [
+      {fr:`À %B% BPM, le rythme cardiaque est poussé haut pour tenir la cadence : mobilisation maximale.`,
+       en:`At %B% BPM, your heart rate is pushed high to hold the pace — full mobilisation.`},
+      {fr:`Ce tempo très rapide de %B% BPM emballe le pouls, comme lors d'un sprint.`,
+       en:`This very fast %B% BPM tempo races your pulse, much like a sprint.`},
+      {fr:`À %B% BPM, le corps bascule en haute intensité, proche de la réponse « combat ou fuite ».`,
+       en:`At %B% BPM, your body tips into high intensity, close to a fight-or-flight response.`}
+    ]
   },
-  en:{
-    bpm:{
-      slow:[
-        `At %B% BPM, the signal's periodicity activates the parasympathetic nervous system the cornerstone of deep recovery.`,
-        `This %B% BPM tempo directly stimulates the vagus nerve, inducing a measurable drop in circulating cortisol.`,
-        `The %B% BPM pulse promotes cardiac coherence, synchronizing respiratory and cardiac cycles in phase.`,
-        `At %B% BPM, the body enters a state of neuro-regeneration and deep cellular rest.`,
-        `This %B% BPM profile mirrors deep-sleep biological rhythms, effectively lowering arterial tension.`,
-        `The absence of acoustic stress at %B% BPM enables acetylcholine release the neuromediator of calm.`
-      ],
-      medium:[
-        `The %B% BPM tempo maintains perfect neuro-vegetative homeostasis neither stressful nor sedative.`,
-        `At %B% BPM, the signal sustains neutral vigilance, ideal for extended cognitive tasks.`,
-        `This moderate rhythm (%B% BPM) preserves nervous resources while preventing drowsiness.`,
-        `The sympathetic/parasympathetic balance is optimal at this %B% BPM tempo.`,
-        `The %B% BPM dynamic sustains stable wakefulness, compatible with sustained attention spans.`,
-        `At %B% BPM, the dopaminergic reward circuit is stimulated without overloading the cardiovascular system.`
-      ],
-      fast:[
-        `This %B% BPM tempo triggers an orthosympathetic cascade, releasing adrenaline and adrenaline.`,
-        `At %B% BPM, the body mobilizes: blood flow accelerates and vigilance reaches its peak.`,
-        `The %B% BPM signal simulates eustress positive stress boosting muscular reactivity.`,
-        `With %B% BPM, rhythmic entrainment forces a metabolic acceleration priming the body for intense effort.`,
-        `Orthosympathetic dominance at %B% BPM promotes glycolysis and immediate energy availability.`,
-        `At %B% BPM, the brain shifts into high-performance mode, optimizing reflexes and fine motor control.`
-      ]
-    },
-    hz:{
-      veryLow:[
-        `The infra-low frequencies (%H% Hz) create a limbic resonance promoting endorphin secretion.`,
-        `The spectrum at %H% Hz stimulates mechanosensitive receptors, reinforcing deep body grounding.`,
-        `At %H% Hz, acoustic energy acts as a natural anxiolytic on the cerebral amygdala.`,
-        `This %H% Hz dominant promotes tissue relaxation and deep sensory discharge.`,
-        `Sound waves at %H% Hz encourage prefrontal cortex disconnection, conducive to letting go.`,
-        `The low spectral centroid (%H% Hz) reduces mental noise and auditory hyper-vigilance.`
-      ],
-      low:[
-        `The mid-bass register (%H% Hz) is perceived as safe and comforting by the right auditory cortex.`,
-        `Frequencies at %H% Hz mimic natural vocal timbres, stabilizing the emotional response.`,
-        `At %H% Hz, the sound signal envelops the nervous system without triggering cortical fatigue.`,
-        `This spectral profile at %H% Hz is ideal for acoustic comfort over long listening sessions.`,
-        `The harmonic richness at %H% Hz promotes serotonin production the mood hormone.`,
-        `At %H% Hz, neural processing remains fluid, avoiding saturation of ascending auditory pathways.`
-      ],
-      mid:[
-        `The presence of upper-mids (%H% Hz) stimulates selective attention and mental clarity.`,
-        `At %H% Hz, the brain processes the signal as priority information, boosting active concentration.`,
-        `This frequency level (%H% Hz) activates short-term memory encoding circuits.`,
-        `The spectral energy at %H% Hz promotes sharp cognitive alertness, useful for learning.`,
-        `At %H% Hz, the primary cortex is engaged for precise analysis of sound textures.`,
-        `The %H% Hz signal acts as a catalyst for tasks requiring precision and sustained focus.`
-      ],
-      high:[
-        `The high-frequency density at %H% Hz triggers temporary neural hyperexcitability.`,
-        `At %H% Hz, the central auditory system is on high alert, increasing nervous tension.`,
-        `These elevated frequencies (%H% Hz) can saturate neurotransmitters during prolonged listening.`,
-        `The rich spectrum at %H% Hz is a powerful stimulant but may impair future sleep quality.`,
-        `At %H% Hz, cortical electrical activity is intense typical of stress or high-performance states.`,
-        `High-frequency dominance (%H% Hz) accelerates overall sensory fatigue.`
-      ]
-    }
+  hormone: {
+    calm: [
+      {fr:`Le cortisol (hormone du stress) tend à baisser tandis que la mélatonine monte : sensation calme, presque endormie.`,
+       en:`Cortisol (the stress hormone) tends to drop while melatonin rises, leaving a calm, almost sleepy feeling.`},
+      {fr:`Ce rythme favorise la détente : moins de stress, plus de récupération.`,
+       en:`This rhythm favours relaxation: less stress, more recovery.`},
+      {fr:`Le système nerveux passe en mode « repos » et invite le corps à relâcher les tensions.`,
+       en:`Your nervous system shifts into "rest" mode, inviting the body to release tension.`}
+    ],
+    baseline: [
+      {fr:`Les hormones restent globalement équilibrées : ni coup de fouet, ni grosse fatigue.`,
+       en:`Your hormones stay broadly balanced — no rush, no crash.`},
+      {fr:`L'humeur reste stable, sans pic notable de stress ni d'excitation.`,
+       en:`Mood stays steady, with no notable spike of stress or excitement.`},
+      {fr:`Un état neutre où le corps n'est ni stimulé ni endormi.`,
+       en:`A neutral state where the body is neither revved up nor lulled down.`}
+    ],
+    focus: [
+      {fr:`La dopamine (motivation) augmente un peu, créant une sensation de concentration agréable.`,
+       en:`Dopamine (motivation) rises a little, producing a pleasant, focused feeling.`},
+      {fr:`Une légère poussée d'adrénaline réveille l'attention sans créer de stress.`,
+       en:`A mild adrenaline bump sharpens attention without tipping into stress.`},
+      {fr:`Le cerveau se met en condition pour travailler : motivation douce, esprit clair.`,
+       en:`Your brain gets into working condition: gentle motivation, clear mind.`}
+    ],
+    energy: [
+      {fr:`La dopamine et l'adrénaline montent nettement : énergie et envie de bouger.`,
+       en:`Dopamine and adrenaline rise clearly, bringing energy and the urge to move.`},
+      {fr:`Le cortisol grimpe un peu aussi : le corps est sous tension positive, prêt à l'effort.`,
+       en:`Cortisol ticks up too: the body is under positive tension, ready for effort.`},
+      {fr:`Cocktail stimulant typique des séances de sport : motivation haute et réactivité accrue.`,
+       en:`A stimulating mix typical of workouts: high motivation and quicker reactions.`}
+    ],
+    intense: [
+      {fr:`L'adrénaline explose et le cortisol grimpe fort : le corps est en alerte maximale.`,
+       en:`Adrenaline surges and cortisol climbs hard — the body is on peak alert.`},
+      {fr:`Les endorphines se libèrent, ce « second souffle » qui aide à encaisser l'intensité.`,
+       en:`Endorphins release — the "second wind" that helps you ride the intensity.`},
+      {fr:`Stimulation extrême : galvanisant sur le moment, fatigant si l'écoute se prolonge.`,
+       en:`Extreme stimulation: galvanising in the moment, tiring if listening goes on.`}
+    ]
+  },
+  freq: {
+    sub: [
+      {fr:`Les sub-graves (20–60 Hz) se ressentent physiquement : une vibration dans le corps, parfois une légère tension.`,
+       en:`The sub-bass (20–60 Hz) is felt physically — a vibration through the body, sometimes a slight tension.`},
+      {fr:`Ces fréquences très basses agissent autant sur la peau et la poitrine que sur les oreilles.`,
+       en:`These very low frequencies act on your skin and chest as much as your ears.`}
+    ],
+    bass: [
+      {fr:`Les basses (60–250 Hz) apportent une chaleur qui résonne dans la poitrine : sensation pleine et rassurante.`,
+       en:`The bass (60–250 Hz) brings a warmth that resonates in the chest — a full, reassuring feel.`},
+      {fr:`Un grave généreux qui « enveloppe » et ancre l'écoute sans fatiguer.`,
+       en:`A generous low end that wraps around you and grounds the listen without tiring.`}
+    ],
+    bright: [
+      {fr:`Les aigus marqués (2 kHz et plus) gardent l'esprit en alerte ; sur la durée, ils peuvent fatiguer l'oreille.`,
+       en:`The bright highs (2 kHz and up) keep the mind alert; over time they can tire the ears.`},
+      {fr:`Beaucoup d'énergie dans les hautes fréquences : vif et détaillé, mais stimulant si prolongé.`,
+       en:`Lots of energy up high: crisp and detailed, but stimulating if it goes on too long.`}
+    ],
+    balanced: [
+      {fr:`Le spectre est équilibré entre graves et aigus : un son confortable, facile à écouter longtemps.`,
+       en:`The spectrum is balanced between lows and highs — a comfortable sound, easy on long listens.`},
+      {fr:`Aucune bande de fréquences ne domine : l'écoute reste naturelle et reposante.`,
+       en:`No single frequency band dominates, so the listen stays natural and easy.`}
+    ]
   }
 };
 
-function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function pick(a){ return a[Math.floor(Math.random() * a.length)]; }
 
-function generateNeuroAnalysis(bpm,hertz,wt){
-  const vB=bpm>0&&isFinite(bpm), vH=hertz>0&&isFinite(hertz);
-  const D=ANALYSIS[lang]||ANALYSIS.fr;
-  const bCat=vB?(bpm<80?'slow':bpm<115?'medium':'fast'):'medium';
-  const hCat=vH?(hertz<500?'veryLow':hertz<1500?'low':hertz<4000?'mid':'high'):'mid';
-  const b=pick(D.bpm[bCat]).replaceAll('%B%',bpm);
-  const h=pick(D.hz[hCat]).replaceAll('%H%',hertz.toLocaleString());
-  const c=L('conclus')[wt]||'';
-  return `${b} ${h}<br><br><strong style="color:#7c3aed">${L('conseil')} :</strong> ${c}`;
+function effectKeyForBpm(bpm){
+  if (!(bpm > 0) || !isFinite(bpm)) return 'baseline';
+  if (bpm < 70)  return 'calm';
+  if (bpm < 90)  return 'baseline';
+  if (bpm < 120) return 'focus';
+  if (bpm < 140) return 'energy';
+  return 'intense';
+}
+
+function dominantBand(bands){
+  if (!bands) return 'balanced';
+  const sub = bands.sub || 0, bass = bands.bass || 0, bright = bands.bright || 0;
+  if (sub >= 0.18) return 'sub';
+  if (bright >= 0.30 && bright >= bass) return 'bright';
+  if (bass >= 0.28) return 'bass';
+  return 'balanced';
+}
+
+/* Returns an array of 3–5 { fr, en } effects for the given BPM + band profile. */
+function generateEffects(bpm, bands){
+  const b  = Math.round(bpm > 0 && isFinite(bpm) ? bpm : 0);
+  const bk = effectKeyForBpm(b);
+  const fk = dominantBand(bands);
+  const fill = s => s.replaceAll('%B%', b || '—');
+
+  const tempo   = pick(EFFECTS.tempo[bk]);
+  const hormone = pick(EFFECTS.hormone[bk]);
+  const freq    = pick(EFFECTS.freq[fk]);
+  const out = [tempo, hormone, freq];
+
+  // Richer ranges get an extra (distinct) hormonal nuance, sometimes.
+  if ((bk === 'focus' || bk === 'energy' || bk === 'intense') && Math.random() < 0.7){
+    let extra = pick(EFFECTS.hormone[bk]), guard = 0;
+    while (extra === hormone && guard++ < 4) extra = pick(EFFECTS.hormone[bk]);
+    if (extra !== hormone) out.push(extra);
+  }
+  return out.slice(0, 5).map(e => ({ fr: fill(e.fr), en: fill(e.en) }));
+}
+
+/* Short current-language summary (used on the left card + when sharing). */
+function summaryFromEffects(effects){
+  if (!effects || !effects.length) return '';
+  const txt = effects.slice(0, 2).map(e => (lang === 'en' ? e.en : e.fr)).join(' ');
+  const c = (L('conclus')[getWave(lastBpm)]) || '';
+  return `${txt}<br><br><strong style="color:#7c3aed">${L('conseil')} :</strong> ${c}`;
 }
 
 function generateTags(bpm,hz,wt){
@@ -406,44 +429,65 @@ function renderHormones(bpm,hz,rms,signalVariance){
 function getWave(bpm){if(!bpm||!isFinite(bpm)||bpm<60)return'delta';if(bpm<80)return'theta';if(bpm<115)return'alpha';if(bpm<155)return'beta';return'gamma';}
 
 /* ══ SHOW RESULTS ══ */
-function showResults(bpm,hz,label,rms=0.15,signalVariance=0.1){
-  const wt=getWave(bpm);
-  const wn=L('wnames');
-  S('rname').innerText=label.length>42?label.substring(0,40)+'…':label;
-  S('rbpm').innerText=(bpm>0&&isFinite(bpm))?bpm:'—';
-  S('rhz').innerText=hz>0?hz.toLocaleString():'—';
-  S('rwave').innerText=wn[wt];
-  ['wd','wt','wa','wb','wg'].forEach(id=>S(id).classList.remove('on'));
+function renderEffects(effects){
+  const box = S('reffects');
+  if (!box) return;
+  box.innerHTML = (effects || []).map(e =>
+    `<div class="effitem"><p class="eff-fr">${e.fr}</p><p class="eff-en">${e.en}</p></div>`
+  ).join('');
+}
+
+function showResults(bpm, hz, label, rms = 0.15, signalVariance = 0.1, bands = null){
+  const wt = getWave(bpm);
+  const wn = L('wnames');
+  S('rname').innerText = (label && label.length > 42) ? label.substring(0, 40) + '…' : (label || '');
+  S('rbpm').innerText  = (bpm > 0 && isFinite(bpm)) ? bpm : '—';
+  S('rhz').innerText   = (hz > 0) ? hz.toLocaleString() : '—';
+  S('rwave').innerText = wn[wt];
+  ['wd','wt','wa','wb','wg'].forEach(id => S(id).classList.remove('on'));
   S({delta:'wd',theta:'wt',alpha:'wa',beta:'wb',gamma:'wg'}[wt]).classList.add('on');
-  typeWords(S('rdesc'),generateNeuroAnalysis(bpm,hz,wt),72);
-  S('rtags').innerHTML=generateTags(bpm,hz,wt);
-  const fs=fatigueScore(bpm,hz);
-  const ff=S('ffill'),fl=S('flbl');
-  if(fs>=60){ff.style.cssText=`width:${fs}%;background:linear-gradient(90deg,#f59e0b,#ef4444)`;fl.style.color='#b91c1c';fl.textContent=L('fHigh');}
-  else if(fs>=30){ff.style.cssText=`width:${fs}%;background:linear-gradient(90deg,#a855f7,#7c3aed)`;fl.style.color='#6d28d9';fl.textContent=L('fMid');}
-  else{ff.style.cssText=`width:${Math.max(fs,8)}%;background:linear-gradient(90deg,#10b981,#059669)`;fl.style.color='#065f46';fl.textContent=L('fLow');}
-  if(bpm>0&&isFinite(bpm))S('hbdot').style.animation=`heartbeat ${(60/bpm).toFixed(3)}s ease-in-out infinite`;
-  lastBpm=bpm;lastHz=hz;renderHormones(bpm,hz,rms,signalVariance);
+
+  lastBpm = bpm; lastHz = hz; lastBands = bands; lastRms = rms; lastVar = signalVariance;
+  lastEffects = generateEffects(bpm, bands);
+
+  typeWords(S('rdesc'), summaryFromEffects(lastEffects), 64);
+  S('rtags').innerHTML = generateTags(bpm, hz, wt);
+
+  const fs = fatigueScore(bpm, hz);
+  const ff = S('ffill'), fl = S('flbl');
+  if (fs >= 60){ ff.style.cssText = `width:${fs}%;background:linear-gradient(90deg,#f59e0b,#ef4444)`; fl.style.color = '#b91c1c'; fl.textContent = L('fHigh'); }
+  else if (fs >= 30){ ff.style.cssText = `width:${fs}%;background:linear-gradient(90deg,#a855f7,#7c3aed)`; fl.style.color = '#6d28d9'; fl.textContent = L('fMid'); }
+  else { ff.style.cssText = `width:${Math.max(fs, 8)}%;background:linear-gradient(90deg,#10b981,#059669)`; fl.style.color = '#065f46'; fl.textContent = L('fLow'); }
+
+  if (bpm > 0 && isFinite(bpm)) S('hbdot').style.animation = `heartbeat ${(60 / bpm).toFixed(3)}s ease-in-out infinite`;
+
+  renderHormones(bpm, hz, rms, signalVariance);
+  renderEffects(lastEffects);
+
   S('sc-analyzing').classList.add('hidden');
   S('sc-result').classList.remove('hidden');
-  window.scrollTo({top:0,behavior:'smooth'});
-  cachedShareCanvas=null;
-  setTimeout(async()=>{
-    try{
-      const target=S('rleft');
-      const actionsDiv=target.querySelector('.backbtn').parentElement;
-      actionsDiv.style.display='none';
-      const rdesc=S('rdesc');
-      const cur=rdesc.querySelector('.cur');
-      if(cur) cur.style.display='none';
-      cachedShareCanvas=await html2canvas(target,{
-        backgroundColor:theme==='dark'?'#04040e':'#eeeef5',
-        scale:1,useCORS:true,logging:false
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  cachedShareCanvas = null;
+  setTimeout(async () => {
+    if (typeof html2canvas !== 'function') return;   // optional dependency
+    const target = S('rleft');
+    const actionsDiv = target.querySelector('.backbtn').parentElement;
+    const cur = S('rdesc').querySelector('.cur');
+    try {
+      actionsDiv.style.display = 'none';
+      if (cur) cur.style.display = 'none';
+      cachedShareCanvas = await html2canvas(target, {
+        backgroundColor: theme === 'dark' ? '#04040e' : '#eeeef5',
+        scale: 1, useCORS: true, logging: false
       });
-      if(cur) cur.style.display='';
-      actionsDiv.style.display='flex';
-    }catch{}
-  },3500);
+    } catch (_) {
+      cachedShareCanvas = null;
+    } finally {
+      // Always restore the action buttons, even if capture failed.
+      if (cur) cur.style.display = '';
+      actionsDiv.style.display = 'flex';
+    }
+  }, 3500);
 }
 
 /* ══════════════════════════════════
@@ -523,219 +567,241 @@ function getAudioCtx(){
 /* ── decodeAudioData universel : callback-style supporté par tous (Safari inclus) ── */
 function decodeAudioDataUniversal(ctx,ab){
   return new Promise((resolve,reject)=>{
-    ctx.decodeAudioData(ab,resolve,reject);
+    let p;
+    try{ p=ctx.decodeAudioData(ab,resolve,reject); }
+    catch(e){ reject(e); return; }
+    // Modern decodeAudioData fulfils BOTH the callbacks and a returned promise;
+    // swallow the promise rejection so it isn't reported as "unhandled".
+    if(p&&typeof p.catch==='function') p.catch(()=>{});
   });
 }
 
-/* ══ Pro Peak-Detection BPM Algorithm (native DSP) ══ */
-function calculateBpmFromPeaks(data, sampleRate) {
-    let peaks = [];
-    const minIndex = Math.floor(sampleRate * 0.2); // Minimum 200ms between kicks (max 300 BPM physical limit)
-    
-    // 1. Dynamic Thresholding (Chunk Analysis)
-    // Analyze block by block to detect kicks even in quiet sections/intros
-    const blockSize = sampleRate; // 1-second blocks
-    for (let i = 0; i < data.length; i += blockSize) {
-        let block = data.subarray(i, i + blockSize);
-        let maxInBlock = 0;
-        
-        for (let j = 0; j < block.length; j++) {
-            if (Math.abs(block[j]) > maxInBlock) maxInBlock = Math.abs(block[j]);
-        }
-        
-        // Lower threshold for more sensitivity inside the block
-        let threshold = maxInBlock * 0.80; 
-        
-        for (let j = 0; j < block.length; j++) {
-            if (block[j] > threshold) {
-                let absoluteIndex = i + j;
-                // Avoid double-counting the same peak
-                if (peaks.length === 0 || absoluteIndex - peaks[peaks.length - 1] > minIndex) {
-                    peaks.push(absoluteIndex);
-                }
-            }
-        }
-    }
-    
-    if (peaks.length < 2) return 0;
-    
-    // 2. Interval Calculation and Octave Correction
-    let bpmCounts = [];
-    for (let i = 1; i < peaks.length; i++) {
-        let interval = peaks[i] - peaks[i - 1];
-        let bpm = (60 * sampleRate) / interval;
-        
-        // Force BPM into standard DJ range [75 - 150 BPM] to fix octave errors
-        while (bpm < 75) bpm *= 2;
-        while (bpm >= 150) bpm /= 2;
-        
-        bpmCounts.push(Math.round(bpm));
-    }
-    
-    // 3. Cluster Voting System
-    // Find the most frequent BPM with a +/- 1 BPM tolerance
-    let counts = {};
-    bpmCounts.forEach(bpm => {
-        counts[bpm] = (counts[bpm] || 0) + 1;
-    });
-    
-    let bestBpm = 0;
-    let maxCount = 0;
-    
-    for (let bpmStr in counts) {
-        let bpm = parseInt(bpmStr);
-        // Add adjacent BPM counts to smooth out micro-variations
-        let clusterScore = (counts[bpm] || 0) + (counts[bpm - 1] || 0) + (counts[bpm + 1] || 0);
-        
-        if (clusterScore > maxCount) {
-            maxCount = clusterScore;
-            bestBpm = bpm;
-        }
-    }
-    
-    return bestBpm;
-}
+/* ══════════════════════════════════════════════════════════════
+   BPM ENGINE — onset-strength + autocorrelation (native Web Audio)
 
-/* ══ Main BPM detection function — Native DSP via OfflineAudioContext ══ */
-async function detectBpm(file) {
-    const resultElement = document.getElementById('bpm-resultat');
-    if (resultElement) resultElement.innerText = "Analyse...";
+   Pipeline (no external libraries, Web Audio API only):
+     OfflineAudioContext @ 4000 Hz   (8000 Hz fallback if a browser
+                                       refuses sub-8 kHz contexts)
+       → BiquadFilter highpass 30 Hz  Q 0.707   (drop sub-bass rumble / DC)
+       → BiquadFilter lowpass  100 Hz Q 0.707   (keep the kick band only)
+       → 20 ms sliding-window energy envelope
+       → half-wave rectified derivative          (onset strength function —
+                                                  survives brick-wall limiting)
+       → downsample to ~100 Hz
+       → 20 s centre segment, subtract DC mean
+       → autocorrelation ACF(τ) over lags matching 60–185 BPM
+       → pick the lag with the highest correlation
+       → octave correction: if BPM > 140 and ACF(2τ) ≥ 0.40·ACF(τ)
+                            use 2τ  (folds trap octave-doubling back down)
 
+   TEST CASES this engine is tuned to pass:
+     1. Trap, slow tempo ~75–80 BPM ("7 rings" — Ariana Grande):
+        previously read 157 (octave doubling). The correction folds 2τ back,
+        so it must report ~78, NOT 150–160.
+     2. Compressed / brick-wall rap (Jul and similar urban masters):
+        raw peak-picking returned 0 because every sample sits near full scale;
+        the onset-strength derivative still catches the kick transients → never 0.
+     3. House, 4-on-the-floor ~128 BPM:
+        clean kick → autocorrelation locks the 128 lag accurately.
+══════════════════════════════════════════════════════════════ */
+
+const ENV_FPS = 100;   // onset-envelope frame-rate (Hz)
+const BPM_MIN = 60;
+const BPM_MAX = 185;
+
+/* Lowest-latency offline context for the kick band. 4000 Hz per spec, with an
+   8000 Hz fallback because a few engines reject contexts below 8 kHz. */
+function makeKickContext(durationSec){
+  for (const sr of [4000, 8000]){
     try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const arrayBuffer = await file.arrayBuffer();
-        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-        
-        // 1. Limit analysis to the first 60 seconds for insane speed
-        const duration = Math.min(audioBuffer.duration, 60);
-        const sampleRate = audioBuffer.sampleRate;
-        
-        // 2. Create lightning-fast Offline Context (1 channel is enough for BPM)
-        const offlineCtx = new OfflineAudioContext(1, sampleRate * duration, sampleRate);
-        
-        const source = offlineCtx.createBufferSource();
-        source.buffer = audioBuffer;
-        
-        // 3. Professional DSP Filter: Isolate the Kick drum (Lowpass filter at 150Hz)
-        const filter = offlineCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(150, offlineCtx.currentTime);
-        
-        // Connect pipeline: Source -> Filter -> Virtual Destination
-        source.connect(filter);
-        filter.connect(offlineCtx.destination);
-        source.start(0);
-        
-        // 4. Render the audio at hardware speed (takes a few milliseconds)
-        const renderedBuffer = await offlineCtx.startRendering();
-        const bufferData = renderedBuffer.getChannelData(0);
-        
-        // 5. Peak matching algorithm
-        const bpm = calculateBpmFromPeaks(bufferData, sampleRate);
-
-        // 6. Extract Hz (ZCR), RMS, and signal variance from the ORIGINAL unfiltered audio
-        const originalData = audioBuffer.getChannelData(0);
-        const sigLen = Math.min(originalData.length, sampleRate * 60);
-        const dur = Math.min(audioBuffer.duration, 60);
-
-        // ZCR for Hz
-        let zc = 0, pos = originalData[0] > 0;
-        for (let i = 1; i < sigLen; i++) {
-            if (pos && originalData[i] < -0.005) pos = false;
-            else if (!pos && originalData[i] > 0.005) { pos = true; zc++; }
-        }
-        const hz = Math.round(zc / dur);
-
-        // RMS
-        let sumSq = 0;
-        for (let i = 0; i < sigLen; i++) sumSq += originalData[i] * originalData[i];
-        const rms = Math.sqrt(sumSq / sigLen);
-
-        // Signal variance
-        let sumDev = 0;
-        for (let i = 0; i < sigLen; i++) sumDev += Math.abs(Math.abs(originalData[i]) - rms);
-        const signalVariance = sumDev / sigLen;
-
-        // 7. Extract label from filename
-        const label = (() => {
-            let l = file.name.replace(/\.[^/.]+$/, '');
-            if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(l) || l.length > 40)
-                l = lang === 'en' ? 'Audio Analysis' : 'Analyse audio';
-            return l;
-        })();
-
-        // 8. Show results
-        showResults(bpm, hz, label, rms, signalVariance);
-        console.log(`[ZenHertz] Analysis successful. BPM: ${bpm}, Hz: ${hz}`);
-
-    } catch (error) {
-        console.error("[ZenHertz] Error analyzing BPM:", error);
-        S('sc-analyzing').classList.add('hidden');
-        S('sc-ready').classList.remove('hidden');
-        showAlert(L('errLink'));
-    }
+      const frames = Math.max(1, Math.ceil(durationSec * sr));
+      return { ctx: new OfflineAudioContext(1, frames, sr), sr };
+    } catch (_) { /* try the next rate */ }
+  }
+  const frames = Math.max(1, Math.ceil(durationSec * 8000));
+  return { ctx: new OfflineAudioContext(1, frames, 8000), sr: 8000 };
 }
 
-/* ── Analyse BPM native (utilisé par les chemins vidéo/FFmpeg) ── */
-async function analyzeRawSamples(data, sr, dur, label){
-  // Calcul du BPM via native algorithm
-  const step = Math.floor(sr / 4);
-  let peaks = [];
-  let maxAmp = 0;
-  for (let i = 0; i < data.length; i++) {
-    if (Math.abs(data[i]) > maxAmp) maxAmp = Math.abs(data[i]);
+/* 20 ms energy envelope → half-wave rectified derivative, decimated to ~100 Hz. */
+function onsetEnvelope(x, sr){
+  const win = Math.max(1, Math.round(0.02 * sr));     // 20 ms window
+  const hop = Math.max(1, Math.round(sr / ENV_FPS));  // → ~100 Hz frames
+  const frames = Math.floor((x.length - win) / hop) + 1;
+  if (frames < 2) return new Float32Array(0);
+  const energy = new Float32Array(frames);
+  for (let f = 0; f < frames; f++){
+    const base = f * hop;
+    let e = 0;
+    for (let j = 0; j < win; j++){ const s = x[base + j]; e += s * s; }
+    energy[f] = e / win;
   }
-  const threshold = maxAmp * 0.75;
-  for (let i = 0; i < data.length; i++) {
-    if (data[i] > threshold) { peaks.push(i); i += step; }
+  const osf = new Float32Array(frames);
+  for (let f = 1; f < frames; f++){
+    const d = energy[f] - energy[f - 1];
+    osf[f] = d > 0 ? d : 0;     // half-wave rectify → onset strength
   }
-  
-  let bpm = 0;
-  if (peaks.length >= 2) {
-    let intervals = [];
-    for (let i = 1; i < peaks.length; i++) intervals.push(peaks[i] - peaks[i - 1]);
-    let counts = {};
-    intervals.forEach(ival => { const r = Math.round(ival / 100) * 100; counts[r] = (counts[r] || 0) + 1; });
-    let maxC = 0, bestI = 0;
-    for (let ival in counts) { if (counts[ival] > maxC) { maxC = counts[ival]; bestI = parseInt(ival); } }
-    if (bestI) {
-      let raw = (60 * sr) / bestI;
-      while (raw < 60) raw *= 2;
-      while (raw > 180) raw /= 2;
-      bpm = raw;
+  return osf;
+}
+
+/* Autocorrelation tempo estimate from a ~100 Hz onset-strength function. */
+function bpmFromOnset(osf){
+  const fps = ENV_FPS;
+  const segLen = Math.min(osf.length, 20 * fps);   // 20 s centre segment
+  if (segLen < fps) return 0;
+  const from = Math.floor((osf.length - segLen) / 2);
+  const seg = osf.subarray(from, from + segLen);
+
+  let mean = 0;
+  for (let i = 0; i < segLen; i++) mean += seg[i];
+  mean /= segLen;
+  const s = new Float32Array(segLen);
+  for (let i = 0; i < segLen; i++) s[i] = seg[i] - mean;   // remove DC mean
+
+  const lagMin = Math.max(2, Math.floor(60 * fps / BPM_MAX));
+  const lagMax = Math.min(segLen - 1, Math.ceil(60 * fps / BPM_MIN));
+  if (lagMax <= lagMin) return 0;
+
+  const acf = new Float32Array(lagMax + 1);
+  let best = 0, bestLag = 0;
+  for (let lag = lagMin; lag <= lagMax; lag++){
+    let sum = 0;
+    for (let i = 0, n = segLen - lag; i < n; i++) sum += s[i] * s[i + lag];
+    acf[lag] = sum;
+    if (sum > best){ best = sum; bestLag = lag; }
+  }
+  if (bestLag === 0 || best <= 0) return 0;
+
+  let bpm = 60 * fps / bestLag;
+  if (bpm > 140){                       // octave correction (trap doubling)
+    const dbl = bestLag * 2;
+    if (dbl <= lagMax && acf[dbl] >= 0.40 * best) bpm = 60 * fps / dbl;
+  }
+  return Math.round(bpm);
+}
+
+/* Decode-agnostic rhythm analysis: render the kick band, then autocorrelate. */
+async function analyzeRhythm(audioBuffer){
+  const dur = Math.min(audioBuffer.duration || 0, 60) || 1;
+  const { ctx, sr } = makeKickContext(dur);
+
+  const src = ctx.createBufferSource();
+  src.buffer = audioBuffer;
+
+  const hp = ctx.createBiquadFilter();
+  hp.type = 'highpass'; hp.frequency.value = 30;  hp.Q.value = 0.707;
+  const lp = ctx.createBiquadFilter();
+  lp.type = 'lowpass';  lp.frequency.value = 100; lp.Q.value = 0.707;
+
+  src.connect(hp); hp.connect(lp); lp.connect(ctx.destination);
+  src.start(0);
+
+  const rendered = await ctx.startRendering();
+  return bpmFromOnset(onsetEnvelope(rendered.getChannelData(0), sr));
+}
+
+/* ── Compact in-place radix-2 FFT (native JS, no libraries) ── */
+function fftRadix2(re, im){
+  const n = re.length;
+  for (let i = 1, j = 0; i < n; i++){
+    let bit = n >> 1;
+    for (; j & bit; bit >>= 1) j ^= bit;
+    j ^= bit;
+    if (i < j){
+      let t = re[i]; re[i] = re[j]; re[j] = t;
+      t = im[i]; im[i] = im[j]; im[j] = t;
     }
   }
-
-  // Hz (ZCR)
-  let zc = 0, pos = data[0] > 0;
-  for (let i = 1; i < data.length; i++) {
-    if (pos && data[i] < -0.005) pos = false;
-    else if (!pos && data[i] > 0.005) { pos = true; zc++; }
+  for (let len = 2; len <= n; len <<= 1){
+    const half = len >> 1, ang = -2 * Math.PI / len;
+    const wr = Math.cos(ang), wi = Math.sin(ang);
+    for (let i = 0; i < n; i += len){
+      let cr = 1, ci = 0;
+      for (let k = 0; k < half; k++){
+        const a = i + k, b = a + half;
+        const tr = re[b] * cr - im[b] * ci;
+        const ti = re[b] * ci + im[b] * cr;
+        re[b] = re[a] - tr; im[b] = im[a] - ti;
+        re[a] += tr;        im[a] += ti;
+        const ncr = cr * wr - ci * wi;
+        ci = cr * wi + ci * wr; cr = ncr;
+      }
+    }
   }
-  const hz = Math.round(zc / dur);
+}
 
-  // RMS
-  const sigLen = Math.min(data.length, sr * 60);
+/* Spectral character (dominant Hz + band-energy split) plus loudness/dynamics. */
+function analyzeSpectrum(audioBuffer){
+  const sr = audioBuffer.sampleRate;
+  const ch = audioBuffer.getChannelData(0);
+  const total = Math.min(ch.length, Math.floor(sr * 60));
+
   let sumSq = 0;
-  for (let i = 0; i < sigLen; i++) sumSq += data[i] * data[i];
-  const rms = Math.sqrt(sumSq / sigLen);
-
-  // Signal variance
+  for (let i = 0; i < total; i++) sumSq += ch[i] * ch[i];
+  const rms = Math.sqrt(sumSq / Math.max(1, total));
   let sumDev = 0;
-  for (let i = 0; i < sigLen; i++) sumDev += Math.abs(Math.abs(data[i]) - rms);
-  const signalVariance = sumDev / sigLen;
+  for (let i = 0; i < total; i++) sumDev += Math.abs(Math.abs(ch[i]) - rms);
+  const variance = sumDev / Math.max(1, total);
 
-  showResults(bpm, hz, label, rms, signalVariance);
+  const N = 32768;
+  const re = new Float32Array(N), im = new Float32Array(N);
+  const offset = Math.max(0, Math.floor((total - N) / 2));
+  const have = Math.min(N, Math.max(0, total - offset));
+  for (let i = 0; i < have; i++){
+    const w = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1));   // Hann window
+    re[i] = ch[offset + i] * w;
+  }
+  fftRadix2(re, im);
+
+  const half = N >> 1, binHz = sr / N;
+  let mTotal = 0, mWeighted = 0, sub = 0, bass = 0, lowMid = 0, bright = 0;
+  for (let k = 1; k < half; k++){
+    const mag = Math.hypot(re[k], im[k]);
+    const f = k * binHz;
+    mTotal += mag; mWeighted += mag * f;
+    if      (f < 60)   sub    += mag;
+    else if (f < 250)  bass   += mag;
+    else if (f < 2000) lowMid += mag;
+    else               bright += mag;
+  }
+  const eAll = sub + bass + lowMid + bright || 1;
+  return {
+    hz: mTotal > 0 ? Math.round(mWeighted / mTotal) : 0,
+    rms, variance,
+    bands: { sub: sub / eAll, bass: bass / eAll, lowMid: lowMid / eAll, bright: bright / eAll }
+  };
 }
 
-async function processArrayBuffer(ab,label){
-  const ctx=getAudioCtx();
-  if(ctx.state==='suspended') await ctx.resume();
-  const buf=await decodeAudioDataUniversal(ctx,ab);
-  const sr=buf.sampleRate,durFull=buf.duration;
-  const rawData=buf.getChannelData(0);
-  const data=rawData.subarray(0,Math.min(rawData.length,Math.floor(90*sr)));
-  analyzeRawSamples(data,sr,Math.min(durFull,90),label);
+/* Single analysis entry-point shared by every decode path. */
+async function analyzeBuffer(audioBuffer, label){
+  if (!audioBuffer || !audioBuffer.length) throw new Error('empty_buffer');
+  const bpm  = await analyzeRhythm(audioBuffer);
+  const spec = analyzeSpectrum(audioBuffer);
+  showResults(bpm, spec.hz, label, spec.rms, spec.variance, spec.bands);
+}
+
+/* ══ Main BPM detection — native DSP. Signature unchanged: detectBpm(file) ══ */
+async function detectBpm(file){
+  const ctx = getAudioCtx();
+  if (ctx.state === 'suspended'){ try { await ctx.resume(); } catch (_) {} }
+  const arrayBuffer = await file.arrayBuffer();
+  const audioBuffer = await decodeAudioDataUniversal(ctx, arrayBuffer);
+  await analyzeBuffer(audioBuffer, labelFromFile(file));
+}
+
+/* Raw Float32 samples (iOS capture path) → AudioBuffer → shared analysis. */
+async function analyzeRawSamples(data, sr, dur, label){
+  const ctx = getAudioCtx();
+  const buf = ctx.createBuffer(1, Math.max(1, data.length), sr || ctx.sampleRate);
+  buf.copyToChannel(data, 0);
+  await analyzeBuffer(buf, label);
+}
+
+/* Encoded bytes (FFmpeg / MediaRecorder paths) → AudioBuffer → shared analysis. */
+async function processArrayBuffer(ab, label){
+  const ctx = getAudioCtx();
+  if (ctx.state === 'suspended') await ctx.resume();
+  const buf = await decodeAudioDataUniversal(ctx, ab);
+  await analyzeBuffer(buf, label);
 }
 
 /* ── Fallback iOS : ScriptProcessorNode ── */
@@ -823,44 +889,51 @@ function processViaAnalyserSampling(file,label){
   });
 }
 
-/* ══ FILE UPLOAD (audio + video) — direct detectBpm() call ══ */
-S('audio-input').addEventListener('change',async e=>{
-  const file=e.target.files[0];if(!file)return;
-  hideAlert();
+/* ══ FILE UPLOAD — file only (audio + video), routed through detectBpm() ══ */
+function showAnalyzing(){
   S('sc-ready').classList.add('hidden');
   S('sc-analyzing').classList.remove('hidden');
-  S('scan-title').textContent=L('scanning');
-  S('scan-sub').textContent=L('analyzinglbl');
-  S('home-btn').style.display='flex';
+  S('scan-title').textContent = L('scanning');
+  S('scan-sub').textContent   = L('analyzinglbl');
+  S('home-btn').style.display = 'flex';
+}
 
-  // Fichier vidéo détecté → chemin vidéo (ne peut pas passer par AudioContext)
-  const isVideo=file.type.startsWith('video/')||/\.(mp4|mov|avi|mkv|webm|m4v|3gp)$/i.test(file.name);
+function showAnalysisError(){
+  S('sc-analyzing').classList.add('hidden');
+  S('sc-ready').classList.remove('hidden');
+  showAlert(L('errFile'));
+}
 
-  if(!isVideo){
-    // Audio file → Direct native DSP via OfflineAudioContext (ultra-rapide)
-    try{await detectBpm(file);return;}
-    catch(err){/* audio non reconnu → tente chemin vidéo */}
+S('audio-input').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';              // allow re-selecting the same file later
+  hideAlert();
+  showAnalyzing();
+
+  const isVideo = file.type.startsWith('video/') ||
+                  /\.(mp4|mov|avi|mkv|webm|m4v|3gp)$/i.test(file.name);
+
+  // Audio (and most MP4 / M4A) decode natively and fast via detectBpm().
+  if (!isVideo){
+    try { await detectBpm(file); return; }
+    catch (_) { /* not decodable as audio → fall through to extraction paths */ }
   }
 
-  // Chemin vidéo  MediaRecorder (PC Chrome/Firefox)
-  if(typeof MediaRecorder!=='undefined'){
-    try{await processViaVideoElement(file,labelFromFile(file));return;}
-    catch(err2){console.warn('[MediaRecorder]',err2);}
-    // Chrome peut décoder l'audio MP4 directement
-    try{const ab=await file.arrayBuffer();await processArrayBuffer(ab,labelFromFile(file));return;}
-    catch(err2b){console.warn('[ArrayBuffer fallback]',err2b);}
+  // Video / container extraction fallbacks — each feeds the same pipeline.
+  if (typeof MediaRecorder !== 'undefined'){
+    try { await processViaVideoElement(file, labelFromFile(file)); return; } catch (_) {}
+    try { const ab = await file.arrayBuffer(); await processArrayBuffer(ab, labelFromFile(file)); return; } catch (_) {}
   }
-
-  // Chemin vidéo  FFmpeg.wasm
-  try{
-    S('scan-sub').textContent=lang==='en'?'Loading decoder…':'Chargement du décodeur…';
-    await processViaFFmpeg(file,labelFromFile(file));
+  try {
+    S('scan-sub').textContent = lang === 'en' ? 'Loading decoder…' : 'Chargement du décodeur…';
+    await processViaFFmpeg(file, labelFromFile(file));
     return;
-  }catch(err3){console.warn('[FFmpeg]',err3);}
+  } catch (_) {}
+  try { await processViaAnalyserSampling(file, labelFromFile(file)); return; } catch (_) {}
 
-  // Chemin vidéo iOS ScriptProcessorNode (last resort)
-  try{await processViaAnalyserSampling(file,labelFromFile(file));}
-  catch(err4){goHome();}
+  // Every path failed → friendly message, never a crash.
+  showAnalysisError();
 });
 
 function labelFromFile(file) {
@@ -1012,150 +1085,102 @@ function processViaVideoElement(file, label){
   });
 }
 
-/* ══ URL ANALYSIS ══ */
-function triggerAnalyzeLink(){
-  const url=S('url-input').value.trim();
-  if(!url){showAlert(L('errEmpty'));return;}
-  hideAlert();
-  analyzeLink(url);
-}
-
-S('url-input').addEventListener('keydown',e=>{if(e.key==='Enter')triggerAnalyzeLink();});
-
-async function analyzeLink(url){
-  S('sc-ready').classList.add('hidden');
-  S('sc-analyzing').classList.remove('hidden');
-  S('scan-title').textContent=L('extracting');
-  S('scan-sub').textContent=L('extractsub');
-  S('home-btn').style.display='flex';
-
-  const COBALT=[
-    'https://cobalt-api.v0l.io/',
-    'https://cobalt.api.timkodiert.de/',
-    'https://api.cobalt.tools/',
-  ];
-
-  let audioUrl=null;
-  for(const inst of COBALT){
-    try{
-      const r=await fetch(inst,{
-        method:'POST',
-        headers:{'Accept':'application/json','Content-Type':'application/json'},
-        body:JSON.stringify({url,downloadMode:'audio',audioFormat:'mp3',filenameStyle:'basic'}),
-        signal:AbortSignal.timeout(9000)
-      });
-      if(!r.ok) continue;
-      const d=await r.json();
-      const u=d.url||d.tunnel;
-      if(u){audioUrl=u;break;}
-    }catch(e){console.warn('[Cobalt]',inst,e.message);}
-  }
-
-  if(!audioUrl){
-    S('sc-analyzing').classList.add('hidden');
-    S('sc-ready').classList.remove('hidden');
-    S('home-btn').style.display='none';
-    showAlert(L('errLink'));
-    return;
-  }
-
-  S('scan-title').textContent=L('scanning');
-  S('scan-sub').textContent=L('analyzinglbl');
-
-  const PROXIES=[
-    u=>u,
-    u=>'https://corsproxy.io/?'+encodeURIComponent(u),
-    u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),
-  ];
-
-  let ab=null;
-  for(const makeUrl of PROXIES){
-    try{
-      const r=await fetch(makeUrl(audioUrl),{signal:AbortSignal.timeout(20000)});
-      if(!r.ok) continue;
-      const buf=await r.arrayBuffer();
-      if(buf.byteLength>1000){ab=buf;break;}
-    }catch(e){console.warn('[fetch]',e.message);}
-  }
-
-  if(!ab){
-    S('sc-analyzing').classList.add('hidden');
-    S('sc-ready').classList.remove('hidden');
-    S('home-btn').style.display='none';
-    showAlert(L('errLink'));
-    return;
-  }
-
-  let label='Audio';
-  try{const u=new URL(url);label=u.hostname.replace('www.','')+' '+u.pathname.split('/').filter(Boolean).pop();}catch{}
-  await processArrayBuffer(ab,label);
-}
-
 let cachedShareCanvas=null;
 
-/* ══ CAPTURE BILAN (SHARE) ══ */
+/* Build the share text — BPM, Hz and a one-line hormonal-effects summary. */
+function buildShareText(){
+  const zen = Math.max(0, 100 - fatigueScore(lastBpm, lastHz));
+  const bpm = (lastBpm > 0 && isFinite(lastBpm)) ? lastBpm : '—';
+  const hz  = (lastHz > 0) ? lastHz.toLocaleString() : '—';
+  const eff = (lastEffects && lastEffects.length) ? (lang === 'en' ? lastEffects[0].en : lastEffects[0].fr) : '';
+  if(lang === 'en'){
+    return `ZenHertz score: ${zen} 🧠\nTempo: ${bpm} BPM 🥁\nFrequency: ${hz} Hz 🌊${eff ? '\n\n' + eff : ''}\n\nSee how your music affects your brain: https://zenhertz.com`;
+  }
+  return `Score ZenHertz : ${zen} 🧠\nRythme : ${bpm} BPM 🥁\nFréquence : ${hz} Hz 🌊${eff ? '\n\n' + eff : ''}\n\nTeste l'impact de ta musique sur ton cerveau : https://zenhertz.com`;
+}
+
+/* Clipboard copy with a legacy execCommand fallback. Never throws. */
+async function copyText(txt){
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(txt);
+      return true;
+    }
+  }catch(_){}
+  try{
+    const ta=document.createElement('textarea');
+    ta.value=txt; ta.setAttribute('readonly','');
+    ta.style.cssText='position:fixed;top:-9999px;left:-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok=document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  }catch(_){ return false; }
+}
+
+function flashBtn(btn, original, msg){
+  if(!btn) return;
+  btn.innerHTML=msg;
+  setTimeout(()=>{ btn.innerHTML=original; }, 1600);
+}
+
+/* ══ SHARE — Web Share API on mobile, clipboard fallback on desktop ══ */
 async function captureBilan(){
   const btn=S('btn-share');
-  const originalHTML=btn.innerHTML;
-  btn.innerHTML=`📸 <span>${L('capturing')}</span>`;
+  const originalHTML=btn ? btn.innerHTML : '';
+  const shareText=buildShareText();
+  const copiedMsg=lang==='en' ? '✓ Copied' : '✓ Copié';
 
   try{
     let canvas=cachedShareCanvas;
-
-    if(!canvas){
+    if(!canvas && typeof html2canvas==='function'){
+      if(btn) btn.innerHTML=`📸 <span>${L('capturing')}</span>`;
       const target=S('rleft');
       const actionsDiv=target.querySelector('.backbtn').parentElement;
-      actionsDiv.style.display='none';
-      canvas=await html2canvas(target,{
-        backgroundColor:theme==='dark'?'#04040e':'#eeeef5',
-        scale:1,useCORS:true,logging:false
-      });
-      actionsDiv.style.display='flex';
+      try{
+        actionsDiv.style.display='none';
+        canvas=await html2canvas(target,{
+          backgroundColor:theme==='dark'?'#04040e':'#eeeef5',
+          scale:1,useCORS:true,logging:false
+        });
+      }catch(_){ canvas=null; }
+      finally{ actionsDiv.style.display='flex'; if(btn) btn.innerHTML=originalHTML; }
     }
 
-    btn.innerHTML=originalHTML;
-
-    const zenScore=Math.max(0,100-fatigueScore(lastBpm,lastHz));
-    const shareText=`Score Zen Hertz : ${zenScore} 🧠\nRythme : ${lastBpm} BPM 🥁\nFréquence : ${lastHz} Hz 🌊\n\nViens tester l'impact de ta musique sur ton cerveau : https://zenhertz.com`;
-
+    // Mobile: share the image + text via the Web Share API.
     if(typeof navigator.share==='function'){
       try{
-        const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
-        const file=new File([blob],`ZenHertz_${lastBpm}BPM.png`,{type:'image/png'});
-        if(navigator.canShare&&navigator.canShare({files:[file]})){
+        const blob=await new Promise(res=>{ try{ canvas.toBlob(res,'image/png'); }catch(_){ res(null); } });
+        const file=blob ? new File([blob],`ZenHertz_${(lastBpm>0&&isFinite(lastBpm))?lastBpm:''}BPM.png`,{type:'image/png'}) : null;
+        if(file && navigator.canShare && navigator.canShare({files:[file]})){
           await navigator.share({title:'ZenHertz',text:shareText,files:[file]});
-          btn.innerHTML=originalHTML;
           return;
         }
-      }catch(e){if(e.name==='AbortError'){btn.innerHTML=originalHTML;return;}}
-
-      try{
         await navigator.share({title:'ZenHertz',text:shareText});
-        btn.innerHTML=originalHTML;
         return;
-      }catch(e){if(e.name==='AbortError'){btn.innerHTML=originalHTML;return;}}
+      }catch(e){
+        if(e && e.name==='AbortError') return;   // user cancelled — do nothing
+        // otherwise fall through to clipboard
+      }
     }
 
-    await navigator.clipboard.writeText(shareText);
-    alert('Résultat copié dans le presse-papier !');
-
-  }catch(err){
-    console.error(err);
-    btn.innerHTML=originalHTML;
-    alert('Erreur lors de la capture de l\'image.');
+    // Desktop / no Web Share API → copy the text summary.
+    const ok=await copyText(shareText);
+    if(btn) flashBtn(btn, originalHTML, ok ? copiedMsg : originalHTML);
+  }catch(_){
+    const ok=await copyText(shareText);
+    if(btn) flashBtn(btn, originalHTML, ok ? copiedMsg : originalHTML);
   }
 }
 
-/* ══ COPIER TEXTE SEUL ══ */
+/* ══ COPY TEXT ONLY ══ */
 async function copierTexte(){
-  const zenScore=Math.max(0,100-fatigueScore(lastBpm,lastHz));
-  const txt=`Score Zen Hertz : ${zenScore} 🧠\nRythme : ${lastBpm} BPM 🥁\nFréquence : ${lastHz} Hz 🌊\n\nViens tester l'impact de ta musique sur ton cerveau : https://zenhertz.com`;
-  try{
-    await navigator.clipboard.writeText(txt);
-    alert('Résultat copié dans le presse-papier !');
-  }catch(e){
-    alert(txt);
-  }
+  const btn=S('btn-copy');
+  const original=btn ? btn.innerHTML : '';
+  const ok=await copyText(buildShareText());
+  const msg=ok ? (lang==='en'?'✓ Copied':'✓ Copié') : (lang==='en'?'Copy failed':'Échec');
+  if(btn) flashBtn(btn, original, msg);
 }
 
 /* ══ FEEDBACK MODAL ══ */
@@ -1204,7 +1229,7 @@ const MODAL_CONTENT={
         {h:'Dopamine & circuit de la récompense',p:`La musique est l'un des seuls stimuli non-chimiques capables d'activer le <strong>noyau accumbens</strong> le centre du plaisir du cerveau. Une étude de Salimpoor et al. (2011, <em>Nature Neuroscience</em>) a mesuré des pics de dopamine allant jusqu'à +65% lors de l'écoute de musique émotionnellement intense. ZenHertz analyse ces patterns pour estimer l'impact probable sur votre circuit de récompense.`},
         {h:'Cortisol & stress acoustique',p:`Des tempos très rapides (>160 BPM) peuvent déclencher une réponse de stress, augmentant le cortisol via l'axe HHS. En revanche, les fréquences graves (40–100 Hz) stimulent le nerf vague, réduisant le cortisol et favorisant la récupération principe utilisé en musicothérapie clinique.`},
         {h:'Comment ZenHertz calcule-t-il ?',p:`L'algorithme analyse le fichier audio en deux temps :`,list2:[
-          ['Détection de pics d\'amplitude','calcul du BPM par intervalles inter-battements'],
+          ['Autocorrélation de l\'enveloppe d\'attaque','BPM via la périodicité du kick isolé (filtre passe-bas)'],
           ['FFT (Transformée de Fourier rapide)','isolation de la fréquence dominante réelle en Hz'],
         ],p2:`Ces valeurs sont croisées avec des modèles neuroacoustiques pour estimer l'impact hormonal probable. Tout le traitement s'effectue <strong>localement dans votre navigateur</strong> aucune donnée ne quitte votre appareil.`},
       ]
@@ -1223,7 +1248,7 @@ const MODAL_CONTENT={
         {h:'Dopamine & the reward circuit',p:`Music is one of the only non-chemical stimuli capable of activating the <strong>nucleus accumbens</strong> the brain's pleasure center. A study by Salimpoor et al. (2011, <em>Nature Neuroscience</em>) measured dopamine peaks of up to +65% during emotionally intense music listening. ZenHertz analyzes these patterns to estimate the likely impact on your reward circuit.`},
         {h:'Cortisol & acoustic stress',p:`Very fast tempos (>160 BPM) can trigger a stress response, increasing cortisol through the HPA axis. Conversely, bass frequencies (40–100 Hz) stimulate the vagus nerve, reducing cortisol and promoting recovery the same principle used in clinical music therapy.`},
         {h:'How does ZenHertz calculate?',p:`The algorithm analyzes the audio file in two steps:`,list2:[
-          ['Amplitude peak detection','BPM calculation via inter-beat intervals'],
+          ['Onset-envelope autocorrelation','BPM from the isolated kick periodicity (low-pass filtered)'],
           ['FFT (Fast Fourier Transform)','isolation of the real dominant frequency in Hz'],
         ],p2:`These values are cross-referenced with neuroacoustic models to estimate the probable hormonal impact. All processing happens <strong>locally in your browser</strong> no data ever leaves your device.`},
       ]
@@ -1234,7 +1259,7 @@ const MODAL_CONTENT={
       logo:'⚖️',title:'Mentions légales',sub:'Transparence & confidentialité',
       sections:[
         {h:'Disclaimer médical',p:`ZenHertz est un outil de <strong>divertissement et d'exploration personnelle</strong>. Les scores BPM, Hz, les estimations hormonales et les profils neuroacoustiques générés sont des <strong>approximations algorithmiques</strong> basées sur l'analyse du signal audio.<br><br>Ces résultats ne constituent en aucun cas un diagnostic médical, psychiatrique ou neurologique. Ils ne remplacent pas l'avis d'un professionnel de santé. En cas de troubles du sommeil, d'anxiété ou de tout autre symptôme, consultez un médecin qualifié.`},
-        {h:"Limites de l'algorithme",p:`L'analyse repose sur la détection de pics d'amplitude (BPM) et une FFT pour la fréquence dominante (Hz). Elle fonctionne de manière optimale sur des morceaux avec une structure rythmique claire. Les résultats peuvent varier selon la qualité du fichier audio, le genre musical ou la complexité harmonique du morceau.`},
+        {h:"Limites de l'algorithme",p:`L'analyse repose sur l'autocorrélation de l'enveloppe rythmique (BPM) et une FFT pour la fréquence dominante (Hz). Elle fonctionne de manière optimale sur des morceaux avec une structure rythmique claire. Les résultats peuvent varier selon la qualité du fichier audio, le genre musical ou la complexité harmonique du morceau.`},
         {h:'🔒 Confidentialité & données',p:`ZenHertz respecte intégralement votre vie privée :`,list2:[
           ['Tout traitement est 100 % local','votre fichier audio est analysé directement dans votre navigateur'],
           ['Aucun fichier n\'est envoyé sur un serveur','vos musiques restent sur votre appareil'],
@@ -1249,7 +1274,7 @@ const MODAL_CONTENT={
       logo:'⚖️',title:'Legal Notice',sub:'Transparency & privacy',
       sections:[
         {h:'Medical disclaimer',p:`ZenHertz is a <strong>entertainment and personal exploration tool</strong>. BPM scores, Hz values, hormonal estimates and neuroacoustic profiles are <strong>algorithmic approximations</strong> based on audio signal analysis.<br><br>These results do not constitute a medical, psychiatric or neurological diagnosis. They do not replace the advice of a healthcare professional. If you experience sleep disorders, anxiety or any other symptoms, please consult a qualified physician.`},
-        {h:'Algorithm limitations',p:`The analysis uses amplitude peak detection (BPM) and FFT for the dominant frequency (Hz). It works best on tracks with a clear rhythmic structure. Results may vary depending on audio file quality, music genre, or harmonic complexity.`},
+        {h:'Algorithm limitations',p:`The analysis uses rhythmic-envelope autocorrelation (BPM) and an FFT for the dominant frequency (Hz). It works best on tracks with a clear rhythmic structure. Results may vary depending on audio file quality, music genre, or harmonic complexity.`},
         {h:'🔒 Privacy & data',p:`ZenHertz fully respects your privacy:`,list2:[
           ['All processing is 100% local','your audio file is analyzed directly in your browser'],
           ['No file is sent to a server','your music stays on your device'],
