@@ -364,7 +364,38 @@ function generateTags(bpm,hz,wt){
   return out.slice(0,4).map(o=>`<span class="tag ${o.t}">${T[o.k]}</span>`).join('');
 }
 
-function fatigueScore(bpm,hz){let s=0;if(bpm>140)s+=40;else if(bpm>110)s+=20;if(hz>3000)s+=40;else if(hz>1500)s+=20;return Math.min(s,100);}
+/* Fatigue score 0–100. Based on parameters professional MIR tools (Essentia,
+   AcousticBrainz) use: bright-band energy (cochlear hair cells at 3–6 kHz
+   fatigue fastest), RMS loudness, dynamic range (low variance = brick-wall
+   mastering = more fatiguing), extreme BPM (>155 only), dominant Hz peak
+   in the harsh 3–8 kHz band. Moderate dance tempos are NOT a fatigue risk. */
+function fatigueScore(bpm, hz, bands, rms, variance, peaks){
+  let s = 0;
+  const br = (bands && bands.bright) || 0;
+  if      (br > 0.48) s += 45;
+  else if (br > 0.38) s += 25;
+  else if (br > 0.28) s += 10;
+
+  const r = isFinite(rms) ? Math.min(rms, 0.5) : 0.15;
+  if      (r > 0.35) s += 20;
+  else if (r > 0.25) s += 10;
+
+  const v = isFinite(variance) ? variance : 0.1;
+  if      (v < 0.03) s += 20;
+  else if (v < 0.06) s += 10;
+
+  if      (bpm > 165) s += 20;
+  else if (bpm > 155) s += 10;
+
+  if (peaks && peaks.length > 0){
+    const p = peaks[0];
+    if      (p >= 3000 && p <= 8000) s += 20;
+    else if (p >= 2000 && p < 3000)  s += 10;
+  } else if (hz > 3500) {
+    s += 15;
+  }
+  return Math.min(s, 100);
+}
 
 const HCOL={dopamine:'linear-gradient(90deg,#7c3aed,#a855f7)',cortisol:'linear-gradient(90deg,#f59e0b,#ef4444)',serotonin:'linear-gradient(90deg,#10b981,#059669)',melatonin:'linear-gradient(90deg,#6366f1,#4338ca)',endorphins:'linear-gradient(90deg,#ec4899,#db2777)',adr:'linear-gradient(90deg,#f59e0b,#d97706)'};
 
@@ -461,7 +492,7 @@ function showResults(bpm, hz, label, rms = 0.15, signalVariance = 0.1, bands = n
   typeWords(S('rdesc'), summaryFromEffects(lastEffects), 64);
   S('rtags').innerHTML = generateTags(bpm, hz, wt);
 
-  const fs = fatigueScore(bpm, hz);
+  const fs = fatigueScore(bpm, hz, bands, rms, signalVariance, peaks);
   const ff = S('ffill'), fl = S('flbl');
   if (fs >= 60){ ff.style.cssText = `width:${fs}%;background:linear-gradient(90deg,#f59e0b,#ef4444)`; fl.style.color = '#b91c1c'; fl.textContent = L('fHigh'); }
   else if (fs >= 30){ ff.style.cssText = `width:${fs}%;background:linear-gradient(90deg,#a855f7,#7c3aed)`; fl.style.color = '#6d28d9'; fl.textContent = L('fMid'); }
@@ -1177,7 +1208,7 @@ let cachedShareCanvas=null;
 
 /* Build the share text — BPM, Hz and a one-line hormonal-effects summary. */
 function buildShareText(){
-  const zen = Math.max(0, 100 - fatigueScore(lastBpm, lastHz));
+  const zen = Math.max(0, 100 - fatigueScore(lastBpm, lastHz, lastBands, lastRms, lastVar, lastPeaks));
   const bpm = (lastBpm > 0 && isFinite(lastBpm)) ? lastBpm : '—';
   const hz  = formatHzDisplay(lastPeaks, lastHz);
   const eff = (lastEffects && lastEffects.length) ? (lang === 'en' ? lastEffects[0].en : lastEffects[0].fr) : '';
