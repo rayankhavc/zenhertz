@@ -683,13 +683,23 @@ function onsetEnvelope(x, sr){
 }
 
 /* Autocorrelation tempo estimate from a ~100 Hz onset-strength function.
-   Improvements over naive best-lag:
-   - Sub-harmonic scoring: multiples of each lag (2τ, 3τ, 4τ) reinforce the
-     hypothesis, giving robustness against off-beat / hi-hat energy.
-   - Stricter downward fold (threshold 0.55 instead of 0.40, BPM floor 145):
-     avoids halving genuine tech-house / techno at 130–145 BPM.
-   - Upward fold: if detected BPM < 85, check whether the double-tempo is
-     supported — catches ghost-beat patterns in slow or pitched-down tracks. */
+   Approach mirrors Essentia RhythmExtractor2013 / librosa beat_track:
+
+   1. Normalized ACF: divide by zero-lag energy → values in (−1,1), thresholds
+      are now file-independent (unlike raw sum which scales with loudness).
+
+   2. Full bidirectional harmonic scoring:
+      - Super-harmonics (τ×2, τ×3, τ×4, τ×5): a genuine beat at τ produces
+        energy at all multiples → reinforces the true period.
+      - Sub-harmonics (τ÷2, τ÷3): prevents choosing a lag that is merely the
+        double/triple of a shorter, stronger period.
+
+   3. Gaussian tempo prior centred at 115 BPM (σ=50): 12 % weight only —
+      barely affects clear signals, gently breaks ties toward common tempos.
+
+   4. Refined octave corrections using normalized thresholds:
+      - Down (> 148 BPM, half-tempo ≥ 50 % of best): trap/hi-hat doubling.
+      - Up  (< 80 BPM,  double-tempo ≥ 60 % of best): ghost-beat / slow intro. */
 function bpmFromOnset(osf){
   const fps = ENV_FPS;
   const segLen = Math.min(osf.length, 20 * fps);
@@ -701,35 +711,41 @@ function bpmFromOnset(osf){
   for (let i = 0; i < segLen; i++) mean += seg[i];
   mean /= segLen;
   const s = new Float32Array(segLen);
-  for (let i = 0; i < segLen; i++) s[i] = seg[i] - mean;
+  let e0 = 0;
+  for (let i = 0; i < segLen; i++){ s[i] = seg[i] - mean; e0 += s[i] * s[i]; }
+  if (e0 < 1e-12) return 0;
 
   const lagMin = Math.max(2, Math.floor(60 * fps / BPM_MAX));
   const lagMax = Math.min(segLen - 1, Math.ceil(60 * fps / BPM_MIN));
   if (lagMax <= lagMin) return 0;
 
-  // Raw ACF
+  // Normalized ACF (range ≈ −1 … 1, comparable across files)
   const acf = new Float32Array(lagMax + 1);
-  let rawBest = 0;
   for (let lag = lagMin; lag <= lagMax; lag++){
     let sum = 0;
     const n = segLen - lag;
     for (let i = 0; i < n; i++) sum += s[i] * s[i + lag];
-    acf[lag] = sum;
-    if (sum > rawBest) rawBest = sum;
+    acf[lag] = sum / e0;
   }
-  if (rawBest <= 0) return 0;
 
-  // Sub-harmonic weighted score: beats at τ create energy at 2τ, 3τ, 4τ too;
-  // summing those in gives the lag that represents the true beat period an edge
-  // over lags that only peak by accident.
+  // Bidirectional harmonic support score
   const score = new Float32Array(lagMax + 1);
   for (let lag = lagMin; lag <= lagMax; lag++){
     let sc = acf[lag];
-    for (const mul of [2, 3, 4]){
-      const h = Math.round(lag * mul);
-      if (h <= lagMax) sc += acf[h] * (0.3 / mul);
+    // Super-harmonics: energy at lag*k confirms lag as fundamental period
+    for (const [k, w] of [[2,0.50],[3,0.33],[4,0.25],[5,0.20]]){
+      const h = Math.round(lag * k);
+      if (h <= lagMax) sc += Math.max(0, acf[h]) * w;
     }
-    score[lag] = sc;
+    // Sub-harmonics: if a shorter period explains lag, this lag scores lower
+    for (const [k, w] of [[2,0.40],[3,0.25]]){
+      const h = Math.round(lag / k);
+      if (h >= lagMin) sc += Math.max(0, acf[h]) * w;
+    }
+    // Gentle prior (12 % weight)
+    const bpmC = 60 * fps / lag;
+    const prior = Math.exp(-0.5 * ((bpmC - 115) / 50) ** 2);
+    score[lag] = sc * (0.88 + 0.12 * prior);
   }
 
   let best = 0, bestLag = 0;
@@ -740,48 +756,72 @@ function bpmFromOnset(osf){
 
   let bpm = 60 * fps / bestLag;
 
-  // Downward octave correction (trap hi-hat doubling):
-  // Only fold if > 145 BPM AND ACF at double lag ≥ 55 % of bestLag ACF.
-  // The 55 % bar (vs old 40 %) prevents wrongly halving genuine 140+ BPM techno.
-  if (bpm > 145){
+  // Downward octave correction (trap / hi-hat doubling) — normalized threshold
+  if (bpm > 148){
     const dbl = bestLag * 2;
-    if (dbl <= lagMax && acf[dbl] >= 0.55 * acf[bestLag]){
-      bpm = 60 * fps / dbl;
-    }
+    if (dbl <= lagMax && acf[dbl] >= 0.50 * acf[bestLag]) bpm = 60 * fps / dbl;
   }
-
-  // Upward octave correction (ghost-beat / half-tempo detection):
-  // If result is suspiciously slow (< 85 BPM), check whether the half-lag
-  // — i.e. double tempo — has at least 65 % of the ACF energy.
-  if (bpm < 85){
+  // Upward octave correction (ghost-beat / half-tempo) — normalized threshold
+  if (bpm < 80){
     const half = Math.round(bestLag / 2);
     if (half >= lagMin){
-      const candidate = 60 * fps / half;
-      if (candidate <= BPM_MAX && acf[half] >= 0.65 * acf[bestLag]) bpm = candidate;
+      const c = 60 * fps / half;
+      if (c <= BPM_MAX && acf[half] >= 0.60 * acf[bestLag]) bpm = c;
     }
   }
 
   return Math.round(bpm);
 }
 
-/* Decode-agnostic rhythm analysis: render the kick band, then autocorrelate. */
+/* Decode-agnostic rhythm analysis: two frequency bands rendered in parallel,
+   onset functions fused before autocorrelation.
+
+   Band 1 — kick/bass (25–200 Hz, 4 kHz context):
+     Covers kick drum, 808 sub-bass, bass-guitar fundamentals.
+   Band 2 — snare/clap (150–600 Hz, 8 kHz context):
+     Covers snare body, clap, tom hits — essential for music without a
+     prominent kick (sampled drums, acoustic, some hip-hop).
+
+   Fusion: osf = osf1 + 0.55 * osf2
+   Running both contexts via Promise.all keeps wall-clock time near single-band. */
 async function analyzeRhythm(audioBuffer){
   const dur = Math.min(audioBuffer.duration || 0, 60) || 1;
-  const { ctx, sr } = makeKickContext(dur);
 
-  const src = ctx.createBufferSource();
-  src.buffer = audioBuffer;
+  function makeCtx(targetSr){
+    for (const sr of [targetSr, 8000]){
+      try{
+        const frames = Math.max(1, Math.ceil(dur * sr));
+        return { ctx: new OfflineAudioContext(1, frames, sr), sr };
+      }catch(_){}
+    }
+    const frames = Math.max(1, Math.ceil(dur * 8000));
+    return { ctx: new OfflineAudioContext(1, frames, 8000), sr: 8000 };
+  }
 
-  const hp = ctx.createBiquadFilter();
-  hp.type = 'highpass'; hp.frequency.value = 30;  hp.Q.value = 0.707;
-  const lp = ctx.createBiquadFilter();
-  lp.type = 'lowpass';  lp.frequency.value = 100; lp.Q.value = 0.707;
+  // Band 1: kick/bass 25–200 Hz
+  const b1 = makeCtx(4000);
+  const src1 = b1.ctx.createBufferSource(); src1.buffer = audioBuffer;
+  const hp1 = b1.ctx.createBiquadFilter(); hp1.type='highpass'; hp1.frequency.value=25;  hp1.Q.value=0.707;
+  const lp1 = b1.ctx.createBiquadFilter(); lp1.type='lowpass';  lp1.frequency.value=200; lp1.Q.value=0.707;
+  src1.connect(hp1); hp1.connect(lp1); lp1.connect(b1.ctx.destination); src1.start(0);
 
-  src.connect(hp); hp.connect(lp); lp.connect(ctx.destination);
-  src.start(0);
+  // Band 2: snare/clap 150–600 Hz
+  const b2 = makeCtx(8000);
+  const src2 = b2.ctx.createBufferSource(); src2.buffer = audioBuffer;
+  const hp2 = b2.ctx.createBiquadFilter(); hp2.type='highpass'; hp2.frequency.value=150; hp2.Q.value=0.707;
+  const lp2 = b2.ctx.createBiquadFilter(); lp2.type='lowpass';  lp2.frequency.value=600; lp2.Q.value=0.707;
+  src2.connect(hp2); hp2.connect(lp2); lp2.connect(b2.ctx.destination); src2.start(0);
 
-  const rendered = await ctx.startRendering();
-  return bpmFromOnset(onsetEnvelope(rendered.getChannelData(0), sr));
+  const [r1, r2] = await Promise.all([b1.ctx.startRendering(), b2.ctx.startRendering()]);
+  const osf1 = onsetEnvelope(r1.getChannelData(0), b1.sr);
+  const osf2 = onsetEnvelope(r2.getChannelData(0), b2.sr);
+
+  // Fuse: both decimated to ENV_FPS, align lengths
+  const len = Math.min(osf1.length, osf2.length);
+  const osf = new Float32Array(len);
+  for (let i = 0; i < len; i++) osf[i] = osf1[i] + 0.55 * osf2[i];
+
+  return bpmFromOnset(osf);
 }
 
 /* ── Compact in-place radix-2 FFT (native JS, no libraries) ── */
@@ -868,10 +908,17 @@ function analyzeSpectrum(audioBuffer){
   pkCandidates.sort((a, b) => b.mag - a.mag);
   const peaks = [];
   for (const p of pkCandidates){
-    if (peaks.every(q => Math.abs(q - p.f) > 60)){
-      peaks.push(p.f);
-      if (peaks.length >= 3) break;
-    }
+    // Frequency-proportional minimum spacing (avoids clustering at one frequency)
+    const minSpacing = Math.max(80, 0.18 * p.f);
+    // Harmonic suppression: skip if p.f ≈ 2× or 3× (or ½× or ⅓×) an existing peak
+    const ok = peaks.every(q => {
+      if (Math.abs(q - p.f) < minSpacing) return false;
+      for (const ratio of [2, 3, 0.5, 0.333]){
+        if (Math.abs(p.f - q * ratio) / Math.max(p.f, 1) < 0.07) return false;
+      }
+      return true;
+    });
+    if (ok){ peaks.push(p.f); if (peaks.length >= 3) break; }
   }
 
   return {
