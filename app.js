@@ -90,6 +90,13 @@ function applyLang(){
   document.querySelectorAll('[data-i-ph]').forEach(el=>{
     const v=L(el.dataset.iPh); if(v) el.placeholder=v;
   });
+  // Wave bar labels (hardcoded in HTML, must be updated on lang toggle)
+  const wlblBar=document.getElementById('wlbl-bar');
+  if(wlblBar){
+    const wn=L('wnames');
+    const spans=wlblBar.querySelectorAll('span');
+    ['delta','theta','alpha','beta','gamma'].forEach((k,i)=>{ if(spans[i]) spans[i].textContent=wn[k]; });
+  }
   if(lastBpm!==null){
     renderHormones(lastBpm,lastHz,lastRms,lastVar);
     if(lastEffects.length){ const d=S('rdesc'); if(d) d.innerHTML=summaryFromEffects(lastEffects); }
