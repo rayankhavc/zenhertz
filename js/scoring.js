@@ -71,6 +71,7 @@ function sleep(m, E){
   let s = 100 - E;
   if (!hasPulse(m)) reasons.push({ k: 'noPulse' });
   else if (m.bpm <= 80) reasons.push({ k: 'slowTempo', bpm: Math.round(m.bpm) });
+  else if (m.bpm <= 105) reasons.push({ k: 'midTempo', bpm: Math.round(m.bpm) });
   else reasons.push({ k: 'fastTempo', bpm: Math.round(m.bpm) });
   if (m.rises.length){
     s -= Math.min(30, 12 * m.rises.length);         // sudden loudness jumps can wake / startle

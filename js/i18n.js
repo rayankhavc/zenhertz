@@ -1,0 +1,271 @@
+/* All user-facing text, FR + EN. `t(key, params)` interpolates {name}. */
+
+const FR = {
+  'meta.title': 'ZenHertz — Ce morceau, c’est pour quand ?',
+  'skip': 'Aller au contenu', 'nav.method': 'Méthode', 'nav.pro': 'Pro', 'nav.partners': 'Partenaires', 'nav.faq': 'FAQ',
+  'hero.badge': 'Gratuit · Sans compte · 100 % sur ton appareil',
+  'hero.title': 'Ce morceau, c’est pour <em>quand</em> ?',
+  'hero.sub': 'Dépose un ou plusieurs sons. ZenHertz mesure le tempo, l’énergie et l’intensité, et te dit s’ils conviennent pour <strong>dormir</strong>, te <strong>concentrer</strong>, <strong>courir</strong> ou une <strong>longue écoute</strong>.',
+  'drop.title': 'Dépose tes morceaux ici',
+  'drop.or': 'ou',
+  'drop.btn': 'Choisir des fichiers',
+  'drop.modes': '<b>1</b> morceau → rapport · <b>2</b> → duel · <b>3 à 10</b> → playlist',
+  'drop.formats': 'MP3 · WAV · FLAC · AAC · M4A · OGG · MP4 · MOV',
+  'drop.private': 'Tes fichiers ne quittent jamais ton appareil.',
+  'drop.limit': 'Maximum {n} morceaux à la fois en version gratuite.',
+  'usage.sleep': 'Sommeil', 'usage.focus': 'Concentration', 'usage.run': 'Course & sport', 'usage.long': 'Longue écoute',
+  'usage.sleep.q': 'Pour s’endormir ou se détendre', 'usage.focus.q': 'Pour travailler sans être distrait',
+  'usage.run.q': 'Pour caler sa foulée', 'usage.long.q': 'Pour écouter des heures sans fatigue',
+  'how.title': 'Comment ça marche',
+  'how.1.t': 'Dépose', 'how.1.p': 'Un fichier audio ou vidéo, depuis ta galerie ou ton ordinateur.',
+  'how.2.t': 'On mesure', 'how.2.p': 'Tempo, régularité, loudness, dynamique, spectre et courbe d’énergie — sur tout le morceau.',
+  'how.3.t': 'Tu choisis', 'how.3.p': 'Un verdict par usage, avec son niveau de preuve. Partage-le ou compare deux morceaux.',
+
+  'method.title': 'Ce qu’on mesure — et ce qu’on ne sait pas',
+  'method.sub': 'On préfère un outil honnête à un outil magique. Chaque verdict affiche son niveau de preuve.',
+  'method.measure.t': 'Mesuré (objectif)',
+  'method.measure.l': ['Tempo (BPM) et clarté de la pulsation', 'Régularité du tempo sur tout le morceau', 'Loudness intégrée (LUFS, norme ITU-R BS.1770)', 'Dynamique : écart crête / loudness (PLR)', 'Répartition grave / médium / aigu', 'Courbe d’énergie et montées brutales'],
+  'method.infer.t': 'Déduit (avec niveau de preuve)',
+  'method.infer.l': ['🏃 Course : cadence et motivation — <b>preuve solide</b>', '😴 Sommeil : musique calme et lente — <b>preuve modérée</b>', '🎯 Concentration — <b>exploratoire</b>', '🎧 Confort de longue écoute — <b>exploratoire</b>'],
+  'method.unknown.t': 'Impossible à savoir depuis un fichier',
+  'method.unknown.l': ['Ton volume et ta durée d’écoute (ce qui compte le plus pour l’audition)', 'Si tu aimes le morceau — souvent plus important que le tempo', 'Les paroles (pas encore détectées)', 'Ton état du moment'],
+  'method.valid.t': 'Vérifié',
+  'method.valid.p': '<b>{passed}/{total}</b> tests de référence réussis (tempo, loudness, compression, détection de pulsation, déterminisme). Loudness comparée à ffmpeg <i>ebur128</i> sur 13 morceaux réels : écart moyen &lt; 0,5 LU.',
+  'method.sources': 'Sources',
+  'method.never': 'Ce qu’on ne fera jamais : te parler d’« hormones », d’« ondes cérébrales » ou de « fréquences de guérison ». Ça ne se mesure pas depuis un fichier audio.',
+
+  'pro.title': 'Pour aller plus loin',
+  'pro.sub': 'ZenHertz reste gratuit. Les offres payantes arrivent — dis-nous si elles t’intéressent.',
+  'pro.free.t': 'Gratuit', 'pro.free.p': '0 €', 'pro.free.l': ['Rapport, duel et playlist (10 morceaux)', 'Partage en image et en lien', 'Export CSV'],
+  'pro.pro.t': 'Pro — coachs & créateurs', 'pro.pro.p': '4,99 € / mois', 'pro.pro.l': ['Playlists jusqu’à 200 morceaux', 'Séances : échauffement → pic → retour au calme', 'Bibliothèque sauvegardée, sans pub'],
+  'pro.studio.t': 'Studio — salles & clubs', 'pro.studio.p': '39 € / mois', 'pro.studio.l': ['Plusieurs coachs, une bibliothèque commune', 'Fiches de séance imprimables', 'Support prioritaire'],
+  'pro.soon': 'Bientôt', 'pro.cta': 'Je suis intéressé·e', 'pro.current': 'Disponible',
+
+  'partners.title': 'Coachs, salles, applis : testons ensemble',
+  'partners.sub': 'Tu construis des séances en musique, tu gères un studio ou une appli ? On cherche des partenaires pilotes. Réponse sous 24 h.',
+  'form.name': 'Nom', 'form.org': 'Structure (facultatif)', 'form.email': 'E-mail', 'form.message': 'Message',
+  'form.send': 'Envoyer', 'form.sending': 'Envoi…', 'form.ok': '✓ Merci ! On revient vers toi très vite.',
+  'form.err': 'L’envoi a échoué. Réessaie, ou écris-nous via la page Partenaires.',
+  'form.consent': 'On utilise ton e-mail uniquement pour te répondre. Voir la <a href="#" data-modal="privacy">confidentialité</a>.',
+  'form.pro.title': 'Être prévenu·e du lancement Pro', 'form.pro.sub': 'Un e-mail au lancement, rien d’autre.',
+
+  'faq.title': 'Questions fréquentes',
+  'faq.q1': 'Mes fichiers sont-ils envoyés quelque part ?', 'faq.a1': 'Non. L’analyse tourne entièrement dans ton navigateur. Aucun fichier, aucun extrait n’est envoyé, stocké ou diffusé.',
+  'faq.q2': 'Et les droits d’auteur ?', 'faq.a2': 'ZenHertz ne copie, n’héberge ni ne diffuse aucune œuvre : il calcule des mesures (tempo, loudness…) sur un fichier que tu possèdes, sur ton appareil. Le partage ne contient que le titre et les mesures.',
+  'faq.q3': 'C’est fiable ?', 'faq.a3': 'Les mesures (tempo, loudness, dynamique) sont fiables et testées. Les verdicts d’usage sont des indications : chacun affiche son niveau de preuve. Le tempo peut être lu « à moitié » (87 au lieu de 174 BPM) : c’est la même pulsation, ressentie différemment.',
+  'faq.q4': 'C’est un avis médical ?', 'faq.a4': 'Non. ZenHertz est un outil indicatif. En cas de troubles du sommeil, d’acouphènes ou de douleurs, consulte un professionnel de santé.',
+
+  'an.title': 'Analyse en cours', 'an.sub': 'Tout se passe sur ton appareil.',
+  'an.read': 'Lecture du fichier', 'an.decode': 'Décodage audio', 'an.decodeFf': 'Chargement du décodeur universel', 'an.capture': 'Capture audio (format inhabituel)',
+  'an.analyze': 'Mesure du tempo et du son', 'an.done': 'Terminé', 'an.fail': 'Impossible de lire ce fichier',
+  'an.cancel': 'Annuler',
+
+  'r.back': '← Nouvelle analyse', 'r.verdict': 'Verdict',
+  'r.best': 'Idéal pour {usage}.', 'r.goodFor': 'Convient pour {usage}.', 'r.avoid': 'À éviter pour {usage}.', 'r.noIdeal': 'Pas d’usage idéal : surtout {usage}.',
+  'r.for.sleep': 's’endormir', 'r.for.focus': 'se concentrer', 'r.for.run': 'courir', 'r.for.long': 'une longue écoute',
+  'r.label.ideal': 'Idéal', 'r.label.good': 'Convient', 'r.label.fair': 'Moyen', 'r.label.avoid': 'À éviter',
+  'r.ev.strong': 'Preuve solide', 'r.ev.moderate': 'Preuve modérée', 'r.ev.exploratory': 'Exploratoire',
+  'r.energy': 'Énergie', 'r.curve': 'Énergie au fil du morceau', 'r.curveRise': 'Montée brutale',
+  'r.measures': 'Voir les mesures', 'r.share': 'Partager', 'r.copyLink': 'Copier le lien', 'r.copied': 'Lien copié ✓',
+  'r.compare': 'Comparer avec un autre', 'r.disclaimer': 'Outil indicatif, pas un avis médical. Le risque pour l’audition dépend surtout de ton volume et de ta durée d’écoute.',
+  'r.analyzedPart': 'Analysé : les {s} premières minutes.',
+  'r.bpmNone': 'Pulsation peu marquée', 'r.bpmApprox': 'approx.', 'r.bpmDouble': 'ressenti double : {b}',
+  'r.cadence': '≈ {c} pas/min',
+  'r.shared': 'Rapport partagé', 'r.sharedSub': 'Analysé par quelqu’un avec ZenHertz. Et toi, ton morceau ?',
+  'r.challenge': 'Défier ce morceau', 'r.analyzeMine': 'Analyser le mien',
+  'm.bpm': 'Tempo', 'm.clarity': 'Clarté de la pulsation', 'm.stability': 'Régularité du tempo', 'm.onsets': 'Attaques par seconde',
+  'm.lufs': 'Loudness intégrée', 'm.lra': 'Plage de loudness (LRA)', 'm.peak': 'Crête', 'm.plr': 'Dynamique (crête − loudness)',
+  'm.bright': 'Énergie au-dessus de 1,5 kHz', 'm.centroid': 'Centre de gravité spectral', 'm.bands': 'Répartition spectrale',
+  'm.band.sub': 'Sub', 'm.band.bass': 'Grave', 'm.band.mid': 'Médium', 'm.band.presence': 'Présence', 'm.band.air': 'Air',
+  'm.duration': 'Durée', 'm.agree': 'Deux méthodes de tempo concordent', 'm.yes': 'oui', 'm.no': 'non',
+
+  'why.sleep.noPulse': 'Pas de pulsation marquée : rien ne pousse à bouger.',
+  'why.sleep.slowTempo': 'Tempo lent ({bpm} BPM).',
+  'why.sleep.midTempo': 'Tempo modéré ({bpm} BPM).',
+  'why.sleep.fastTempo': 'Tempo de {bpm} BPM : plutôt stimulant pour s’endormir.',
+  'why.rise': 'Montée brutale du volume à {time}{more}.', 'why.riseMore': ' (+{n} autres)', 'why.riseMore1': ' (+1 autre)',
+  'why.swings': 'Le volume varie beaucoup au fil du morceau.',
+  'why.lowEnergy': 'Énergie globale basse.', 'why.midEnergy': 'Énergie globale moyenne.', 'why.highEnergy': 'Énergie globale élevée.',
+  'why.focus.steady': 'Énergie régulière, peu de ruptures.',
+  'why.focus.veryCalm': 'Très calme : peut endormir plus que concentrer.',
+  'why.focus.lyrics': 'Les paroles gênent souvent la lecture — on ne les détecte pas encore.',
+  'why.run.cadence.walk': '≈ {c} pas/min : rythme de marche active.',
+  'why.run.cadence.jog': '≈ {c} pas/min : footing tranquille.',
+  'why.run.cadence.run': '≈ {c} pas/min : cadence de course classique.',
+  'why.run.cadence.fast': '≈ {c} pas/min : très rapide, plutôt pour le fractionné.',
+  'why.run.cadence.none': 'Tempo trop lent pour caler une foulée.',
+  'why.run.noPulse': 'Pas de pulsation nette : difficile de caler ses foulées.',
+  'why.run.unsteady': 'Le tempo varie au fil du morceau.',
+  'why.long.compressed': 'Son très compressé (dynamique {plr} dB) : peut fatiguer sur la durée.',
+  'why.long.dynamic': 'Dynamique de {plr} dB : plutôt reposant pour l’oreille.',
+  'why.long.harsh': 'Beaucoup d’énergie dans la zone 2–6 kHz, la plus sensible de l’oreille.',
+  'why.long.volume': 'Le vrai risque pour l’audition dépend de ton volume et de ta durée d’écoute.',
+
+  'ev.run': 'Bien étudié : la musique améliore l’humeur pendant l’effort et peut réduire l’effort perçu (méta-analyse, Terry et al., 2020). Une partie des coureurs calent spontanément leur foulée sur le tempo (Van Dyck et al., 2015).',
+  'ev.sleep': 'Écouter de la musique calme améliorerait la qualité de sommeil ressentie chez les adultes insomniaques (revue Cochrane, Jespersen et al., 2022). L’effet varie selon les personnes.',
+  'ev.focus': 'Résultats mitigés : en moyenne, la musique de fond n’améliore pas les performances cognitives, et gêne parfois la lecture et la mémorisation (méta-analyse, Kämpfe et al., 2011). On indique seulement si le morceau est régulier et modéré.',
+  'ev.long': 'Compression forte et aigus marqués sont souvent jugés fatigants, mais peu d’études le mesurent. Ce qui est établi : le risque auditif dépend du niveau sonore et de la durée d’exposition (OMS).',
+
+  'duel.title': 'Duel', 'duel.vs': 'vs', 'duel.tie': 'Égalité', 'duel.summary': 'En résumé', 'duel.for': 'Pour {usage} : {winner}.', 'duel.forTie': 'Pour {usage} : égalité.',
+  'duel.details': 'Rapport détaillé',
+  'pl.title': 'Ta playlist', 'pl.sort': 'Ordonner pour', 'pl.export': 'Exporter (CSV)', 'pl.n': '{n} morceaux',
+  'pl.mode.run': 'Courir (meilleure cadence d’abord)', 'pl.mode.session': 'Séance : échauffement → pic → retour au calme',
+  'pl.mode.winddown': 'S’endormir : du plus énergique au plus calme', 'pl.mode.focus': 'Se concentrer', 'pl.mode.bpm': 'Tempo croissant',
+  'pl.col.title': 'Titre', 'pl.col.bpm': 'BPM', 'pl.col.cad': 'Pas/min', 'pl.col.energy': 'Énergie', 'pl.col.score': 'Score',
+  'pl.pro': 'Plus de 10 morceaux, séances sauvegardées : c’est l’offre Pro.',
+
+  'ad.label': 'Publicité', 'ad.title': 'Votre marque ici', 'ad.text': 'Touchez des sportifs, coachs et mélomanes au moment où ils choisissent leur musique.', 'ad.cta': 'Nous contacter',
+
+  'footer.legal': 'Mentions légales', 'footer.privacy': 'Confidentialité', 'footer.feedback': 'Un bug, une idée ?', 'footer.by': 'Conçu par',
+  'feedback.title': 'Ton avis compte', 'feedback.sub': 'Bug, idée, suggestion : on lit tout.',
+  'err.file': 'Ce fichier n’a pas pu être lu. Essaie un MP3, WAV ou M4A.',
+  'err.tooBig': '« {name} » est trop lourd (max {mb} Mo).',
+  'err.share': 'Le partage n’est pas disponible ici : l’image a été téléchargée.',
+  'share.text': '{title} — {verdict} Analyse ton morceau sur ZenHertz :',
+  'share.duel': 'Duel ZenHertz : {a} vs {b}. Ton tour :',
+  'theme': 'Thème', 'lang': 'EN'
+};
+
+const EN = {
+  'meta.title': 'ZenHertz — When is this track for?',
+  'skip': 'Skip to content', 'nav.method': 'Method', 'nav.pro': 'Pro', 'nav.partners': 'Partners', 'nav.faq': 'FAQ',
+  'hero.badge': 'Free · No account · 100% on your device',
+  'hero.title': 'When is this track <em>for</em>?',
+  'hero.sub': 'Drop one or more tracks. ZenHertz measures tempo, energy and intensity, and tells you whether they suit <strong>sleep</strong>, <strong>focus</strong>, <strong>running</strong> or <strong>long listening</strong>.',
+  'drop.title': 'Drop your tracks here', 'drop.or': 'or', 'drop.btn': 'Choose files',
+  'drop.modes': '<b>1</b> track → report · <b>2</b> → duel · <b>3 to 10</b> → playlist',
+  'drop.formats': 'MP3 · WAV · FLAC · AAC · M4A · OGG · MP4 · MOV',
+  'drop.private': 'Your files never leave your device.',
+  'drop.limit': 'Up to {n} tracks at once on the free plan.',
+  'usage.sleep': 'Sleep', 'usage.focus': 'Focus', 'usage.run': 'Running & sport', 'usage.long': 'Long listening',
+  'usage.sleep.q': 'To fall asleep or unwind', 'usage.focus.q': 'To work without distraction',
+  'usage.run.q': 'To lock your stride', 'usage.long.q': 'To listen for hours without fatigue',
+  'how.title': 'How it works',
+  'how.1.t': 'Drop', 'how.1.p': 'An audio or video file, from your gallery or computer.',
+  'how.2.t': 'We measure', 'how.2.p': 'Tempo, steadiness, loudness, dynamics, spectrum and energy curve — across the whole track.',
+  'how.3.t': 'You choose', 'how.3.p': 'One verdict per use, with its level of evidence. Share it or compare two tracks.',
+  'method.title': 'What we measure — and what we don’t know',
+  'method.sub': 'An honest tool beats a magic one. Every verdict shows its level of evidence.',
+  'method.measure.t': 'Measured (objective)',
+  'method.measure.l': ['Tempo (BPM) and pulse clarity', 'Tempo steadiness across the track', 'Integrated loudness (LUFS, ITU-R BS.1770)', 'Dynamics: peak-to-loudness ratio (PLR)', 'Low / mid / high balance', 'Energy curve and sudden rises'],
+  'method.infer.t': 'Inferred (with level of evidence)',
+  'method.infer.l': ['🏃 Running: cadence and motivation — <b>strong evidence</b>', '😴 Sleep: calm, slow music — <b>moderate evidence</b>', '🎯 Focus — <b>exploratory</b>', '🎧 Long-listening comfort — <b>exploratory</b>'],
+  'method.unknown.t': 'Impossible to know from a file',
+  'method.unknown.l': ['Your volume and listening time (what matters most for hearing)', 'Whether you like the track — often more important than tempo', 'Lyrics (not detected yet)', 'How you feel right now'],
+  'method.valid.t': 'Verified',
+  'method.valid.p': '<b>{passed}/{total}</b> reference tests passed (tempo, loudness, compression, pulse detection, determinism). Loudness checked against ffmpeg <i>ebur128</i> on 13 real tracks: mean gap &lt; 0.5 LU.',
+  'method.sources': 'Sources',
+  'method.never': 'What we will never do: talk about “hormones”, “brainwaves” or “healing frequencies”. None of that can be measured from an audio file.',
+  'pro.title': 'Go further', 'pro.sub': 'ZenHertz stays free. Paid plans are coming — tell us if you’re interested.',
+  'pro.free.t': 'Free', 'pro.free.p': '€0', 'pro.free.l': ['Report, duel and playlist (10 tracks)', 'Share as image and link', 'CSV export'],
+  'pro.pro.t': 'Pro — coaches & creators', 'pro.pro.p': '€4.99 / month', 'pro.pro.l': ['Playlists up to 200 tracks', 'Sessions: warm-up → peak → cool-down', 'Saved library, no ads'],
+  'pro.studio.t': 'Studio — gyms & clubs', 'pro.studio.p': '€39 / month', 'pro.studio.l': ['Several coaches, one shared library', 'Printable session sheets', 'Priority support'],
+  'pro.soon': 'Coming soon', 'pro.cta': 'I’m interested', 'pro.current': 'Available',
+  'partners.title': 'Coaches, gyms, apps: let’s test together',
+  'partners.sub': 'You build workouts to music, run a studio or an app? We’re looking for pilot partners. Reply within 24 h.',
+  'form.name': 'Name', 'form.org': 'Organisation (optional)', 'form.email': 'Email', 'form.message': 'Message',
+  'form.send': 'Send', 'form.sending': 'Sending…', 'form.ok': '✓ Thanks! We’ll get back to you very soon.',
+  'form.err': 'Sending failed. Please try again.',
+  'form.consent': 'We only use your email to reply. See <a href="#" data-modal="privacy">privacy</a>.',
+  'form.pro.title': 'Get notified when Pro launches', 'form.pro.sub': 'One email at launch, nothing else.',
+  'faq.title': 'FAQ',
+  'faq.q1': 'Are my files uploaded anywhere?', 'faq.a1': 'No. Analysis runs entirely in your browser. No file or excerpt is sent, stored or distributed.',
+  'faq.q2': 'What about copyright?', 'faq.a2': 'ZenHertz doesn’t copy, host or distribute any work: it computes measurements (tempo, loudness…) on a file you own, on your device. Sharing only includes the title and the measurements.',
+  'faq.q3': 'Is it reliable?', 'faq.a3': 'Measurements (tempo, loudness, dynamics) are reliable and tested. Usage verdicts are indications, each with its level of evidence. Tempo may be read at half speed (87 instead of 174 BPM): same pulse, felt differently.',
+  'faq.q4': 'Is this medical advice?', 'faq.a4': 'No. ZenHertz is an indicative tool. For sleep problems, tinnitus or pain, see a health professional.',
+  'an.title': 'Analysing', 'an.sub': 'Everything happens on your device.',
+  'an.read': 'Reading file', 'an.decode': 'Decoding audio', 'an.decodeFf': 'Loading universal decoder', 'an.capture': 'Capturing audio (unusual format)',
+  'an.analyze': 'Measuring tempo and sound', 'an.done': 'Done', 'an.fail': 'Could not read this file', 'an.cancel': 'Cancel',
+  'r.back': '← New analysis', 'r.verdict': 'Verdict',
+  'r.best': 'Ideal for {usage}.', 'r.goodFor': 'Good for {usage}.', 'r.avoid': 'Avoid for {usage}.', 'r.noIdeal': 'No ideal use: mostly {usage}.',
+  'r.for.sleep': 'falling asleep', 'r.for.focus': 'focusing', 'r.for.run': 'running', 'r.for.long': 'long listening',
+  'r.label.ideal': 'Ideal', 'r.label.good': 'Good', 'r.label.fair': 'Fair', 'r.label.avoid': 'Avoid',
+  'r.ev.strong': 'Strong evidence', 'r.ev.moderate': 'Moderate evidence', 'r.ev.exploratory': 'Exploratory',
+  'r.energy': 'Energy', 'r.curve': 'Energy over time', 'r.curveRise': 'Sudden rise',
+  'r.measures': 'See measurements', 'r.share': 'Share', 'r.copyLink': 'Copy link', 'r.copied': 'Link copied ✓',
+  'r.compare': 'Compare with another', 'r.disclaimer': 'Indicative tool, not medical advice. Hearing risk depends mostly on your volume and listening time.',
+  'r.analyzedPart': 'Analysed: the first {s} minutes.',
+  'r.bpmNone': 'Weak pulse', 'r.bpmApprox': 'approx.', 'r.bpmDouble': 'double-time: {b}',
+  'r.cadence': '≈ {c} steps/min',
+  'r.shared': 'Shared report', 'r.sharedSub': 'Analysed by someone with ZenHertz. What about your track?',
+  'r.challenge': 'Challenge this track', 'r.analyzeMine': 'Analyse mine',
+  'm.bpm': 'Tempo', 'm.clarity': 'Pulse clarity', 'm.stability': 'Tempo steadiness', 'm.onsets': 'Onsets per second',
+  'm.lufs': 'Integrated loudness', 'm.lra': 'Loudness range (LRA)', 'm.peak': 'Peak', 'm.plr': 'Dynamics (peak − loudness)',
+  'm.bright': 'Energy above 1.5 kHz', 'm.centroid': 'Spectral centroid', 'm.bands': 'Spectral balance',
+  'm.band.sub': 'Sub', 'm.band.bass': 'Bass', 'm.band.mid': 'Mid', 'm.band.presence': 'Presence', 'm.band.air': 'Air',
+  'm.duration': 'Duration', 'm.agree': 'Two tempo methods agree', 'm.yes': 'yes', 'm.no': 'no',
+  'why.sleep.noPulse': 'No marked pulse: nothing pushes you to move.',
+  'why.sleep.slowTempo': 'Slow tempo ({bpm} BPM).',
+  'why.sleep.midTempo': 'Moderate tempo ({bpm} BPM).',
+  'why.sleep.fastTempo': '{bpm} BPM: rather stimulating for falling asleep.',
+  'why.rise': 'Sudden volume rise at {time}{more}.', 'why.riseMore': ' (+{n} more)', 'why.riseMore1': ' (+1 more)',
+  'why.swings': 'Volume changes a lot across the track.',
+  'why.lowEnergy': 'Low overall energy.', 'why.midEnergy': 'Medium overall energy.', 'why.highEnergy': 'High overall energy.',
+  'why.focus.steady': 'Steady energy, few breaks.',
+  'why.focus.veryCalm': 'Very calm: may make you sleepy rather than focused.',
+  'why.focus.lyrics': 'Lyrics often disturb reading — we don’t detect them yet.',
+  'why.run.cadence.walk': '≈ {c} steps/min: brisk walking pace.',
+  'why.run.cadence.jog': '≈ {c} steps/min: easy jog.',
+  'why.run.cadence.run': '≈ {c} steps/min: classic running cadence.',
+  'why.run.cadence.fast': '≈ {c} steps/min: very fast, better for intervals.',
+  'why.run.cadence.none': 'Tempo too slow to lock a stride.',
+  'why.run.noPulse': 'No clear pulse: hard to lock your stride.',
+  'why.run.unsteady': 'Tempo drifts across the track.',
+  'why.long.compressed': 'Heavily compressed (dynamics {plr} dB): can be tiring over time.',
+  'why.long.dynamic': '{plr} dB of dynamics: rather easy on the ears.',
+  'why.long.harsh': 'Lots of energy at 2–6 kHz, where the ear is most sensitive.',
+  'why.long.volume': 'The real risk to hearing depends on your volume and listening time.',
+  'ev.run': 'Well studied: music improves mood during exercise and can lower perceived exertion (meta-analysis, Terry et al., 2020). Some runners spontaneously sync their stride to the tempo (Van Dyck et al., 2015).',
+  'ev.sleep': 'Listening to calm music may improve perceived sleep quality in adults with insomnia (Cochrane review, Jespersen et al., 2022). Effects vary between people.',
+  'ev.focus': 'Mixed results: on average background music does not improve cognitive performance and sometimes hurts reading and memory (meta-analysis, Kämpfe et al., 2011). We only say whether the track is steady and moderate.',
+  'ev.long': 'Heavy compression and harsh highs are often called fatiguing, but few studies measure it. What is established: hearing risk depends on sound level and exposure time (WHO).',
+  'duel.title': 'Duel', 'duel.vs': 'vs', 'duel.tie': 'Tie', 'duel.summary': 'In short', 'duel.for': 'For {usage}: {winner}.', 'duel.forTie': 'For {usage}: tie.',
+  'duel.details': 'Detailed report',
+  'pl.title': 'Your playlist', 'pl.sort': 'Order for', 'pl.export': 'Export (CSV)', 'pl.n': '{n} tracks',
+  'pl.mode.run': 'Running (best cadence first)', 'pl.mode.session': 'Workout: warm-up → peak → cool-down',
+  'pl.mode.winddown': 'Falling asleep: most energetic to calmest', 'pl.mode.focus': 'Focus', 'pl.mode.bpm': 'Ascending tempo',
+  'pl.col.title': 'Title', 'pl.col.bpm': 'BPM', 'pl.col.cad': 'Steps/min', 'pl.col.energy': 'Energy', 'pl.col.score': 'Score',
+  'pl.pro': 'More than 10 tracks and saved sessions come with Pro.',
+  'ad.label': 'Advertisement', 'ad.title': 'Your brand here', 'ad.text': 'Reach athletes, coaches and music lovers right when they pick their music.', 'ad.cta': 'Contact us',
+  'footer.legal': 'Legal notice', 'footer.privacy': 'Privacy', 'footer.feedback': 'Bug or idea?', 'footer.by': 'Made by',
+  'feedback.title': 'Your feedback matters', 'feedback.sub': 'Bugs, ideas, suggestions: we read everything.',
+  'err.file': 'This file could not be read. Try an MP3, WAV or M4A.',
+  'err.tooBig': '“{name}” is too large (max {mb} MB).',
+  'err.share': 'Sharing isn’t available here: the image was downloaded.',
+  'share.text': '{title} — {verdict} Analyse your track on ZenHertz:',
+  'share.duel': 'ZenHertz duel: {a} vs {b}. Your turn:',
+  'theme': 'Theme', 'lang': 'FR'
+};
+
+const DICTS = { fr: FR, en: EN };
+let current = 'fr';
+try {
+  const saved = localStorage.getItem('zh-lang');
+  if (saved === 'fr' || saved === 'en') current = saved;
+  else if (!/^fr\b/i.test(navigator.language || 'fr')) current = 'en';
+} catch (_) {}
+
+export const getLang = () => current;
+export function setLang(l){ current = l; try { localStorage.setItem('zh-lang', l); } catch (_) {} }
+export function t(key, params){
+  let s = DICTS[current][key] ?? FR[key] ?? key;
+  if (params && typeof s === 'string') s = s.replace(/\{(\w+)\}/g, (_, k) => (params[k] ?? ''));
+  return s;
+}
+
+/* Static text: data-i18n (innerHTML) and data-i18n-attr="attr:key". */
+export function applyStatic(root = document){
+  document.documentElement.lang = current;
+  document.title = t('meta.title');
+  root.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t(el.dataset.i18n);
+    if (Array.isArray(v)) el.innerHTML = v.map(x => `<li>${x}</li>`).join('');
+    else el.innerHTML = v;
+  });
+  root.querySelectorAll('[data-i18n-attr]').forEach(el => {
+    for (const pair of el.dataset.i18nAttr.split(',')){
+      const [attr, key] = pair.split(':');
+      el.setAttribute(attr, t(key));
+    }
+  });
+}

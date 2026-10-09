@@ -1,301 +1,236 @@
-<!DOCTYPE html>
-<html lang="fr" data-theme="light" data-lang="fr">
+<!doctype html>
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#eeeef5" id="meta-theme-color">
-<title>ZenHertz Analyse bioacoustique</title>
-
-<script defer data-domain="zenhertz.com" src="https://plausible.io/js/script.js"></script>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ZenHertz — Ce morceau, c’est pour quand ?</title>
+  <meta name="description" content="Dépose un morceau : ZenHertz mesure tempo, énergie et intensité et te dit s’il convient pour dormir, te concentrer, courir ou une longue écoute. Gratuit, sans compte, 100 % sur ton appareil.">
+  <meta property="og:title" content="ZenHertz — Ce morceau, c’est pour quand ?">
+  <meta property="og:description" content="Sommeil, concentration, course, longue écoute : le verdict de ton morceau en 10 secondes. Gratuit, rien n’est envoyé.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#7c3aed">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%237c3aed'/%3E%3Cpath d='M5 16h4l3-7 4 14 4-10 2 3h5' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    try { var th = localStorage.getItem('zh-theme'); if (th === 'dark' || th === 'light') document.documentElement.dataset.theme = th; } catch (e) {}
+  </script>
 </head>
 <body>
+  <a class="skip" href="#main" data-i18n="skip">Aller au contenu</a>
 
-<div id="mesh"><div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div></div>
-
-<div id="topbar">
-  <button class="tbtn" id="home-btn" onclick="goLanding()" style="display:none">
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-    <span data-i="homeBtn">Accueil</span>
-  </button>
-  <div style="flex:1"></div>
-  <div class="tright">
-    <button class="tbtn" onclick="toggleLang()"><span id="llbl">FR</span></button>
-    <button class="tbtn" onclick="toggleTheme()" id="thbtn">🌙</button>
-  </div>
-</div>
-
-<div id="sc-landing">
-
-  <div class="lp-hero">
-
-    <div class="lp-logo-wrap">
-      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="zhg" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#7c3aed"/>
-            <stop offset="100%" stop-color="#a855f7"/>
-          </linearGradient>
-        </defs>
-        <rect x="2"  y="18" width="5" height="8"  rx="2.5" fill="url(#zhg)" opacity=".6"/>
-        <rect x="10" y="12" width="5" height="20" rx="2.5" fill="url(#zhg)" opacity=".75"/>
-        <rect x="18" y="4"  width="5" height="36" rx="2.5" fill="url(#zhg)"/>
-        <rect x="26" y="12" width="5" height="20" rx="2.5" fill="url(#zhg)" opacity=".75"/>
-        <rect x="34" y="18" width="5" height="8"  rx="2.5" fill="url(#zhg)" opacity=".6"/>
-      </svg>
-      <div>
-        <span class="lp-logo-text">ZenHertz</span>
-        <span class="lp-badge">Beta</span>
+  <header class="top">
+    <div class="wrap top-in">
+      <a class="logo" href="#" data-act="home" aria-label="ZenHertz">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9"/><path d="M5 16h4l3-7 4 14 4-10 2 3h5"/></svg>
+        <span>ZenHertz</span>
+      </a>
+      <nav class="nav" aria-label="Navigation">
+        <a href="#methode" data-i18n="nav.method">Méthode</a>
+        <a href="#pro" data-i18n="nav.pro">Pro</a>
+        <a href="#partenaires" data-i18n="nav.partners">Partenaires</a>
+      </nav>
+      <div class="top-actions">
+        <button class="icon-btn" type="button" data-act="lang" data-i18n="lang" aria-label="Language">EN</button>
+        <button class="icon-btn" type="button" data-act="theme" data-i18n-attr="aria-label:theme" aria-label="Thème">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
       </div>
     </div>
+  </header>
 
-    <h1 class="lp-h1" data-i="landH1fr">Ta musique impacte ton cerveau.<br><span data-i="landH1em">Découvrez comment.</span></h1>
-    <p class="lp-sub" data-i="landSub">ZenHertz analyse les fréquences de ta musique et révèle son impact sur tes ondes cérébrales, tes hormones et ton système nerveux en quelques secondes.</p>
-
-    <button class="lp-cta" onclick="showTool()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      <span data-i="landCta">Analyser ma musique</span>
-    </button>
-    <p class="lp-cta-sub" data-i="landCtaSub">Gratuit · Aucune inscription · Tous formats</p>
-
-    <div class="lp-preview" style="margin-top:2.5rem">
-      <div class="lp-preview-inner">
-        <div class="lp-preview-bar">
-          <div class="lp-preview-dot" style="background:#7c3aed"></div>
-          <div class="lp-preview-dot" style="background:#a855f7;opacity:.5"></div>
-          <div class="lp-preview-dot" style="background:#c084fc;opacity:.3"></div>
-          <span style="font-size:.6rem;color:var(--t3);margin-left:auto;font-weight:600">ZenHertz · Live</span>
+  <main id="main">
+    <!-- ═══════════ HOME ═══════════ -->
+    <div id="home" class="view">
+      <section class="hero wrap">
+        <div class="hero-text">
+          <p class="badge" data-i18n="hero.badge">Gratuit · Sans compte · 100 % sur ton appareil</p>
+          <h1 data-i18n="hero.title">Ce morceau, c’est pour <em>quand</em> ?</h1>
+          <p class="lead" data-i18n="hero.sub"></p>
+          <ul class="usage-chips" aria-hidden="true">
+            <li>😴 <span data-i18n="usage.sleep">Sommeil</span></li>
+            <li>🎯 <span data-i18n="usage.focus">Concentration</span></li>
+            <li>🏃 <span data-i18n="usage.run">Course & sport</span></li>
+            <li>🎧 <span data-i18n="usage.long">Longue écoute</span></li>
+          </ul>
         </div>
-        <div class="lp-preview-metric">
-          <div><p class="lp-preview-val">128</p><p class="lp-preview-lbl">BPM</p></div>
-          <div class="lp-preview-div"></div>
-          <div><p class="lp-preview-val v">432</p><p class="lp-preview-lbl">Hertz</p></div>
-          <div class="lp-preview-div"></div>
-          <div><p class="lp-preview-val" style="font-size:.95rem;padding-top:.3rem">Alpha</p><p class="lp-preview-lbl" data-i="wlbl">Onde</p></div>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="drop-hint">
+          <div class="drop-ico" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path d="M24 31V11m0 0-8 8m8-8 8 8"/><path d="M10 29v6a4 4 0 0 0 4 4h20a4 4 0 0 0 4-4v-6"/></svg>
+          </div>
+          <p class="drop-title" data-i18n="drop.title">Dépose tes morceaux ici</p>
+          <p class="drop-or" data-i18n="drop.or">ou</p>
+          <span class="btn btn-primary btn-lg" data-i18n="drop.btn">Choisir des fichiers</span>
+          <p class="drop-modes" id="drop-hint" data-i18n="drop.modes"></p>
+          <p class="drop-formats" data-i18n="drop.formats"></p>
+          <p class="drop-private"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span data-i18n="drop.private"></span></p>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <div class="lp-stats">
-      <div class="lp-stat"><p>6</p><p data-i="statFormats">Formats</p></div>
-      <div class="lp-stat"><p>5</p><p data-i="statWaves">Ondes cérébrales</p></div>
-      <div class="lp-stat"><p>6</p><p data-i="statHorm">Hormones</p></div>
-    </div>
-  </div>
+      <section class="wrap usages" aria-label="Usages">
+        <article class="ucard-mini"><span aria-hidden="true">😴</span><h2 data-i18n="usage.sleep">Sommeil</h2><p data-i18n="usage.sleep.q"></p><span class="ev-mini ev-moderate" data-i18n="r.ev.moderate"></span></article>
+        <article class="ucard-mini"><span aria-hidden="true">🎯</span><h2 data-i18n="usage.focus">Concentration</h2><p data-i18n="usage.focus.q"></p><span class="ev-mini ev-exploratory" data-i18n="r.ev.exploratory"></span></article>
+        <article class="ucard-mini"><span aria-hidden="true">🏃</span><h2 data-i18n="usage.run">Course</h2><p data-i18n="usage.run.q"></p><span class="ev-mini ev-strong" data-i18n="r.ev.strong"></span></article>
+        <article class="ucard-mini"><span aria-hidden="true">🎧</span><h2 data-i18n="usage.long">Longue écoute</h2><p data-i18n="usage.long.q"></p><span class="ev-mini ev-exploratory" data-i18n="r.ev.exploratory"></span></article>
+      </section>
 
-  <div class="lp-steps">
-    <h2 class="lp-steps-title" data-i="landHow">Comment ça marche ?</h2>
-    <div class="lp-steps-grid">
-      <div class="lp-step">
-        <div class="lp-step-num">1</div>
-        <h3 data-i="step1T">Importe ton son</h3>
-        <p data-i="step1D">Dépose n'importe quel fichier audio ou vidéo directement depuis ta galerie ou ton ordinateur.</p>
-        <div class="lp-formats">
-          <span class="lp-fmt">MP3</span><span class="lp-fmt">WAV</span><span class="lp-fmt">AAC</span>
-          <span class="lp-fmt">MP4</span><span class="lp-fmt">MOV</span><span class="lp-fmt">FLAC</span>
+      <section class="wrap how" aria-labelledby="how-t">
+        <h2 id="how-t" class="h2" data-i18n="how.title">Comment ça marche</h2>
+        <ol class="steps">
+          <li><b>1</b><h3 data-i18n="how.1.t"></h3><p data-i18n="how.1.p"></p></li>
+          <li><b>2</b><h3 data-i18n="how.2.t"></h3><p data-i18n="how.2.p"></p></li>
+          <li><b>3</b><h3 data-i18n="how.3.t"></h3><p data-i18n="how.3.p"></p></li>
+        </ol>
+      </section>
+
+      <div class="wrap"><div data-ad="landing-mid"></div></div>
+
+      <section id="methode" class="wrap method" aria-labelledby="method-t">
+        <h2 id="method-t" class="h2" data-i18n="method.title"></h2>
+        <p class="sub" data-i18n="method.sub"></p>
+        <div class="mgrid">
+          <div class="mcard"><h3 data-i18n="method.measure.t"></h3><ul data-i18n="method.measure.l"></ul></div>
+          <div class="mcard"><h3 data-i18n="method.infer.t"></h3><ul data-i18n="method.infer.l"></ul></div>
+          <div class="mcard"><h3 data-i18n="method.unknown.t"></h3><ul data-i18n="method.unknown.l"></ul></div>
+          <div class="mcard valid"><h3 data-i18n="method.valid.t"></h3><p id="valid-text"></p></div>
         </div>
-      </div>
-      <div class="lp-step">
-        <div class="lp-step-num">2</div>
-        <h3 data-i="step2T">Analyse instantanée</h3>
-        <p data-i="step2D">Notre moteur bioacoustique détecte le BPM, les Hz dominants et classe tes ondes cérébrales en temps réel.</p>
-      </div>
-      <div class="lp-step">
-        <div class="lp-step-num">3</div>
-        <h3 data-i="step3T">Ton profil neuro-acoustique</h3>
-        <p data-i="step3D">Découvre l'impact hormonal, l'état cérébral induit et si ton écoute prolongée est sûre ou stimulante.</p>
-      </div>
-    </div>
-  </div>
+        <p class="never" data-i18n="method.never"></p>
+        <details class="sources">
+          <summary data-i18n="method.sources">Sources</summary>
+          <ol>
+            <li>Terry P.C., Karageorghis C.I., Curran M.L., Martin O.V., Parsons-Smith R.L. (2020). Effects of music in exercise and sport: A meta-analytic review. <i>Psychological Bulletin</i>, 146(2), 91–117.</li>
+            <li>Van Dyck E. et al. (2015). Spontaneous entrainment of running cadence to music tempo. <i>Sports Medicine – Open</i>, 1, 15.</li>
+            <li>Jespersen K.V., Pando-Naude V., Koenig J., Jennum P., Vuust P. (2022). Listening to music for insomnia in adults. <i>Cochrane Database of Systematic Reviews</i>, CD010459.</li>
+            <li>Kämpfe J., Sedlmeier P., Renkewitz F. (2011). The impact of background music on adult listeners: A meta-analysis. <i>Psychology of Music</i>, 39(4), 424–448.</li>
+            <li>Salimpoor V.N. et al. (2011). Anatomically distinct dopamine release during anticipation and experience of peak emotion to music. <i>Nature Neuroscience</i>, 14, 257–262.</li>
+            <li>Ferreri L. et al. (2019). Dopamine modulates the reward experiences elicited by music. <i>PNAS</i>, 116(9), 3793–3798.</li>
+            <li>Nozaradan S., Peretz I., Missal M., Mouraux A. (2011). Tagging the neuronal entrainment to beat and meter. <i>Journal of Neuroscience</i>, 31(28), 10234–10240.</li>
+            <li>Organisation mondiale de la santé — initiative « Make Listening Safe » (écoute sans risque).</li>
+            <li>ITU-R BS.1770 (mesure de la loudness) · EBU R 128 / Tech 3342 (LRA).</li>
+          </ol>
+        </details>
+      </section>
 
-  <div class="lp-feats">
-    <div class="lp-feat">
-      <div class="lp-feat-icon">📱</div>
-      <h4 data-i="feat1T">iOS · Android · PC</h4>
-      <p data-i="feat1D">Fonctionne sur tous les appareils, sans installation.</p>
-    </div>
-    <div class="lp-feat">
-      <div class="lp-feat-icon">⚡</div>
-      <h4 data-i="feat2T">100% dans le navigateur</h4>
-      <p data-i="feat2D">Aucun upload vers un serveur. Tes fichiers restent sur ton appareil.</p>
-    </div>
-    <div class="lp-feat">
-      <div class="lp-feat-icon">🔬</div>
-      <h4 data-i="feat3T">Basé sur la science</h4>
-      <p data-i="feat3D">Autocorrélation multi-bande, FFT 32k points, scoring harmonique.</p>
-    </div>
-  </div>
-
-  <div style="text-align:center;padding:1rem 1.5rem 3rem">
-    <button class="lp-cta" onclick="showTool()">
-      <span data-i="landCta">Analyser ma musique</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </button>
-  </div>
-
-  <div class="ec-wrap">
-    <div class="ec-box">
-      <p style="font-size:1.05rem;font-weight:900;color:var(--t1);letter-spacing:-.3px;margin-bottom:.3rem">🚀 <span data-i="ecTitle">ZenHertz arrive officiellement</span></p>
-      <p style="font-size:.76rem;color:var(--t2);line-height:1.6;margin-bottom:1.2rem" data-i="ecSub">Soyez informés de la sortie officielle juste une notification.</p>
-      <form name="email-capture" method="POST" data-netlify="true" style="display:flex;gap:.5rem" onsubmit="handleEmailSubmit(event,this)">
-        <input type="hidden" name="form-name" value="email-capture">
-        <input type="email" name="email" class="ec-input" data-i-ph="ecPh" placeholder="votre@email.com" required>
-        <button type="submit" class="ec-btn" data-i="ecBtn">M'avertir</button>
-      </form>
-      <p id="ec-confirm" style="display:none;font-size:.72rem;color:#7c3aed;font-weight:700;margin-top:.7rem" data-i="ecConfirm">✓ Vous serez notifié à la sortie !</p>
-    </div>
-  </div>
-
-  <div class="lp-footer">
-    <div class="lp-footer-links">
-      <button onclick="openModal('modal-science')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">🔬 <span data-i="sciLink">Comment ça marche ?</span></button>
-      <button onclick="openModal('modal-legal')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">⚖️ <span data-i="legalLink">Mentions légales</span></button>
-    </div>
-    <p class="lp-by">Made by <a href="mailto:raythanwebdesign@gmail.com">RaythanWebDesign</a></p>
-  </div>
-
-</div>
-<div id="sc-ready" class="screen hidden">
-  <div class="glass fade" style="max-width:440px;width:100%;padding:2.5rem 2rem">
-    <div style="text-align:center;margin-bottom:1.5rem">
-      <div class="logo">ZenHertz</div>
-      <p style="color:var(--t2);font-size:.84rem;line-height:1.65;margin-top:.4rem" data-i="tagline">
-        Découvrez l'impact de votre musique sur votre <span style="color:#7c3aed;font-weight:600">système nerveux</span> et vos <span style="color:#a855f7;font-weight:600">ondes cérébrales</span>.
-      </p>
-    </div>
-
-    <div id="alert-box"><p id="alert-msg"></p></div>
-
-    <label style="cursor:pointer;display:block">
-      <div class="uzone">
-        <div class="uico">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <section id="pro" class="wrap pro" aria-labelledby="pro-t">
+        <h2 id="pro-t" class="h2" data-i18n="pro.title"></h2>
+        <p class="sub" data-i18n="pro.sub"></p>
+        <div class="plans">
+          <article class="plan">
+            <h3 data-i18n="pro.free.t"></h3><p class="price" data-i18n="pro.free.p"></p>
+            <ul data-i18n="pro.free.l"></ul>
+            <span class="plan-tag" data-i18n="pro.current"></span>
+          </article>
+          <article class="plan featured">
+            <span class="soon" data-i18n="pro.soon"></span>
+            <h3 data-i18n="pro.pro.t"></h3><p class="price" data-i18n="pro.pro.p"></p>
+            <ul data-i18n="pro.pro.l"></ul>
+            <button class="btn btn-primary" type="button" data-act="pro" data-plan="pro" data-i18n="pro.cta"></button>
+          </article>
+          <article class="plan">
+            <span class="soon" data-i18n="pro.soon"></span>
+            <h3 data-i18n="pro.studio.t"></h3><p class="price" data-i18n="pro.studio.p"></p>
+            <ul data-i18n="pro.studio.l"></ul>
+            <button class="btn" type="button" data-act="pro" data-plan="studio" data-i18n="pro.cta"></button>
+          </article>
         </div>
-        <p style="font-size:.92rem;font-weight:600;color:var(--t1)" data-i="uplbl">Analyser un fichier</p>
-        <p style="font-size:.65rem;color:var(--t3);letter-spacing:.15em;text-transform:uppercase;margin-top:.4rem;font-weight:500">MP3 · WAV · OGG · FLAC · AAC · M4A · MP4</p>
-      </div>
-      <input type="file" id="audio-input" style="display:none" accept=".mp3,.mp4,.wav,.ogg,.flac,.aac,.m4a,.mov,.m4v,audio/*,video/*">
-    </label>
+      </section>
 
-    <div style="margin-top:1.4rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;text-align:center">
-      <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">⏱</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)">BPM</p></div>
-      <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">〰️</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)">Hz</p></div>
-      <div style="background:rgba(124,58,237,.06);border-radius:14px;padding:.75rem .4rem"><p style="font-size:1rem;color:#7c3aed;margin-bottom:.2rem">🧠</p><p style="font-size:.62rem;font-weight:700;color:var(--t2)" data-i="wlbl">Ondes</p></div>
-    </div>
-
-    <div style="margin-top:1.5rem;display:flex;justify-content:center;gap:1.4rem">
-      <button onclick="openModal('modal-science')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">🔬 Comment ça marche ?</button>
-      <button onclick="openModal('modal-legal')" style="background:none;border:none;padding:0;font-family:inherit;font-size:.64rem" class="cursor-pointer no-underline text-gray-400 hover:text-white transition-colors duration-300 font-medium tracking-wide">⚖️ Mentions légales</button>
-    </div>
-  </div>
-</div>
-
-<div id="sc-analyzing" class="screen hidden">
-  <div class="glass fade" style="max-width:430px;width:100%;padding:3.5rem 2rem;text-align:center">
-    <div id="zh-wave" class="zh-wave">
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
-      <span></span>
-    </div>
-    <p id="scan-title" style="font-size:1.1rem;font-weight:700;color:var(--t1);letter-spacing:-.4px"></p>
-    <p id="scan-sub" style="font-size:.68rem;color:var(--t3);letter-spacing:.25em;text-transform:uppercase;margin-top:.7rem;font-weight:600"></p>
-    <div class="pbar-wrap hidden" id="pbar-wrap"><div class="pbar-fill" id="pbar-fill"></div></div>
-    <p id="pbar-msg"></p>
-  </div>
-</div>
-
-<div id="sc-result" class="result-page hidden fade">
-  <div id="rwrap">
-    <div class="glass" id="rleft" style="padding:2rem 1.75rem">
-      <div class="hbring"><div class="hbdot" id="hbdot"></div></div>
-      <div style="text-align:center;margin-bottom:1.2rem">
-        <p id="rname" style="font-size:1rem;font-weight:700;color:var(--t1);letter-spacing:-.3px;word-break:break-word;line-height:1.35"></p>
-        <div style="height:3px;width:44px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:2px;margin:.55rem auto 0"></div>
-      </div>
-      <div class="mgrid">
-        <div style="text-align:center"><p id="rbpm" class="mv">—</p><p class="ml">BPM</p></div>
-        <div class="mdiv"></div>
-        <div style="text-align:center"><p id="rhz" class="mv a">—</p><p class="ml">Hertz</p></div>
-        <div class="mdiv"></div>
-        <div style="text-align:center"><p id="rwave" class="mv sm">—</p><p class="ml" data-i="wlbl">Onde</p></div>
-      </div>
-      <div class="sbox">
-        <p class="stitle" data-i="neuroprofile">Profil Neuro-acoustique</p>
-        <div class="wbar">
-          <div id="wd" class="ws" style="background:#818cf8"></div>
-          <div id="wt" class="ws" style="background:#a78bfa"></div>
-          <div id="wa" class="ws" style="background:#7c3aed"></div>
-          <div id="wb" class="ws" style="background:#c084fc"></div>
-          <div id="wg" class="ws" style="background:#e879f9"></div>
+      <section id="partenaires" class="wrap partners" aria-labelledby="partners-t">
+        <div class="partners-in">
+          <div>
+            <h2 id="partners-t" class="h2" data-i18n="partners.title"></h2>
+            <p class="sub" data-i18n="partners.sub"></p>
+          </div>
+          <form class="form" data-form="partner" novalidate>
+            <div class="row2">
+              <label><span data-i18n="form.name">Nom</span><input name="name" autocomplete="name" required maxlength="120"></label>
+              <label><span data-i18n="form.org">Structure</span><input name="org" autocomplete="organization" maxlength="160"></label>
+            </div>
+            <label><span data-i18n="form.email">E-mail</span><input name="email" type="email" autocomplete="email" required maxlength="200"></label>
+            <label><span data-i18n="form.message">Message</span><textarea name="message" rows="4" maxlength="4000"></textarea></label>
+            <input type="hidden" name="subject" value="">
+            <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+            <p class="consent small" data-i18n="form.consent"></p>
+            <button class="btn btn-primary" type="submit" data-i18n="form.send">Envoyer</button>
+            <p class="form-status" role="status" aria-live="polite"></p>
+          </form>
         </div>
-        <div class="wlbl" id="wlbl-bar"><span>Delta</span><span>Thêta</span><span>Alpha</span><span>Bêta</span><span>Gamma</span></div>
-        <div id="rdesc" class="tw" style="margin-top:.8rem"></div>
-        <div class="tags" id="rtags"></div>
-        <div class="fbar"><div class="ffill" id="ffill"></div></div>
-        <p id="flbl" style="font-size:.67rem;margin-top:.38rem;font-weight:600"></p>
-      </div>
-      <div class="disc" style="margin-bottom:1.2rem"><p data-i="disclaimer"></p></div>
-      
-      <div style="display:flex; gap:1rem; align-items:center; justify-content:center; flex-wrap:wrap;">
-        <span class="backbtn" onclick="goHome()" data-i="back">← Analyser un autre morceau</span>
-        <div class="sharebtn" id="btn-share" onclick="captureBilan()">📸 <span data-i="share">Partager</span></div>
-        <div class="sharebtn" id="btn-copy" onclick="copierTexte()" style="background:var(--card);border:1px solid var(--div);color:var(--t2);box-shadow:none">📋 <span data-i="copyBtn">Copier</span></div>
+      </section>
+
+      <section id="faq" class="wrap faq" aria-labelledby="faq-t">
+        <h2 id="faq-t" class="h2" data-i18n="faq.title"></h2>
+        <details><summary data-i18n="faq.q1"></summary><p data-i18n="faq.a1"></p></details>
+        <details><summary data-i18n="faq.q2"></summary><p data-i18n="faq.a2"></p></details>
+        <details><summary data-i18n="faq.q3"></summary><p data-i18n="faq.a3"></p></details>
+        <details><summary data-i18n="faq.q4"></summary><p data-i18n="faq.a4"></p></details>
+      </section>
+    </div>
+
+    <!-- ═══════════ APP (analysis + report) ═══════════ -->
+    <div id="app" class="view wrap" hidden>
+      <div class="app-bar"><button class="btn btn-ghost" type="button" data-act="new" data-i18n="r.back">← Nouvelle analyse</button></div>
+      <section id="progress" class="progress" aria-live="polite" hidden>
+        <h2 class="h2" data-i18n="an.title">Analyse en cours</h2>
+        <p class="sub" data-i18n="an.sub"></p>
+        <ul id="progress-list" class="plist"></ul>
+      </section>
+      <div id="report"></div>
+      <div data-ad="report-bottom"></div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <div data-ad="footer"></div>
+      <div class="foot-in">
+        <a class="logo small" href="#" data-act="home"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9"/><path d="M5 16h4l3-7 4 14 4-10 2 3h5"/></svg><span>ZenHertz</span></a>
+        <nav class="foot-links">
+          <a href="#" data-modal="legal" data-i18n="footer.legal">Mentions légales</a>
+          <a href="#" data-modal="privacy" data-i18n="footer.privacy">Confidentialité</a>
+          <a href="#" data-act="feedback" data-i18n="footer.feedback">Un bug, une idée ?</a>
+        </nav>
+        <p class="by"><span data-i18n="footer.by">Conçu par</span> <b>Raythan Web Design</b> · © 2026</p>
       </div>
     </div>
-    <div id="rright" style="display:flex;flex-direction:column;gap:1.2rem">
-      <div class="hpanel">
-        <p class="stitle" data-i="hormones">Tableau Hormonal Estimé</p>
-        <div id="hgauges"></div>
-      </div>
-      <div class="hpanel">
-        <p class="stitle" data-i="effectsTitle">Effets ressentis estimés</p>
-        <div id="reffects"></div>
-      </div>
-    </div>
-  </div>
-</div>
+  </footer>
 
+  <dialog id="modal" class="modal" aria-labelledby="modal-title">
+    <button class="modal-x" type="button" data-close aria-label="Fermer">✕</button>
+    <div id="modal-body"></div>
+  </dialog>
 
-<div id="modal-science" class="zh-modal-overlay" onclick="closeModalOutside(event,'modal-science')">
-  <div class="zh-modal-box">
-    <button class="zh-modal-close" onclick="closeModal('modal-science')">✕</button>
-    <div class="zh-modal-scroll" id="modal-science-content"></div>
-  </div>
-</div>
+  <template id="tpl-pro">
+    <h2 id="modal-title" class="h3" data-i18n="form.pro.title"></h2>
+    <p class="muted" data-i18n="form.pro.sub"></p>
+    <form class="form" data-form="pro" novalidate>
+      <label><span data-i18n="form.email">E-mail</span><input name="email" type="email" autocomplete="email" required maxlength="200"></label>
+      <label><span data-i18n="form.org">Structure (facultatif)</span><input name="org" maxlength="160"></label>
+      <input type="hidden" name="subject" value="">
+      <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+      <p class="consent small" data-i18n="form.consent"></p>
+      <button class="btn btn-primary" type="submit" data-i18n="form.send">Envoyer</button>
+      <p class="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </template>
+  <template id="tpl-feedback">
+    <h2 id="modal-title" class="h3" data-i18n="feedback.title"></h2>
+    <p class="muted" data-i18n="feedback.sub"></p>
+    <form class="form" data-form="feedback" novalidate>
+      <label><span data-i18n="form.message">Message</span><textarea name="message" rows="5" required maxlength="4000"></textarea></label>
+      <label><span data-i18n="form.email">E-mail</span><input name="email" type="email" autocomplete="email" maxlength="200"></label>
+      <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+      <button class="btn btn-primary" type="submit" data-i18n="form.send">Envoyer</button>
+      <p class="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </template>
 
-<div id="modal-legal" class="zh-modal-overlay" onclick="closeModalOutside(event,'modal-legal')">
-  <div class="zh-modal-box">
-    <button class="zh-modal-close" onclick="closeModal('modal-legal')">✕</button>
-    <div class="zh-modal-scroll" id="modal-legal-content"></div>
-  </div>
-</div>
+  <input id="file-input" type="file" multiple hidden accept="audio/*,video/*,.mp3,.wav,.flac,.aac,.m4a,.ogg,.oga,.opus,.mp4,.mov,.webm,.mkv">
+  <div class="dropveil" id="dropveil" aria-hidden="true"><p data-i18n="drop.title">Dépose tes morceaux ici</p></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<button id="feedback-fab" onclick="openModal('modal-feedback')">💬 <span data-i="feedbackBtn">Feedback</span></button>
-
-<div id="modal-feedback" class="zh-modal-overlay" onclick="if(event.target===this)closeModal('modal-feedback')">
-  <div class="zh-modal-box">
-    <button class="zh-modal-close" onclick="closeModal('modal-feedback')">✕</button>
-    <div class="zh-modal-scroll">
-      <div class="zh-modal-logo">💬</div>
-      <div class="zh-modal-title" data-i="fbTitle">Votre avis compte</div>
-      <div class="zh-modal-sub" data-i="fbSub">Bug, idée, suggestion on lit tout</div>
-      <form name="feedback" method="POST" data-netlify="true" onsubmit="handleFeedbackSubmit(event,this)">
-        <input type="hidden" name="form-name" value="feedback">
-        <textarea name="message" class="fb-textarea" data-i-ph="fbPh" placeholder="Décrivez votre expérience, un bug, une idée..." required></textarea>
-        <input type="email" name="email" class="ec-input" style="width:100%;margin-top:.6rem" data-i-ph="fbEmailPh" placeholder="Votre email (optionnel)">
-        <button type="submit" class="lp-cta" style="width:100%;margin-top:1rem;justify-content:center" data-i="fbSend">Envoyer</button>
-      </form>
-      <p id="fb-confirm" style="display:none;text-align:center;font-size:.78rem;color:#7c3aed;font-weight:700;margin-top:.8rem" data-i="fbConfirm">✓ Merci ! On a bien reçu votre message.</p>
-    </div>
-  </div>
-</div>
-
-<script src="app.js" defer></script>
+  <script type="module" src="js/app.js"></script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
