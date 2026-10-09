@@ -1,0 +1,97 @@
+{
+  "passed": 18,
+  "total": 18,
+  "date": "2026-10-09",
+  "results": [
+    {
+      "name": "Tempo 70 BPM",
+      "ok": true,
+      "detail": "→ 70 BPM, clarté 0.895"
+    },
+    {
+      "name": "Tempo 90 BPM",
+      "ok": true,
+      "detail": "→ 89.9 BPM, clarté 0.893"
+    },
+    {
+      "name": "Tempo 100 BPM",
+      "ok": true,
+      "detail": "→ 100 BPM, clarté 0.936"
+    },
+    {
+      "name": "Tempo 120 BPM",
+      "ok": true,
+      "detail": "→ 120 BPM, clarté 0.941"
+    },
+    {
+      "name": "Tempo 128 BPM",
+      "ok": true,
+      "detail": "→ 127.9 BPM, clarté 0.932"
+    },
+    {
+      "name": "Tempo 140 BPM",
+      "ok": true,
+      "detail": "→ 139.9 BPM, clarté 0.931"
+    },
+    {
+      "name": "Tempo 160 BPM",
+      "ok": true,
+      "detail": "→ 80 BPM (ressenti à la moitié — accepté), clarté 0.961"
+    },
+    {
+      "name": "Tempo 174 BPM",
+      "ok": true,
+      "detail": "→ 87 BPM (ressenti à la moitié — accepté), clarté 0.963"
+    },
+    {
+      "name": "Loudness sinus −20 dBFS",
+      "ok": true,
+      "detail": "→ -23 LUFS (attendu −23.0)"
+    },
+    {
+      "name": "Loudness stéréo (+3 LU)",
+      "ok": true,
+      "detail": "→ -20 LUFS (attendu −20.0)"
+    },
+    {
+      "name": "Compression détectée (PLR)",
+      "ok": true,
+      "detail": "PLR 21.2 dB → 12.2 dB"
+    },
+    {
+      "name": "Confort longue écoute baisse",
+      "ok": true,
+      "detail": "100 → 81"
+    },
+    {
+      "name": "Bruit rose : pas de pulsation",
+      "ok": true,
+      "detail": "clarté 0"
+    },
+    {
+      "name": "Son tenu : pas de pulsation",
+      "ok": true,
+      "detail": "clarté 0"
+    },
+    {
+      "name": "Sommeil : nappe calme > beat 174",
+      "ok": true,
+      "detail": "100 vs 47"
+    },
+    {
+      "name": "Course : beat 174 > nappe calme",
+      "ok": true,
+      "detail": "88 vs 0"
+    },
+    {
+      "name": "Montée brutale repérée",
+      "ok": true,
+      "detail": "→ 30 s"
+    },
+    {
+      "name": "Déterminisme",
+      "ok": true,
+      "detail": "résultats identiques"
+    }
+  ]
+}

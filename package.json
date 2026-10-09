@@ -1,0 +1,9 @@
+{
+  "name": "zenhertz",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/run.js"
+  },
+  "engines": { "node": ">=18" }
+}
