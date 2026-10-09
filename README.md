@@ -20,6 +20,7 @@ Tout est calculé dans le navigateur : aucun fichier n’est envoyé.
 | `tools/calibrate.mjs` | Calibration sur de vrais fichiers (nécessite ffmpeg) |
 
 ## Formulaires (à configurer dans Vercel → Settings → Environment Variables)
+- `SUPABASE_URL` + `SUPABASE_KEY` : table `zh_submissions` (insertion seule, configurée), **ou**
 - `FORMS_WEBHOOK_URL` : n’importe quel webhook (Make, Zapier, Discord, Slack…), **ou**
 - `RESEND_API_KEY` + `FORMS_TO_EMAIL` (+ `FORMS_FROM_EMAIL`) : envoi par e-mail via resend.com
 

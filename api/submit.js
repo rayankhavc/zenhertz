@@ -1,5 +1,6 @@
 /* Vercel serverless function: receives the site's forms and delivers them.
    Configure at least one destination in Vercel → Settings → Environment Variables:
+     SUPABASE_URL + SUPABASE_KEY   insert into table zh_submissions (insert-only RLS)
      FORMS_WEBHOOK_URL   any webhook (Make, Zapier, n8n, Discord, Slack…) — JSON POST
      RESEND_API_KEY + FORMS_TO_EMAIL (+ FORMS_FROM_EMAIL)   email via resend.com
    Without a destination it answers 503, so the page shows an error instead of
@@ -33,6 +34,17 @@ export default async function handler(req, res){
 
   const record = { type, ...data, receivedAt: new Date().toISOString() };
   const deliveries = [];
+  if (process.env.SUPABASE_URL && process.env.SUPABASE_KEY){
+    deliveries.push(fetch(`${process.env.SUPABASE_URL}/rest/v1/zh_submissions`, {
+      method: 'POST',
+      headers: {
+        apikey: process.env.SUPABASE_KEY, Authorization: `Bearer ${process.env.SUPABASE_KEY}`,
+        'Content-Type': 'application/json', Prefer: 'return=minimal'
+      },
+      body: JSON.stringify({ type, name: data.name || null, org: data.org || null, email: data.email || null,
+        message: data.message || null, subject: data.subject || null, lang: data.lang || null, page: data.page || null })
+    }).then(r => { if (!r.ok) throw new Error('supabase ' + r.status); }));
+  }
   if (process.env.FORMS_WEBHOOK_URL){
     deliveries.push(fetch(process.env.FORMS_WEBHOOK_URL, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
